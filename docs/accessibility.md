@@ -1,0 +1,20 @@
+# Accessibility
+
+The hero includes a main landmark, page heading, skip link, named controls,
+visible focus, project metadata as text, and a persistent pause control. Images
+have meaningful alternative text. Silent video enhances an equivalent poster;
+no information requires audio.
+
+Tabbing into a moving study foregrounds and pauses it. Gallery view offers a
+stationary alternative. Native dialogs provide focus containment and Escape,
+visible close buttons, and focus restoration. The menu exposes implemented views.
+
+`prefers-reduced-motion: reduce` selects a normal, fully discoverable gallery,
+disables automatic video playback, and removes secondary transitions. Preference
+changes are handled live. Explicit pause stops movement and video; hidden tabs
+also suspend work.
+
+Interface text uses Moss Ink on Soft Ivory. Media has restrained contrast scrims
+and project-specific dark text for light studies. Automated axe scans run on both
+browser projects; they do not replace screen-reader and image-contrast review
+after content changes.

@@ -1,0 +1,165 @@
+dialog {
+  border: 0;
+  padding: 0;
+  color: var(--color-text);
+  background: var(--color-canvas);
+}
+dialog::backdrop {
+  background: #1d231d80;
+}
+.work-dialog {
+  width: min(920px, calc(100% - 40px));
+  max-height: calc(100svh - 40px);
+}
+.work-dialog-inner {
+  position: relative;
+  display: grid;
+}
+.dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  background: var(--color-canvas);
+}
+.work-dialog-image {
+  height: 250px;
+}
+.work-dialog-image img {
+  object-position: center 48%;
+}
+.work-dialog-copy {
+  padding: 32px 26px;
+}
+.work-dialog-copy h2 {
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  margin-top: 22px;
+}
+.work-dialog-copy h2 span {
+  display: block;
+  font-style: italic;
+  font-size: 28px;
+  letter-spacing: -0.015em;
+  margin-top: 7px;
+}
+.work-dialog-copy p {
+  font-size: 14px;
+  line-height: 1.65;
+  margin-top: 24px;
+}
+.work-dialog-copy .concept-note {
+  padding-top: 20px;
+  border-top: var(--border);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+.work-dialog-copy .text-button {
+  margin-top: 24px;
+}
+.studio-menu {
+  width: 100%;
+  max-width: none;
+  height: 100svh;
+  max-height: none;
+  margin: 0;
+  padding: 24px var(--page-gutter);
+  background: var(--color-brand);
+  color: var(--color-canvas);
+}
+.studio-menu::backdrop {
+  background: var(--color-brand);
+}
+.studio-menu button:focus-visible {
+  outline-color: var(--color-canvas);
+}
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-body {
+  display: grid;
+  gap: 40px;
+  padding: 10svh 0;
+}
+.menu-body h2 {
+  font-size: clamp(42px, 6vw, 88px);
+  line-height: 1.03;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  margin-top: 20px;
+}
+.menu-body h2 em {
+  letter-spacing: -0.02em;
+}
+.menu-body nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.menu-body nav button {
+  display: flex;
+  width: 100%;
+  padding: 24px 0;
+  align-items: center;
+  text-align: left;
+  gap: 18px;
+  font-size: 18px;
+  border-bottom: 1px solid #f4eee54d;
+}
+.menu-body nav button > span {
+  font-size: 10px;
+  margin-right: 8px;
+}
+.menu-body nav button svg {
+  margin-left: auto;
+}
+.menu-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f4eee54d;
+}
+.menu-bottom p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.menu-bottom p .serif {
+  display: inline-block;
+  font-size: 23px;
+  font-style: italic;
+  padding-top: 12px;
+}
+
+@media (min-width: 768px) {
+  .work-dialog-inner {
+    grid-template-columns: 0.95fr 1fr;
+  }
+  .work-dialog-image {
+    height: 560px;
+  }
+  .work-dialog-copy {
+    padding: 70px 44px 40px;
+  }
+  .work-dialog-copy h2 {
+    font-size: 48px;
+  }
+  .studio-menu {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+  .menu-body {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 8vw;
+    padding: 17svh 0;
+  }
+  .menu-body nav button {
+    font-size: 24px;
+    padding: 34px 0;
+  }
+}

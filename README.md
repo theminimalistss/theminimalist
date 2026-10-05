@@ -1,1 +1,97 @@
-# theminimalist
+# The Minimalist
+
+**Independent design studio · v0.1.0 · Phase 1 landing experience**
+
+A warm editorial portfolio with a continuous spatial work loop, mixed image and
+video studies, an accessible gallery, and restrained studio navigation. This
+release implements the landing experience only.
+
+The six projects are **independent concept studies with licensed stock media**,
+not commissioned client work. Replace them with approved portfolio content
+before a public studio launch.
+
+## Run locally
+
+Requires Node.js 22.12+ and npm. Node 22 is specified in `.nvmrc`.
+
+```bash
+npm ci
+npm run dev
+```
+
+Open the URL printed by Vite (normally `http://127.0.0.1:5173`). No API keys or
+environment variables are required. Production assets are stored locally.
+
+## Stack and architecture
+
+React 19, TypeScript 6, Vite 8, React Router, native CSS transforms and
+`requestAnimationFrame`. Vitest, Testing Library, and Playwright cover data,
+lifecycles, UI, and browser interactions. Fonts are self-hosted.
+
+```text
+UI → hooks → services → repositories → local content
+```
+
+The repository returns unknown data; the service validates and selects work.
+Hooks own loading, browser subscriptions, animation, and media lifecycles.
+UI composes typed media and accessible controls. Static design tokens/copy
+do not require data-layer indirection.
+
+```text
+.agent/              AI state, decisions, tasks, and session history
+docs/                Engineering docs, media sources, original briefs
+scripts/             Media processing and consistency checks
+src/repositories/    Local collection and future CMS boundary
+src/services/        React-independent validation and selection
+src/hooks/           Loading, motion, observers, dialogs
+src/types/           Work domain model
+src/utils/           Pure spatial math
+src/router/          Route definitions and lazy 404
+src/ui/              Components, hero, pages, and design tokens
+src/assets/          Local AVIF/WebP and WebM/MP4 media
+src/tests/           Test setup and fixtures
+e2e/                 Browser acceptance tests
+```
+
+## Commands
+
+| Command                                   | Purpose                                                      |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| `npm run dev`                             | Local development server                                     |
+| `npm run build`                           | Strict types and production bundle                           |
+| `npm run preview`                         | Serve the production bundle                                  |
+| `npm run check`                           | Format, lint, types, tests, build, version, and media checks |
+| `npm run lint` / `npm run typecheck`      | Lint/architecture and strict type checks                     |
+| `npm run test` / `npm run test:watch`     | Unit/component tests                                         |
+| `npm run test:coverage`                   | Service/hook/math coverage report                            |
+| `npm run test:e2e`                        | Chromium desktop and WebKit mobile tests                     |
+| `npm run format` / `npm run format:check` | Apply/check formatting                                       |
+| `npm run media:prepare`                   | Cache sources and regenerate media; needs FFmpeg             |
+| `npm run media:audit`                     | Media budgets/dimensions/duration/no-audio checks            |
+| `npm run version:check`                   | Synchronized Semantic Version records                        |
+
+First install browsers with `npx playwright install chromium webkit`. On Linux,
+add `--with-deps`. FFmpeg/ffprobe are required for media commands and `check`.
+
+## Documentation
+
+- [Architecture](docs/architecture.md) and [project structure](docs/project-structure.md)
+- [Coding standards](docs/coding-standards.md) and [testing](docs/testing.md)
+- [Accessibility](docs/accessibility.md) and [performance](docs/performance.md)
+- [Media pipeline](docs/media-pipeline.md) and [source/creator log](docs/media-sources.md)
+- [Deployment](docs/deployment.md) and [versioning](docs/versioning.md)
+
+The interaction concept is inspired by [Loop's spatial portfolio](https://loop-agency.framer.website/home-spiral).
+No reference-site assets, copy, code, or branding are included.
+
+## Versioning and AI handoff
+
+Semantic Versioning begins at `0.1.0`. Keep `package.json`, `package-lock.json`,
+`CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
+Commits. Preparing a version is local; pushing/publishing requires authorization.
+
+Future agents start with [project state](.agent/PROJECT_STATE.md),
+[decisions](.agent/DECISIONS.md), and [architecture](.agent/ARCHITECTURE.md), then
+inspect only relevant modules. Update the state and AI changelog after meaningful
+changes. The root changelog records releases; `.agent/CHANGELOG.md` records
+implementation sessions and validation.
