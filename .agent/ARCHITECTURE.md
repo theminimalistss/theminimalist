@@ -20,6 +20,8 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Transitions: data router + `PageLink` (view transitions), keyed route fade,
   `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
 - Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.
+- Sound: `soundEngine` (Web Audio, samples + synthesis + ambient) driven by
+  `useSound`/`useInteractionSounds`; preference via repository → service.
 - Sharing: `src/router/pageMeta.json` → runtime titles (`useDocumentMeta`) and
   build-time per-route HTML (`scripts/socialMeta.ts`); images via `media:social`.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.

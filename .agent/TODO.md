@@ -7,6 +7,8 @@
 - Build inquiry, quote, and appointment forms through a repository/service.
 - Add product data behind a repository once a catalog exists.
 - Check WebGL loader/menu morph frame pacing on real phones and Safari.
+- Listen to sound levels on real speakers/phones; tune `SOUNDS` and `AMBIENT`.
+- Set `VITE_SITE_URL` and validate link previews with platform debuggers.
 - Perform real-device motion and screen-reader checks on approved content.
 - Scope later pages/contact integrations after Phase 1 review.
 - Reassess TypeScript 7 support during dependency maintenance.

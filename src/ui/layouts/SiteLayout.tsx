@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
+import { useInteractionSounds } from '@/hooks/useInteractionSounds';
 import { useRouteFocus } from '@/hooks/useRouteFocus';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useScrolledPast } from '@/hooks/useScrolledPast';
@@ -20,6 +21,7 @@ export function SiteLayout() {
   );
   useRouteFocus(pathname);
   useDocumentMeta(pathname);
+  useInteractionSounds(pathname, menuOpen);
   useScrollReveal();
   useEffect(() => scheduleIdle(prefetchPages, 4_000), []);
 

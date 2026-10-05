@@ -17,9 +17,12 @@ Run `npm run test:e2e` after interaction or layout changes.
 - Browser: production page, console errors, motion/pause, menu, dialogs/focus,
   keyboard foregrounding, live reduced-motion changes, overflow, 404, axe scans.
 
-Playwright runs Chromium desktop and WebKit mobile against a production build.
-Install browsers with `npx playwright install chromium webkit`; add `--with-deps`
-on Linux. Failures retain screenshots and traces in ignored output folders.
+Playwright runs Chromium desktop, WebKit desktop, and WebKit mobile against a
+production build; CI adds Firefox (set `E2E_FIREFOX=1` to include it locally).
+Install browsers with `npx playwright install chromium firefox webkit`; add
+`--with-deps` on Linux. Browser tests also cover link-preview HTML fetched
+without JavaScript, campaign links, real sound playback (Chromium), and the
+remembered sound toggle. Failures retain screenshots and traces in ignored output folders.
 
 ## Visual and performance review
 

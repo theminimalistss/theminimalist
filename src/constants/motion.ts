@@ -7,13 +7,16 @@ export const MOTION = {
   wheelImpulse: 6e-7,
   maxVelocity: 1 / 3_000,
   velocitySettle: 650,
+  wheelSoundRange: 360,
+  detentSpeed: 3,
+  hoverCruise: 0.2,
 } as const;
 
 export const LOADER = {
   minimumDuration: { full: 1_800, brief: 650 },
   bloomDuration: { full: 1_500, brief: 450 },
   reducedDuration: 400,
-  maximumDuration: 8_000,
+  maximumDuration: 12_000,
   fontTimeout: 500,
   exitDuration: 1_100,
   shineDuration: 900,

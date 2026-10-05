@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { soundEngine } from '@/audio/soundEngine';
 import type { Work } from '@/types/work';
 
 type Part = [element: HTMLElement, name: string];
@@ -55,6 +56,7 @@ export function useWorkPreview() {
       return;
     }
     const id = (next ?? current.current)?.id;
+    if (id) soundEngine.swell(next ? 'in' : 'out');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!id || reduced || typeof document.startViewTransition !== 'function') {
       setWork(next);

@@ -7,6 +7,7 @@ import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 import { useSiteMenu } from '@/hooks/useSiteMenu';
+import { useSound } from '@/hooks/useSound';
 import { useWorkPreview } from '@/hooks/useWorkPreview';
 import { CollectionStatus } from '@/ui/components/CollectionStatus';
 import { WorkDialog } from '@/ui/components/WorkDialog';
@@ -25,13 +26,17 @@ export function Hero() {
   const [paused, setPaused] = useState(false);
   const [inspecting, setInspecting] = useState(false);
   const preview = useWorkPreview();
+  const { play } = useSound();
   const view = reducedMotion ? 'gallery' : preferredView;
   const works = state.status === 'ready' ? state.works : [];
   const mediaPlaying = !paused && !reducedMotion && !menuOpen && !preview.work && pageVisible;
   const { rootRef, morphing, capture } = useCollectionMorph(view);
 
   function changeView(nextView: CollectionView) {
-    if (nextView !== view) capture();
+    if (nextView !== view) {
+      capture();
+      play('switch');
+    }
     setView(nextView);
     setInspecting(false);
   }

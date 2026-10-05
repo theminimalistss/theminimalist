@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.5.0
+VERSION: 0.6.0
 STATUS: Landing experience complete; site structure in place with temporary pages
-CURRENT TASK: Audio feedback for navigation, spiral, hover, and clicks.
+CURRENT TASK: Review 0.6.0 sound design and cross-browser support.
 
 ## Completed
 
@@ -21,6 +21,8 @@ CURRENT TASK: Audio feedback for navigation, spiral, hover, and clicks.
   name corrected to “The Minimalist — Design Studio”.
 - 0.5.0: Preview morph (View Transitions), full-bleed mobile spiral, per-route
   share HTML/images/icons, campaign-aware intro.
+- 0.6.0: Interface sound + generative ambient with a remembered toggle, work
+  hover feedback, spiral hover slowdown, cross-browser targets and fallbacks.
 
 ## Known issues / limits
 
@@ -31,6 +33,9 @@ CURRENT TASK: Audio feedback for navigation, spiral, hover, and clicks.
 - About, Founders, Testimonials, Products, Contact, and Inquiries hold placeholder
   content; contact details are "To be confirmed"; inquiry forms are not live.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
+- Sound was designed by measurement and synthesis, not by ear in this session;
+  listen on real speakers/headphones and adjust `SOUNDS`/`AMBIENT` levels.
+- Playwright Firefox cannot launch on macOS 27 locally; Firefox runs in CI.
 - No production domain, actual client work, contact integration, or later pages yet.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
 
@@ -41,7 +46,8 @@ CURRENT TASK: Audio feedback for navigation, spiral, hover, and clicks.
 `src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/hooks/usePointerCue.ts`,
 `src/router/pageModules.ts`, `src/shaders/`,
 `src/constants/brand.ts`,
-`src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`,
+`src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`, `src/audio/`,
+`src/constants/sounds.ts`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
 NEXT RECOMMENDED TASK: Supply real page copy/contact details, then build inquiry forms

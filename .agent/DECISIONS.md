@@ -167,3 +167,26 @@ with hand-built FLIP across fonts; the browser cross-fades text natively.
 
 Impact: Browsers without the API (or reduced motion) open instantly. The spiral
 stays paused while a morph runs so the card lands where it left.
+
+## 2026-10-06 — Sound: CC0 samples plus synthesis, on by default
+
+Decision: Short interface sounds are CC0 Kenney samples processed by
+`npm run media:audio`; the spiral whoosh, preview swell, and ambient bed are
+synthesized with Web Audio. Sound is on by default, starts only after the first
+user gesture, and is controlled by a remembered header toggle.
+
+Reason: Licensed, tiny, reproducible assets; synthesis follows speed and key,
+never loops audibly, and costs no download. A visible control satisfies audio
+control expectations (WCAG 1.4.2).
+
+Impact: All playback goes through `soundEngine`; UI uses `useSound`. Elements
+with `data-sound="off"` skip the generic click.
+
+## 2026-10-06 — Explicit browser targets
+
+Decision: Build for Chrome/Edge 90, Firefox 90, and Safari 15 with CSS fallbacks
+and runtime guards; test Chromium, WebKit (desktop and mobile), and Firefox (CI).
+
+Reason: Visitors arrive from many browsers and in-app web views.
+
+Impact: Avoid APIs newer than these targets without a fallback.

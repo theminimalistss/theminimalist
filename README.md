@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.5.0 · Landing experience + site structure**
+**Design studio · v0.6.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -9,6 +9,13 @@ experience is complete; the other pages exist with temporary content.
 The six projects are **independent concept studies with licensed stock media**,
 not commissioned client work. Replace them with approved portfolio content
 before a public studio launch.
+
+## Experience
+
+Spatial spiral and gallery with morphing transitions, a WebGL lotus intro and
+menu, page transitions, scroll reveals, and quiet interface sound with a
+generative ambient bed (toggle “Sound” in the header). Built for Chrome/Edge 90+,
+Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
 
 ## Site map
 
@@ -80,13 +87,15 @@ e2e/                 Browser acceptance tests
 | `npm run lint` / `npm run typecheck`      | Lint/architecture and strict type checks                     |
 | `npm run test` / `npm run test:watch`     | Unit/component tests                                         |
 | `npm run test:coverage`                   | Service/hook/math coverage report                            |
-| `npm run test:e2e`                        | Chromium desktop and WebKit mobile tests                     |
+| `npm run test:e2e`                        | Chromium and WebKit browser tests (Firefox in CI)            |
 | `npm run format` / `npm run format:check` | Apply/check formatting                                       |
 | `npm run media:prepare`                   | Cache sources and regenerate media; needs FFmpeg             |
-| `npm run media:audit`                     | Media budgets/dimensions/duration/no-audio checks            |
+| `npm run media:audio`                     | Download (CC0) and optimize interface sounds; needs FFmpeg   |
+| `npm run media:social`                    | Render share images, app icons, and the web manifest         |
+| `npm run media:audit`                     | Image, video, and sound budgets and format checks            |
 | `npm run version:check`                   | Synchronized Semantic Version records                        |
 
-First install browsers with `npx playwright install chromium webkit`. On Linux,
+First install browsers with `npx playwright install chromium firefox webkit`. On Linux,
 add `--with-deps`. FFmpeg/ffprobe are required for media commands and `check`.
 
 ## Documentation

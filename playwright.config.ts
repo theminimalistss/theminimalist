@@ -16,6 +16,14 @@ export default defineConfig({
       name: 'desktop-chromium',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 960 } },
     },
+    ...(process.env.CI || process.env.E2E_FIREFOX
+      ? [
+          {
+            name: 'desktop-firefox',
+            use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 960 } },
+          },
+        ]
+      : []),
     {
       name: 'desktop-webkit',
       use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 960 } },

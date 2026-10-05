@@ -5,6 +5,52 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-10-06
+
+### Added
+
+- Interface sound: hover, click, page navigation, menu open/close, spiral ↔
+  gallery switch, a speed-following whoosh and soft detent ticks while steering
+  the spiral, and a soft synthesized swell when a work preview opens or closes.
+  Samples are CC0 (Kenney Interface Sounds and UI Audio), trimmed, softened, and
+  encoded as Opus/WebM with MP3 fallback (about 1–3.5 KB each).
+- Soothing generative ambient bed: slow sine chords in D major drifting every
+  36 s, a low “ocean wash”, rare soft chimes, long reverb; fades in over 8 s.
+- Header “Sound” toggle (remembered); audio starts only after the first click
+  or key press and suspends when hidden or off.
+- Work hover/focus feedback: lift shadow, gentle media zoom and dim, title rise,
+  and the spiral slows to a fifth of its speed under the pointer.
+- The loader now waits for fonts, the page, every sound file, on-screen images,
+  and on-screen playing videos (12 s safety cap), and shows a loading indicator
+  (hairline progress and counter, exposed as a progress bar).
+- `npm run media:audio` reproduces the sound set; the media audit checks audio
+  size, length, mono, and format pairs.
+
+### Changed
+
+- Cross-browser: explicit build targets (Chrome/Edge 90, Firefox 90, Safari 15),
+  `vh` fallbacks for `svh`, iOS text-size adjustment, `<dialog>` fallback,
+  prefixed Web Audio for older Safari, and no `structuredClone`/`throwIfAborted`.
+- Firefox joins the browser test matrix in CI (`E2E_FIREFOX=1` locally).
+
+### AI session
+
+Changed: `src/audio/`, `src/constants/sounds.ts`, `src/assets/audio/`,
+`src/repositories/preferences.repository.ts`, `src/services/sound.service.ts`,
+`src/hooks/{useSound,useInteractionSounds,useSpiralLoop,useWorkPreview,useDialog}.ts`,
+`src/ui/components/{SoundToggle,SiteHeader,WorkItem,WorkDialog}.tsx`, styles,
+`scripts/{prepare-audio,audit-media}.mjs`, `vite.config.ts`,
+`playwright.config.ts`, CI, tests, docs.
+
+Reason: The user asked for tactile, immersive sound on every interaction, a
+soothing background bed, gentler preview sounds, hover feedback on works, and
+support across browsers.
+
+Tests: `npm run check` passed (79 unit tests, audio audit). `npm run test:e2e`
+passed 67 locally (8 skipped on mobile) including real sound playback and a
+remembered toggle. Firefox could not launch locally (Playwright Firefox on
+macOS 27 cannot create a profile); it runs in CI on Linux.
+
 ## [0.5.0] — 2026-10-06
 
 ### Added

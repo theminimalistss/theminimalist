@@ -20,7 +20,12 @@ export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () =
     >
       {work && (
         <div className="work-dialog-inner" tabIndex={-1}>
-          <button className="icon-button dialog-close" aria-label="Close project" onClick={onClose}>
+          <button
+            className="icon-button dialog-close"
+            aria-label="Close project"
+            data-sound="off"
+            onClick={onClose}
+          >
             <Icon name="close" />
           </button>
           <div className="work-dialog-image" data-work-part="media">
@@ -49,7 +54,7 @@ export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () =
                 client work.
               </p>
             )}
-            <button className="text-button" onClick={onClose}>
+            <button className="text-button" data-sound="off" onClick={onClose}>
               Back to the collection <span aria-hidden="true">↗</span>
             </button>
           </div>

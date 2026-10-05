@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, type RefObject } from 'react';
+import { soundEngine } from '@/audio/soundEngine';
 import { MOTION } from '@/constants/motion';
 import {
   applyWheelImpulse,
@@ -29,6 +30,17 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
     const items = Array.from(stage.querySelectorAll<HTMLElement>('[data-spiral-item]'));
     let frame = 0;
     let lastTime = 0;
+    let lastSlot = Math.floor(progress.current * count);
+    let hovering = false;
+    const hover = (event: PointerEvent) => {
+      hovering =
+        event.pointerType === 'mouse' &&
+        event.target instanceof Element &&
+        event.target.closest('[data-spiral-item]') !== null;
+    };
+    const leave = () => {
+      hovering = false;
+    };
     let geometry = {
       width: stage.clientWidth,
       height: stage.clientHeight,
@@ -65,19 +77,30 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
       draw();
     };
     stage.addEventListener('focusin', focusWork);
+    stage.addEventListener('pointerover', hover);
+    stage.addEventListener('pointerleave', leave);
 
     const steer = (event: WheelEvent) => {
       if (event.ctrlKey || !event.deltaY) return;
       const delta = normalizeWheelDelta(event.deltaY, event.deltaMode, window.innerHeight);
       cruise.current = getCruiseVelocity(delta > 0 ? 1 : -1);
       velocity.current = applyWheelImpulse(velocity.current, delta);
+      soundEngine.whoosh(Math.abs(delta) / MOTION.wheelSoundRange);
     };
 
     const animate = (time: number) => {
       const delta = lastTime ? Math.min(time - lastTime, MOTION.maxFrameDelta) : 0;
       lastTime = time;
-      velocity.current = settleVelocity(velocity.current, cruise.current, delta);
+      const target = cruise.current * (hovering ? MOTION.hoverCruise : 1);
+      velocity.current = settleVelocity(velocity.current, target, delta);
       progress.current = wrapProgress(progress.current + velocity.current * delta);
+      const slot = Math.floor(progress.current * count);
+      if (slot !== lastSlot) {
+        lastSlot = slot;
+        if (Math.abs(velocity.current) > Math.abs(cruise.current) * MOTION.detentSpeed) {
+          soundEngine.play('detent');
+        }
+      }
       draw();
       frame = requestAnimationFrame(animate);
     };
@@ -90,6 +113,8 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
       cancelAnimationFrame(frame);
       resize.disconnect();
       stage.removeEventListener('focusin', focusWork);
+      stage.removeEventListener('pointerover', hover);
+      stage.removeEventListener('pointerleave', leave);
       window.removeEventListener('wheel', steer);
       velocity.current = cruise.current;
       items.forEach((item) => {

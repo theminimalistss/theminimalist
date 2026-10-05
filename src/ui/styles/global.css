@@ -5,6 +5,8 @@
 }
 html {
   min-width: 320px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   background: var(--color-canvas);
 }
 body {
@@ -119,6 +121,7 @@ video {
   place-items: center;
 }
 .not-found {
+  min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;

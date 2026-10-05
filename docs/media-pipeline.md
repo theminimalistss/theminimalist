@@ -22,3 +22,17 @@ A frame from the final encoding generates poster variants.
 
 Source downloads never enter Git or the production bundle. Vite hashes local
 optimized imports. The browser selects a suitable format and image resolution.
+
+## Interface sounds
+
+`npm run media:audio` downloads the CC0 Kenney packs into ignored `.cache/audio/`
+(once), then for each mapped sound trims leading/trailing silence, applies a
+9 kHz low-pass, converts to mono 48 kHz, normalizes the peak to −1 dB, adds a
+12 ms fade-out, and writes Opus/WebM and MP3 to `src/assets/audio/`. Record any
+new source in `media-sources.md`. The audit enforces ≤12 KB, ≤1 s, mono, and a
+matching fallback per sound.
+
+## Share images
+
+`npm run media:social` renders `public/social/*.png`, app icons, and the web
+manifest from `src/router/pageMeta.json`.

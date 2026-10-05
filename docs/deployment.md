@@ -10,6 +10,14 @@ tags on Netlify, Cloudflare Pages, Vercel (`cleanUrls`), GitHub Pages, or nginx
 (`try_files $uri $uri.html $uri/index.html /index.html`). Unknown paths should
 fall back to `index.html` (the app renders its 404) or `404.html`.
 
+## Browser support
+
+Builds target Chrome/Edge 90+, Firefox 90+, and Safari/iOS 15+ (including
+in-app browsers built on them). Newer features degrade gracefully: View
+Transitions, WebGL, `:has()`, and `inert` are enhancements with fallbacks.
+Serve `.webm` audio/video as `audio/webm`/`video/webm` and `.mp3` as
+`audio/mpeg`.
+
 ## Link previews and ads
 
 Crawlers for Facebook/Instagram/Threads, LinkedIn, X, Reddit, WhatsApp, Slack,

@@ -28,6 +28,7 @@ export function WorkItem({ work, index, playing, onSelect, priority = false, siz
       <WorkMeta work={work} index={index} />
       <button
         className="work-open"
+        data-sound="off"
         onClick={(event) => {
           event.currentTarget.focus({ preventScroll: true });
           onSelect(work);

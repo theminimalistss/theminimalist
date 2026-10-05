@@ -54,6 +54,36 @@ for (const directory of ['src/assets/images/hero', 'src/assets/videos/hero']) {
     }
   }
 }
+const AUDIO = 'src/assets/audio';
+const sounds = (await readdir(AUDIO)).sort();
+for (const filename of sounds) {
+  const path = `${AUDIO}/${filename}`;
+  const { size } = await stat(path);
+  totalBytes += size;
+  const metadata = JSON.parse(
+    execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', path], {
+      encoding: 'utf8',
+    }),
+  );
+  const stream = metadata.streams.find((entry) => entry.codec_type === 'audio');
+  const pair = filename.replace(/\.(webm|mp3)$/u, filename.endsWith('.webm') ? '.mp3' : '.webm');
+  if (
+    size > 12_000 ||
+    !stream ||
+    stream.channels !== 1 ||
+    Number(metadata.format.duration) > 1 ||
+    !sounds.includes(pair)
+  ) {
+    console.error(`Sound outside budget or missing its fallback: ${path}`);
+    failed = true;
+  }
+  report.push({
+    file: filename,
+    KB: Math.round(size / 1024),
+    dimensions: 'mono',
+    seconds: Number(metadata.format.duration).toFixed(2),
+  });
+}
 console.table(report);
 console.info(
   `All local media (both format variants): ${(totalBytes / 1024 / 1024).toFixed(2)} MiB`,

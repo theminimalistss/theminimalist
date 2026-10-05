@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router';
 import { isNavGroupActive, PRIMARY_NAVIGATION } from '@/router/navigation';
 import { Icon } from '@/ui/components/Icon';
+import { SoundToggle } from '@/ui/components/SoundToggle';
 import { StudioLogo } from '@/ui/components/StudioLogo';
 import { PageLink } from '@/ui/components/PageLink';
 
@@ -23,6 +24,7 @@ export function SiteHeader({ menuOpen, scrolled, onMenu }: Props) {
           </PageLink>
         ))}
       </nav>
+      <SoundToggle />
       <button
         className="menu-trigger"
         onClick={(event) => {

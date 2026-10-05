@@ -9,6 +9,10 @@ Tabbing into a moving study foregrounds and pauses it. Gallery view offers a
 stationary alternative. Native dialogs provide focus containment and Escape,
 visible close buttons, and focus restoration. The menu exposes implemented views.
 
+Sound never starts before a user gesture, stays quiet, and is controlled by the
+labelled “Sound” toggle (`aria-pressed`) at the top of every page; the choice is
+remembered. No information depends on sound.
+
 Every page shares the header, menu, and footer sitemap. Navigation landmarks are
 named (Primary, Site, Footer, Breadcrumb, section tabs) and mark the current page
 with `aria-current`. After a route change the page scrolls to the top and focus

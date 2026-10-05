@@ -163,6 +163,10 @@ test('shows the studio loader until the page is ready, then reveals the hero', a
   const loader = page.locator('.page-loader');
   await expect(loader).toBeVisible();
   await expect(loader).toHaveAttribute('role', 'status');
+  await expect(page.getByRole('progressbar', { name: 'Loading' })).toHaveAttribute(
+    'aria-valuenow',
+    /^\d+$/,
+  );
   await expect(page.locator('#boot-splash')).toHaveCount(0);
   await expect(page.locator('.app-shell')).toHaveAttribute('inert', '');
   await expect(loader).toHaveCount(0, { timeout: 10_000 });
@@ -260,4 +264,40 @@ test('a work morphs into its preview and back, then the spiral resumes', async (
   const item = page.locator('[data-spiral-item]').first();
   const settled = await item.getAttribute('style');
   await expect.poll(() => item.getAttribute('style')).not.toBe(settled);
+});
+
+test('interface sounds play after the first interaction and the toggle is remembered', async ({
+  page,
+  browserName,
+}) => {
+  await page.addInitScript(() => {
+    const counter = window as unknown as { soundStarts: number };
+    counter.soundStarts = 0;
+    const start = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function (...args: Parameters<typeof start>) {
+      counter.soundStarts += 1;
+      return start.apply(this, args);
+    };
+  });
+  await openPage(page, '/about');
+  const toggle = page.getByRole('button', { name: 'Sound', exact: true });
+  await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  if (browserName === 'chromium') {
+    await page.locator('.page-intro').click();
+    await page.waitForTimeout(600);
+    await page
+      .getByRole('navigation', { name: 'Footer' })
+      .getByRole('link', { name: 'Founders' })
+      .click();
+    await expect
+      .poll(() => page.evaluate(() => (window as unknown as { soundStarts: number }).soundStarts))
+      .toBeGreaterThan(0);
+  }
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+  await openPage(page, '/contact');
+  await expect(page.getByRole('button', { name: 'Sound', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  );
 });

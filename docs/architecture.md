@@ -64,6 +64,22 @@ morphs the box, the media (cropped with `object-fit: cover`), and the type
 reduced motion the dialog opens instantly. The spiral stays paused while a morph
 runs, and requests made mid-morph are queued.
 
+## Sound
+
+`soundEngine` (`src/audio/`) owns one `AudioContext`, created on the first click
+or key press (browsers block audio before a gesture). It decodes short samples
+(Opus/WebM, MP3 fallback) with slight pitch variation, throttles hover and
+detent sounds, and lets only one “transition” sound play per 150 ms so a menu
+link does not stack sounds. Synthesized sounds: the spiral whoosh (filtered
+noise that follows wheel speed), the preview swell (air sweep plus two soft sine
+notes in the ambient key), and the ambient bed (`ambient.ts`: detuned sine chords
+through a low-pass and long generated reverb, a slow ocean wash, rare chimes).
+The context suspends when sound is off or the tab is hidden.
+`useInteractionSounds` adds delegated hover/click listeners and navigation/menu
+sounds in `SiteLayout`; `useSpiralLoop` and `useWorkPreview` call the engine
+directly. The preference flows `preferences.repository` → `sound.service` →
+`useSound` → `SoundToggle`.
+
 ## Sharing and metadata
 
 `src/router/pageMeta.json` holds each route's title, description, share image,
@@ -85,6 +101,10 @@ a maximum cap). `PageLoader` keeps the app shell `inert` until then.
 (`lotusArtwork.ts`) and renders `src/shaders/loader.ts`: a bloom from the
 flower's base, a shimmer while waiting, then an organic opening onto the hero. A
 boot splash in `index.html` matches the loader before JavaScript runs.
+
+`usePageLoad` tracks the window load, fonts, every sound file (when sound is
+on), and the images and playing videos on screen, reports progress to the
+loader's indicator, and resolves after the minimum intro (12 s cap).
 
 `useIntro` asks `visit.service` whether this session has already seen the intro
 (`visit.repository` wraps `sessionStorage` and tolerates blocked storage); the

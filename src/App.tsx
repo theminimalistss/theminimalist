@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LOADER } from '@/constants/motion';
 import { useIntro } from '@/hooks/useIntro';
-import { usePageReady } from '@/hooks/usePageReady';
+import { usePageLoad } from '@/hooks/usePageLoad';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { AppRouter } from '@/router/AppRouter';
 import { ErrorBoundary } from '@/ui/components/ErrorBoundary';
@@ -10,10 +10,10 @@ import { PageLoader } from '@/ui/components/PageLoader';
 export default function App() {
   const reducedMotion = useReducedMotion();
   const intro = useIntro();
-  const ready = usePageReady(
-    reducedMotion ? LOADER.reducedDuration : LOADER.minimumDuration[intro.mode],
-    LOADER.maximumDuration,
-  );
+  const { ready, progress } = usePageLoad({
+    minimum: reducedMotion ? LOADER.reducedDuration : LOADER.minimumDuration[intro.mode],
+    maximum: LOADER.maximumDuration,
+  });
   const [loading, setLoading] = useState(true);
 
   return (
@@ -27,6 +27,7 @@ export default function App() {
       {loading && (
         <PageLoader
           ready={ready}
+          progress={progress}
           animated={!reducedMotion}
           bloomDuration={LOADER.bloomDuration[intro.mode]}
           onExited={() => {

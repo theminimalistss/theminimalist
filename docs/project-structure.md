@@ -7,6 +7,10 @@
 | `src/repositories/works.repository.ts`  | Infrastructure adapter                                            |
 | `src/services/works.service.ts`         | Validation, normalization, selection, ordering                    |
 | `src/hooks/`                            | Loading, observers, visibility, dialogs, animation integration    |
+| `src/audio/`                            | Web Audio engine, ambient bed, synthesized sounds                 |
+| `src/constants/sounds.ts`               | Sound map, mix levels, ambient and swell settings                 |
+| `src/assets/audio/`                     | CC0 interface sounds (Opus/WebM + MP3)                            |
+| `scripts/prepare-audio.mjs`             | Download and optimize interface sounds                            |
 | `src/utils/spiral.ts`                   | Pure spatial and wheel-velocity math                              |
 | `src/utils/webgl.ts`, `lotusArtwork.ts` | WebGL scene helpers and loader texture painting                   |
 | `src/utils/collectionMorph.ts`          | Keyframes and clip insets for the spiral ↔ gallery flight         |

@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), socialMeta(normalizeSiteUrl(env.VITE_SITE_URL))],
     resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
-    build: { assetsInlineLimit: 0 },
+    build: {
+      assetsInlineLimit: 0,
+      target: ['es2020', 'chrome90', 'edge90', 'firefox90', 'safari15'],
+      cssTarget: ['chrome90', 'edge90', 'firefox90', 'safari15'],
+    },
     test: {
       environment: 'jsdom',
       setupFiles: ['./src/tests/setup.ts'],

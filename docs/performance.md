@@ -19,6 +19,13 @@ Budgets enforced by `npm run media:audit`:
 - View switches use compositor-friendly WAAPI transform animations; the spiral's
   RAF loop pauses during the flight.
 
+## Sound
+
+- Eight samples total about 16 KB per format; they are fetched while the
+  loader shows (so the site is ready to sound) and decoded after the first
+  gesture. Ambient and synthesized sounds download
+  nothing. The audio context suspends when sound is off or the page is hidden.
+
 ## Startup and navigation
 
 - The full loader intro (1.8s minimum, 1.5s bloom) plays once per browser

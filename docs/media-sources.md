@@ -26,6 +26,28 @@ videos. Outputs live in `src/assets/images/hero` and `src/assets/videos/hero`.
 Inter Tight and Instrument Serif are self-hosted through pinned Fontsource
 packages under the SIL Open Font License. Copies in `public/licenses/` ship with
 the deployed font assets.
-The leaf mark, favicon, social preview, work naming, and UI art direction were
+The lotus mark redraw, favicon, share images, work naming, and UI art direction were
 created for this build and are provisional pending studio approval. No Loop
 assets, copy, source code, or branding were reused.
+
+## Interface sounds
+
+Downloaded 2026-10-06 from Kenney, **CC0 1.0 (public domain)**; attribution is
+not required. Packs: [Interface Sounds](https://kenney.nl/assets/interface-sounds)
+and [UI Audio](https://kenney.nl/assets/ui-audio). Processed by
+`npm run media:audio` (silence trim, 9 kHz low-pass, mono 48 kHz, peak −1 dB,
+short fade-out, Opus 48 kb/s and MP3 64 kb/s).
+
+| Local name   | Source file                         |
+| ------------ | ----------------------------------- |
+| `hover`      | UI Audio `rollover2.ogg`            |
+| `click`      | Interface Sounds `select_002.ogg`   |
+| `navigate`   | Interface Sounds `maximize_008.ogg` |
+| `menu-open`  | Interface Sounds `maximize_006.ogg` |
+| `menu-close` | Interface Sounds `minimize_006.ogg` |
+| `switch`     | Interface Sounds `drop_002.ogg`     |
+| `detent`     | Interface Sounds `tick_004.ogg`     |
+| `sound-on`   | Interface Sounds `glass_002.ogg`    |
+
+The ambient bed, spiral whoosh, and preview swell are synthesized in the browser
+and contain no third-party audio.
