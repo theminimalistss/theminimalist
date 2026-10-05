@@ -26,9 +26,10 @@ export const MENU_MORPH = {
 } as const;
 
 export const COLLECTION_MORPH = {
-  duration: 900,
-  stagger: 45,
-  easing: 'cubic-bezier(0.65, 0, 0.25, 1)',
+  duration: 1_050,
+  stagger: 40,
+  easing: 'cubic-bezier(0.45, 0, 0.15, 1)',
+  chromeDip: 0.25,
 } as const;
 
 export const COMPACT_QUERY = '(max-width: 767px)';

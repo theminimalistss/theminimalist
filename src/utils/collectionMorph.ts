@@ -54,3 +54,13 @@ export function getSpiralKeyframes(
     { transform: spiralTransform },
   ];
 }
+
+export function getChromeKeyframes(from: Region, to: Region, dip: number): Keyframe[] {
+  const dx = from.left - to.left;
+  const dy = from.top - to.top;
+  return [
+    { transform: `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`, opacity: 1 },
+    { opacity: dip, offset: 0.4 },
+    { transform: 'translate(0px, 0px)', opacity: 1 },
+  ];
+}

@@ -9,6 +9,11 @@ Tabbing into a moving study foregrounds and pauses it. Gallery view offers a
 stationary alternative. Native dialogs provide focus containment and Escape,
 visible close buttons, and focus restoration. The menu exposes implemented views.
 
+Every page shares the header, menu, and footer sitemap. Navigation landmarks are
+named (Primary, Site, Footer, Breadcrumb, section tabs) and mark the current page
+with `aria-current`. After a route change the page scrolls to the top and focus
+moves to `#main-content`, including after navigating from the menu.
+
 The loader is a polite status region and the page behind it stays `inert` until
 ready. The menu keeps native dialog focus handling; Escape and Close play the
 morph out and then restore focus to the menu button.

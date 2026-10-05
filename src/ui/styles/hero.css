@@ -8,52 +8,6 @@
   min-height: 700px;
   overflow: clip;
 }
-.hero-header {
-  position: relative;
-  z-index: var(--layer-shell);
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 26px var(--page-gutter);
-}
-.studio-logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  width: fit-content;
-}
-.studio-mark {
-  width: 25px;
-  height: 32px;
-}
-.studio-logo-type {
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: -0.045em;
-  white-space: nowrap;
-}
-.studio-logo-type > span {
-  display: block;
-  font-size: 6.5px;
-  letter-spacing: 0.2em;
-  font-weight: 400;
-  margin-top: 5px;
-}
-.header-note {
-  display: none;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-.menu-trigger {
-  display: flex;
-  align-items: center;
-  justify-self: end;
-  gap: 18px;
-  font-size: 12px;
-  min-height: 44px;
-  padding: 0;
-}
 .hero-main {
   position: static;
 }
@@ -134,9 +88,12 @@
 .spiral-stage {
   position: absolute;
   inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   perspective: 1100px;
 }
-.spiral-item {
+.spiral-stage > li {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -240,6 +197,7 @@
   margin-bottom: 24px;
 }
 .hero--gallery {
+  padding-top: var(--header-height);
   padding-bottom: 32px;
 }
 .hero--gallery .collection-heading {

@@ -65,6 +65,7 @@ dialog::backdrop {
   height: 100svh;
   max-height: none;
   margin: 0;
+  overflow-y: auto;
   padding: 24px var(--page-gutter);
   background: transparent;
   color: var(--color-canvas);
@@ -136,7 +137,7 @@ dialog::backdrop {
 .menu-body {
   display: grid;
   gap: 40px;
-  padding: 10svh 0;
+  padding: 6svh 0;
 }
 .menu-body h2 {
   font-size: clamp(42px, 6vw, 88px);
@@ -148,27 +149,62 @@ dialog::backdrop {
 .menu-body h2 em {
   letter-spacing: -0.02em;
 }
-.menu-body nav {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.menu-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.menu-body nav button {
-  display: flex;
-  width: 100%;
-  padding: 24px 0;
-  align-items: center;
-  text-align: left;
-  gap: 18px;
-  font-size: 18px;
+.menu-nav > li {
+  padding: 10px 0;
   border-bottom: 1px solid #f4eee54d;
 }
-.menu-body nav button > span {
-  font-size: 10px;
-  margin-right: 8px;
+.studio-menu a:focus-visible {
+  outline-color: var(--color-canvas);
 }
-.menu-body nav button svg {
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 48px;
+  font-size: 20px;
+}
+.menu-link svg {
   margin-left: auto;
+  transition: transform var(--duration-fast) ease;
+}
+.menu-link:hover svg {
+  transform: translate(3px, -3px);
+}
+.menu-link[aria-current='page'] {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+.menu-index {
+  min-width: 26px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-style: normal;
+}
+.menu-sublinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  margin: 0;
+  padding: 0 0 6px 44px;
+  list-style: none;
+  font-size: 12px;
+  color: #f4eee5b8;
+}
+.menu-sublinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
+.menu-sublinks a:hover,
+.menu-sublinks a[aria-current='page'] {
+  color: var(--color-canvas);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .menu-bottom {
   display: flex;
@@ -207,12 +243,11 @@ dialog::backdrop {
     padding-bottom: 36px;
   }
   .menu-body {
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns: 1fr 1.1fr;
     gap: 8vw;
-    padding: 17svh 0;
+    padding: 10svh 0;
   }
-  .menu-body nav button {
+  .menu-link {
     font-size: 24px;
-    padding: 34px 0;
   }
 }

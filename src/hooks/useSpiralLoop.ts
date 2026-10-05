@@ -9,17 +9,17 @@ import {
   wrapProgress,
 } from '@/utils/spiral';
 
-type Options = { count: number; paused: boolean; compact: boolean };
+type Options = { count: number; paused: boolean; compact: boolean; enabled: boolean };
 
-export function useSpiralLoop({ count, paused, compact }: Options) {
-  const stageRef = useRef<HTMLDivElement>(null);
+export function useSpiralLoop({ count, paused, compact, enabled }: Options) {
+  const stageRef = useRef<HTMLOListElement>(null);
   const progress = useRef(0.5);
   const cruise = useRef(getCruiseVelocity(1));
   const velocity = useRef(getCruiseVelocity(1));
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
-    if (!stage || !count) return;
+    if (!stage || !count || !enabled) return;
     const items = Array.from(stage.querySelectorAll<HTMLElement>('[data-spiral-item]'));
     let frame = 0;
     let lastTime = 0;
@@ -85,8 +85,12 @@ export function useSpiralLoop({ count, paused, compact }: Options) {
       stage.removeEventListener('focusin', focusWork);
       window.removeEventListener('wheel', steer);
       velocity.current = cruise.current;
+      items.forEach((item) => {
+        item.style.transform = '';
+        item.style.zIndex = '';
+      });
     };
-  }, [count, paused, compact]);
+  }, [count, paused, compact, enabled]);
 
   return stageRef;
 }

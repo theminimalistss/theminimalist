@@ -1,8 +1,8 @@
 # The Minimalist — agent instructions
 
 Before editing, read `.agent/PROJECT_STATE.md`, `.agent/DECISIONS.md`, and
-`.agent/ARCHITECTURE.md`. Follow the task scope; the current release implements
-the Phase 1 landing experience only.
+`.agent/ARCHITECTURE.md`. Follow the task scope; the landing experience is complete
+and the other pages hold temporary content until real content is supplied.
 
 - Keep work data flowing UI → hook → service → repository.
 - Preserve the palette and typography in `src/ui/styles/`.

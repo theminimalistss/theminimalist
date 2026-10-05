@@ -1,14 +1,28 @@
 # The Minimalist
 
-**Independent design studio · v0.1.0 · Phase 1 landing experience**
+**Independent design studio · v0.3.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
-video studies, an accessible gallery, and restrained studio navigation. This
-release implements the landing experience only.
+video studies, an accessible gallery, and studio navigation. The landing
+experience is complete; the other pages exist with temporary content.
 
 The six projects are **independent concept studies with licensed stock media**,
 not commissioned client work. Replace them with approved portfolio content
 before a public studio launch.
+
+## Site map
+
+| Section  | Pages                                                                          |
+| -------- | ------------------------------------------------------------------------------ |
+| Home     | `/` — the collection in motion (spiral ↔ gallery)                              |
+| Works    | `/works`                                                                       |
+| Studio   | `/about`, `/founders`, `/testimonials`                                         |
+| Products | `/products`, `/products/software`, `/products/templates`, `/products/hardware` |
+| Contact  | `/contact`, `/inquiries`, `/inquiries/quote`, `/inquiries/appointment`         |
+
+Every page is reachable from the header (desktop), the menu, and the footer
+sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home and
+Works hold clearly marked placeholder content; inquiry forms are not live yet.
 
 ## Run locally
 
@@ -45,9 +59,10 @@ src/repositories/    Local collection and future CMS boundary
 src/services/        React-independent validation and selection
 src/hooks/           Loading, motion, observers, dialogs
 src/types/           Work domain model
-src/utils/           Pure spatial math
-src/router/          Route definitions and lazy 404
-src/ui/              Components, hero, pages, and design tokens
+src/utils/           Pure spatial math, WebGL and morph helpers
+src/shaders/         GLSL for the loader and menu morph
+src/router/          Routes, navigation structure, lazy pages
+src/ui/              Layouts, components, sections, pages, design tokens
 src/assets/          Local AVIF/WebP and WebM/MP4 media
 src/tests/           Test setup and fixtures
 e2e/                 Browser acceptance tests

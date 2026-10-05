@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { getClipInset, getGalleryKeyframes, getSpiralKeyframes } from '@/utils/collectionMorph';
+import {
+  getChromeKeyframes,
+  getClipInset,
+  getGalleryKeyframes,
+  getSpiralKeyframes,
+} from '@/utils/collectionMorph';
 import { getSpiralPosition, readSpiralPose } from '@/utils/spiral';
 
 const pose = { x: 300, y: 200, width: 200, rotateY: -12, rotateZ: 4 };
@@ -40,5 +45,14 @@ describe('collection morph', () => {
     expect(getClipInset(box, { left: 0, top: 0, right: 1000, bottom: 700 })).toBe(
       'inset(-50.0px -100.0px -50.0px -100.0px)',
     );
+  });
+
+  it('glides persistent chrome from its old corner with a soft dip', () => {
+    const from = { left: 40, top: 300, right: 400, bottom: 500 };
+    const to = { left: 40, top: 160, right: 900, bottom: 240 };
+    const [start, middle, end] = getChromeKeyframes(from, to, 0.25);
+    expect(start?.transform).toBe('translate(0.0px, 140.0px)');
+    expect(middle).toEqual({ opacity: 0.25, offset: 0.4 });
+    expect(end?.transform).toBe('translate(0px, 0px)');
   });
 });

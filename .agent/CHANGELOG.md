@@ -5,6 +5,45 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-10-06
+
+### Added
+
+- Site structure from the project brief: Works, About, Founders, Testimonials,
+  Products (Software solutions, Website templates, Hardware products), Contact,
+  and Inquiries (General, Quote, Appointment), each with temporary content.
+- Fixed site header with the lotus logo and primary links (Works, Studio,
+  Products, Contact); it gains a background once the page scrolls.
+- Site menu rebuilt as a full site map with sub-page links and current-page state.
+- Footer sitemap, breadcrumbs, and section tabs on sub-pages; page titles per route.
+- Shared page blocks: intro, section, link cards, checklist, placeholder.
+
+### Changed
+
+- Spiral ↔ gallery switching keeps the same card, image, and video elements, so
+  nothing reloads mid-flight; heading, statement, and footer now glide instead
+  of fading out and back in. Slightly longer, softer easing.
+- Header logo uses the lotus mark from the brand board.
+- Route changes scroll to the top and move focus to the new page's main content.
+- Menu no longer switches collection views (the hero controls do).
+
+### AI session
+
+Changed: `src/router/`, `src/ui/layouts/`, `src/ui/pages/`, `src/ui/sections/Page/`,
+`src/ui/sections/Hero/{Hero,WorkCollection}.tsx`, `src/ui/components/{SiteHeader,SiteFooter,StudioMenu,StudioLogo,Icon}.tsx`,
+`src/hooks/{useSiteMenu,useRouteFocus,useScrolledPast,useDocumentTitle,useSpiralLoop,useCollectionMorph}.ts`,
+`src/constants/pages.ts`, styles, tests, docs.
+
+Reason: The user asked for a smoother spiral ↔ grid transition and a clear,
+on-brand place for every page in their task list (with temporary content), so
+visitors can navigate easily.
+
+Tests: `npm run check` passed (67 unit tests, build, version, media audit).
+`npm run test:e2e` passed 43 tests, 2 skipped for mobile (keyboard, wheel),
+including footer-sitemap traversal, menu navigation focus, tabs/breadcrumbs,
+and axe checks on new pages. Pages and transitions reviewed at desktop and phone
+widths.
+
 ## [0.2.0] — 2026-10-06
 
 ### Added

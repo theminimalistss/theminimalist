@@ -1,6 +1,6 @@
 export function HeroStatement() {
   return (
-    <div className="hero-statement">
+    <div className="hero-statement" data-morph-chrome="statement">
       <p className="statement-title">
         Less, but
         <br />

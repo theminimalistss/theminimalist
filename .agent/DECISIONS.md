@@ -84,3 +84,27 @@ them without a layout library, and WAAPI avoids per-frame React work.
 
 Impact: Spiral cards keep their scale and tilt into the flight; reversing
 mid-flight starts from the in-flight position. Reduced motion never switches views.
+
+## 2026-10-06 — One navigation structure, layout routes
+
+Decision: `src/router/navigation.ts` defines four groups (Works, Studio, Products,
+Contact) used by the header, menu, footer, tabs, and tests. `SiteLayout` and
+`PageLayout` are React Router layout routes; menu open state is shared through a
+small context.
+
+Reason: Eight requested pages (two with sub-pages) need one predictable map;
+grouping keeps the header to four links.
+
+Impact: Adding a page means adding a route and a navigation entry. Inner pages
+are lazy. Placeholder copy stays in UI constants until a CMS exists.
+
+## 2026-10-06 — Persistent cards across collection views
+
+Decision: Replace separate spiral and gallery trees with one `WorkCollection`
+whose list items change layout class; the spiral loop clears its transforms
+when disabled.
+
+Reason: Remounting reloaded images and videos mid-transition and caused flashes.
+
+Impact: Switching is continuous; the spiral header links stay hidden over the
+moving spiral (desktop) and appear in gallery view and on other pages.

@@ -1,20 +1,21 @@
 import { Link } from 'react-router';
 import { ROUTES } from '@/router/paths';
-import { StudioLogo } from '@/ui/components/StudioLogo';
+import { PageIntro } from '@/ui/sections/Page/PageIntro';
 
 export default function NotFoundPage() {
   return (
-    <main id="main-content" className="not-found">
-      <StudioLogo />
-      <span className="eyebrow">404 — A little too minimal</span>
-      <h1>
-        Nothing here.
-        <br />
-        <em className="serif">Something good awaits.</em>
-      </h1>
+    <PageIntro
+      eyebrow="404 — A little too minimal"
+      title="Nothing here."
+      accent="Something good awaits."
+      lead="The page you’re looking for has moved or doesn’t exist yet."
+    >
       <Link className="text-button" to={ROUTES.home}>
         Back to the collection ↗
       </Link>
-    </main>
+      <Link className="text-button" to={ROUTES.contact}>
+        Contact the studio ↗
+      </Link>
+    </PageIntro>
   );
 }

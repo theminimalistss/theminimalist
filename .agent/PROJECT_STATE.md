@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — independent design studio website
-VERSION: 0.2.0
-STATUS: Phase 1 implemented with WebGL loader, menu morph, wheel steering, view morph
-CURRENT TASK: Review 0.2.0 motion work.
+VERSION: 0.3.0
+STATUS: Landing experience complete; site structure in place with temporary pages
+CURRENT TASK: Review 0.3.0 navigation and placeholder pages.
 
 ## Completed
 
@@ -14,11 +14,14 @@ CURRENT TASK: Review 0.2.0 motion work.
 - Unit/browser tests, CI, tokens, source briefs, docs, and handoff records.
 - 0.2.0: WebGL lotus loader with boot splash, WebGL menu morph, wheel-steered spiral,
   animated spiral ↔ gallery switching.
+- 0.3.0: Site structure (Works, Studio, Products, Contact/Inquiries), fixed header,
+  site-map menu, footer, breadcrumbs/tabs; persistent cards for smooth switching.
 
 ## Known issues / limits
 
 - Concepts and provisional copy need approved replacements before launch.
-- The header still uses the provisional leaf mark; the loader uses the lotus mark.
+- About, Founders, Testimonials, Products, Contact, and Inquiries hold placeholder
+  content; contact details are "To be confirmed"; inquiry forms are not live.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - No production domain, actual client work, contact integration, or later pages yet.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
@@ -29,6 +32,8 @@ CURRENT TASK: Review 0.2.0 motion work.
 `src/hooks/useSpiralLoop.ts`, `src/hooks/useLoaderScene.ts`,
 `src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/shaders/`,
 `src/constants/brand.ts`,
+`src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
-NEXT RECOMMENDED TASK: Decide whether the lotus mark replaces the header leaf mark.
+NEXT RECOMMENDED TASK: Supply real page copy/contact details, then build inquiry forms
+(form → hook → service validation → repository).

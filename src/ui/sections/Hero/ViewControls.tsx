@@ -11,7 +11,7 @@ type Props = {
 
 export function ViewControls({ view, onChange, reducedMotion, count }: Props) {
   return (
-    <div className="collection-heading">
+    <div className="collection-heading" data-morph-chrome="heading">
       <span className="eyebrow collection-kicker">A collection of possibilities</span>
       <h1 id="collection-title">
         Selected

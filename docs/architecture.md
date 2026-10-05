@@ -33,13 +33,16 @@ to cruising speed. Normal scrolling is never intercepted.
 
 ## View switching
 
-`useCollectionMorph` captures each card's pose (`data-work-id`) when the view
-changes: centre, width, and, for spiral cards, the scale and tilt read from the
+`WorkCollection` renders one list for both views, so cards, images, and videos
+persist across a switch; only the layout classes change. `useCollectionMorph`
+captures each card's pose (`data-work-id`) when the view changes: centre, width, and, for spiral cards, the scale and tilt read from the
 spiral transform. After React commits the new view, a layout effect animates
 each card from that pose with the Web Animations API (staggered). Gallery cards
 settle flat; spiral cards land on their live spiral transform, which stays
 paused until the flight ends. The clip window animates between the spiral
-viewport and the full window so cards never cut off abruptly.
+viewport and the full window so cards never cut off abruptly. The heading,
+statement, and footer (`data-morph-chrome`) glide from their old position with
+a soft opacity dip instead of fading out and in.
 
 ## Loader and menu morph
 
@@ -63,7 +66,19 @@ through the native autoplay attribute, which could prematurely start media.
 
 Native modal dialogs contain focus and support Escape. `useDialog` restores the
 invoker and previous page overflow. Project previews are brief study summaries;
-no full project pages are included in Phase 1.
+there are no individual project pages yet.
+
+## Site structure and navigation
+
+`src/router/paths.ts` names every route and `src/router/navigation.ts` groups them
+(Works, Studio, Products, Contact). The header, menu, footer sitemap, section
+tabs, and tests all read that one structure. `SiteLayout` owns the fixed header,
+the site menu (state shared with the hero through `SiteMenuContext` so media
+pauses while it is open), and route focus: on navigation the page scrolls to the
+top and `#main-content` receives focus. `PageLayout` adds the main landmark and
+footer for inner pages. Inner pages are lazy-loaded and composed from small
+`src/ui/sections/Page/` blocks. Their copy is static presentation content; move
+it behind a repository when a CMS arrives.
 
 ## Future integration
 

@@ -10,6 +10,8 @@ import '@/ui/styles/hero-responsive.css';
 import '@/ui/styles/work.css';
 import '@/ui/styles/dialog.css';
 import '@/ui/styles/loader.css';
+import '@/ui/styles/site.css';
+import '@/ui/styles/pages.css';
 import App from '@/App';
 
 const root = document.getElementById('root');

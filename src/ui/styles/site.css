@@ -1,0 +1,219 @@
+.scroll-sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: var(--layer-shell);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-6);
+  min-height: var(--header-height);
+  padding: 0 var(--page-gutter);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+.site-header[data-scrolled] {
+  background: var(--color-canvas);
+  border-bottom-color: var(--color-line);
+}
+.studio-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+}
+.studio-mark {
+  width: 36px;
+  height: auto;
+  color: var(--color-brand);
+}
+.studio-logo-type {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.studio-logo-type > span {
+  display: block;
+  font-size: 6.5px;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  margin-top: 5px;
+}
+.site-nav {
+  display: none;
+}
+.site-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 12px;
+  color: var(--color-muted);
+  transition: color var(--duration-fast) ease;
+}
+.site-nav-link:hover,
+.site-nav-link[aria-current='page'] {
+  color: var(--color-brand);
+}
+.site-nav-link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  height: 1px;
+  background: currentColor;
+}
+.menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: 18px;
+  font-size: 12px;
+  min-height: 44px;
+  padding: 0;
+}
+.page-status {
+  padding: calc(var(--header-height) + 64px) var(--page-gutter);
+  min-height: 100svh;
+}
+
+.site-footer {
+  display: grid;
+  gap: 48px;
+  margin: 0 var(--page-gutter);
+  padding: 64px 0 40px;
+  border-top: var(--border);
+}
+.established {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--color-accent);
+}
+.established-mark {
+  width: 40px;
+  color: var(--color-brand);
+}
+.site-footer-brand p {
+  margin-top: 24px;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+.site-footer-brand em {
+  letter-spacing: -0.02em;
+}
+.site-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+.site-footer-nav h2 {
+  color: var(--color-muted);
+}
+.site-footer-nav ul {
+  display: grid;
+  gap: 2px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.site-footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 13px;
+}
+.site-footer-nav a:hover {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.site-footer-note {
+  padding-top: 24px;
+  border-top: var(--border);
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+@media (min-width: 768px) {
+  .studio-mark {
+    width: 40px;
+  }
+  .studio-logo-type {
+    font-size: 19px;
+  }
+  .studio-logo-type > span {
+    font-size: 7px;
+  }
+  .site-footer {
+    grid-template-columns: 1fr 1.6fr;
+    padding-top: 80px;
+  }
+  .site-footer-nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .site-footer-note {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 900px) {
+  .site-header {
+    grid-template-columns: 1fr auto auto;
+  }
+  .site-nav {
+    display: flex;
+    gap: 28px;
+    margin-right: 20px;
+    animation: site-nav-in var(--duration-reveal) var(--ease-editorial) both;
+  }
+  body:has(.hero--spiral) .site-header {
+    grid-template-columns: 1fr auto;
+  }
+  body:has(.hero--spiral) .site-nav {
+    display: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  .studio-logo {
+    gap: 14px;
+  }
+  .studio-mark {
+    width: 46px;
+  }
+  .studio-logo-type {
+    font-size: 22px;
+  }
+  .studio-logo-type > span {
+    font-size: 8px;
+  }
+  .site-nav-link,
+  .menu-trigger {
+    font-size: 13px;
+  }
+  .menu-trigger {
+    gap: 22px;
+  }
+}
+
+@keyframes site-nav-in {
+  from {
+    opacity: 0;
+  }
+}

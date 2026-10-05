@@ -9,12 +9,16 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Spiral: pure normalized math + one RAF; wrapping outside the clip; no per-frame
   React state; mobile geometry; keyboard foregrounding/pause.
 - Wheel: passive listener boosts spiral velocity; scroll direction sets spin.
-- View switch: `useCollectionMorph` snapshots card poses, then WAAPI flies them
-  into the new layout while the spiral is paused and the clip animates.
+- View switch: one `WorkCollection` keeps the same card elements in both views;
+  `useCollectionMorph` flies them with WAAPI (spiral paused, clip animated) and
+  glides the heading, statement, and footer.
 - Loader/menu: hooks own WebGL scenes (`src/shaders/`), with SVG/CSS fallbacks.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.
 - UI: composed components, native buttons/dialogs, centralized design tokens.
-- Routes: eager homepage, lazy 404; no later site pages.
+- Routes: `SiteLayout` (header, menu, route focus) wraps every page; `PageLayout`
+  adds main + footer for inner pages. Home is eager; other pages are lazy.
+- Navigation: `src/router/navigation.ts` is the single source for header, menu,
+  footer, tabs, and tests.
 
 No global store, animation dependency, runtime API, hotlinks, or secrets.
 See `DECISIONS.md` and `docs/architecture.md` for rationale.

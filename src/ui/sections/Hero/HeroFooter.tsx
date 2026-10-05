@@ -10,7 +10,7 @@ type Props = {
 
 export function HeroFooter({ paused, onToggle, reducedMotion, gallery, onBrowse }: Props) {
   return (
-    <footer className="hero-footer">
+    <footer className="hero-footer" data-morph-chrome="footer">
       <span className="footer-signature">
         EST. 2020 <span aria-hidden="true">—</span> DESIGN WITH INTENTION
       </span>

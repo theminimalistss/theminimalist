@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { COLLECTION_MORPH } from '@/constants/motion';
 import {
+  getChromeKeyframes,
   getClipInset,
   getGalleryKeyframes,
   getSpiralKeyframes,
@@ -9,7 +10,7 @@ import {
 } from '@/utils/collectionMorph';
 import { readSpiralPose } from '@/utils/spiral';
 
-type Snapshot = { poses: Map<string, CardPose>; region: Region };
+type Snapshot = { poses: Map<string, CardPose>; chrome: Map<string, Region>; region: Region };
 
 const cardTiming = (index: number): KeyframeAnimationOptions => ({
   duration: COLLECTION_MORPH.duration,
@@ -47,8 +48,30 @@ function readSnapshot(root: HTMLElement): Snapshot {
       rotateZ: pose?.rotateZ ?? 0,
     });
   }
+  const chrome = new Map<string, Region>();
+  for (const element of root.querySelectorAll<HTMLElement>('[data-morph-chrome]')) {
+    if (element.dataset.morphChrome)
+      chrome.set(element.dataset.morphChrome, element.getBoundingClientRect());
+  }
   const clip = root.querySelector('.spiral-viewport')?.getBoundingClientRect();
-  return { poses, region: clip ?? windowRegion() };
+  return { poses, chrome, region: clip ?? windowRegion() };
+}
+
+function playChrome(root: HTMLElement, from: Map<string, Region>) {
+  return Array.from(root.querySelectorAll<HTMLElement>('[data-morph-chrome]')).flatMap(
+    (element) => {
+      const previous = from.get(element.dataset.morphChrome ?? '');
+      const next = element.getBoundingClientRect();
+      const moved = previous && Math.hypot(previous.left - next.left, previous.top - next.top) > 1;
+      if (!moved || !element.animate) return [];
+      return [
+        element.animate(getChromeKeyframes(previous, next, COLLECTION_MORPH.chromeDip), {
+          duration: COLLECTION_MORPH.duration,
+          easing: COLLECTION_MORPH.easing,
+        }),
+      ];
+    },
+  );
 }
 
 function animateClip(container: HTMLElement | null, from: Region, to: Region, count: number) {
@@ -114,7 +137,10 @@ export function useCollectionMorph(view: 'spiral' | 'gallery') {
     snapshot.current = null;
     if (!from || !root) return;
     const token = ++generation.current;
-    const animations = view === 'spiral' ? playIntoSpiral(root, from) : playIntoGallery(root, from);
+    const animations = [
+      ...(view === 'spiral' ? playIntoSpiral(root, from) : playIntoGallery(root, from)),
+      ...playChrome(root, from.chrome),
+    ];
     void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
       if (generation.current === token) setMorphing(false);
     });

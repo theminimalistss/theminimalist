@@ -71,7 +71,7 @@ test('loads local media, moves continuously, and responds to pause', async ({ pa
   expect(errors).toEqual([]);
 });
 
-test('gallery, project preview, menu, and dismissal work', async ({ page }) => {
+test('gallery, project preview, and dismissal work', async ({ page }) => {
   await openPage(page);
   await page.getByRole('button', { name: 'Gallery', exact: true }).click();
   await expect(
@@ -85,9 +85,7 @@ test('gallery, project preview, menu, and dismissal work', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(dialog).not.toBeVisible();
   await expect(project).toBeFocused();
-  await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await expect(page.getByRole('navigation', { name: 'Collection views' })).toBeVisible();
-  await page.getByRole('button', { name: /Explore in motion/ }).click();
+  await page.getByRole('button', { name: 'Spiral', exact: true }).click();
   await expect(page.locator('.spiral-stage')).toBeVisible();
 });
 
@@ -186,7 +184,7 @@ test('shows the studio loader until the page is ready, then reveals the hero', a
   await expect(loader).toHaveCount(0, { timeout: 10_000 });
   await expect(page.locator('.app-shell')).not.toHaveAttribute('inert', '');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await expect(page.getByRole('navigation', { name: 'Collection views' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Site' })).toBeVisible();
 });
 
 test('menu morphs open and closed, then restores focus', async ({ page }) => {
