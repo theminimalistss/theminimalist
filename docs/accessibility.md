@@ -9,8 +9,13 @@ Tabbing into a moving study foregrounds and pauses it. Gallery view offers a
 stationary alternative. Native dialogs provide focus containment and Escape,
 visible close buttons, and focus restoration. The menu exposes implemented views.
 
+The loader is a polite status region and the page behind it stays `inert` until
+ready. The menu keeps native dialog focus handling; Escape and Close play the
+morph out and then restore focus to the menu button.
+
 `prefers-reduced-motion: reduce` selects a normal, fully discoverable gallery,
-disables automatic video playback, and removes secondary transitions. Preference
+disables automatic video playback, shows a static loader, opens the menu without
+a morph, and removes secondary transitions and their delays. Preference
 changes are handled live. Explicit pause stops movement and video; hidden tabs
 also suspend work.
 

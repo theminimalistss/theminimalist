@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { COMPACT_QUERY } from '@/constants/motion';
+import { useCollectionMorph } from '@/hooks/useCollectionMorph';
 import { useHeroWorks } from '@/hooks/useHeroWorks';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
@@ -27,15 +28,17 @@ export function Hero() {
   const view = reducedMotion ? 'gallery' : preferredView;
   const works = state.status === 'ready' ? state.works : [];
   const mediaPlaying = !paused && !reducedMotion && !menuOpen && !selectedWork && pageVisible;
+  const { rootRef, morphing, capture } = useCollectionMorph(view);
 
   function changeView(nextView: CollectionView) {
+    if (nextView !== view) capture();
     setView(nextView);
     setInspecting(false);
     setMenuOpen(false);
   }
 
   return (
-    <div className={`hero hero--${view}`}>
+    <div ref={rootRef} className={`hero hero--${view}`} data-morphing={morphing ? '' : undefined}>
       <HeroHeader onMenu={() => setMenuOpen(true)} menuOpen={menuOpen} />
       <main
         id="main-content"
@@ -73,7 +76,7 @@ export function Hero() {
           (view === 'spiral' ? (
             <WorkSpiral
               works={works}
-              paused={!mediaPlaying || inspecting}
+              paused={!mediaPlaying || inspecting || morphing}
               mediaPlaying={mediaPlaying}
               compact={compact}
               onSelect={setSelectedWork}

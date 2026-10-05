@@ -25,8 +25,35 @@ duplicated. A 90-second cycle creates slow exhibition movement.
 resized. It cancels frames while paused, hidden, inspecting, or behind a dialog.
 Keyboard-focused work moves to the foreground and holds still. Reduced motion
 selects a normal scrolling gallery and prevents video playback. Compact geometry
-changes radius, depth, and rotation; CSS handles other layout differences. Normal
-scrolling is never intercepted.
+changes radius, depth, and rotation; CSS handles other layout differences.
+
+A passive wheel listener steers the moving spiral: each wheel delta adds velocity
+(capped), the scroll direction sets the cruise direction, and velocity eases back
+to cruising speed. Normal scrolling is never intercepted.
+
+## View switching
+
+`useCollectionMorph` captures each card's pose (`data-work-id`) when the view
+changes: centre, width, and, for spiral cards, the scale and tilt read from the
+spiral transform. After React commits the new view, a layout effect animates
+each card from that pose with the Web Animations API (staggered). Gallery cards
+settle flat; spiral cards land on their live spiral transform, which stays
+paused until the flight ends. The clip window animates between the spiral
+viewport and the full window so cards never cut off abruptly.
+
+## Loader and menu morph
+
+`usePageReady` waits for the window load event, fonts, and a minimum intro (with
+a maximum cap). `PageLoader` keeps the app shell `inert` until then.
+`useLoaderScene` paints the lotus mark and “EST. 2020” into a texture
+(`lotusArtwork.ts`) and renders `src/shaders/loader.ts`: a bloom from the
+flower's base, a shimmer while waiting, then an organic opening onto the hero. A
+boot splash in `index.html` matches the loader before JavaScript runs.
+
+`useMenuMorph` keeps the menu dialog rendered through `opening` → `open` →
+`closing` → `closed`, rendering `src/shaders/menuMorph.ts` from the close button's
+position. Without WebGL it animates a CSS `clip-path` circle; with reduced motion
+the phases switch instantly.
 
 ## Media and dialogs
 

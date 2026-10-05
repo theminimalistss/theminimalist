@@ -128,6 +128,9 @@
   overflow: clip;
   z-index: var(--layer-works);
 }
+.hero[data-morphing] .spiral-viewport {
+  overflow: visible;
+}
 .spiral-stage {
   position: absolute;
   inset: 0;

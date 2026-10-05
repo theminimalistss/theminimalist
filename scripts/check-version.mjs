@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 const read = (file) => readFile(file, 'utf8');
 const { version } = JSON.parse(await read('package.json'));
 const lock = JSON.parse(await read('package-lock.json'));
-const changelog = await read('CHANGELOG.md');
+const changelog = await read('.agent/CHANGELOG.md');
 const state = await read('.agent/PROJECT_STATE.md');
 if (
   !/^\d+\.\d+\.\d+$/u.test(version) ||
@@ -13,7 +13,7 @@ if (
   !state.includes(`VERSION: ${version}`)
 ) {
   console.error(
-    'Version mismatch. Update package.json, package-lock.json, CHANGELOG.md, and .agent/PROJECT_STATE.md together.',
+    'Version mismatch. Update package.json, package-lock.json, .agent/CHANGELOG.md, and .agent/PROJECT_STATE.md together.',
   );
   process.exitCode = 1;
 } else {

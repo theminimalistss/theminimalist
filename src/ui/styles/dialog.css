@@ -66,11 +66,64 @@ dialog::backdrop {
   max-height: none;
   margin: 0;
   padding: 24px var(--page-gutter);
-  background: var(--color-brand);
+  background: transparent;
   color: var(--color-canvas);
 }
-.studio-menu::backdrop {
+.studio-menu[data-phase='open'] {
   background: var(--color-brand);
+}
+.studio-menu[data-phase='closing'] {
+  pointer-events: none;
+}
+.studio-menu::backdrop {
+  background: transparent;
+}
+.menu-morph {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.menu-morph[data-renderer='css'] {
+  background: var(--color-brand);
+  clip-path: circle(0 at 100% 0);
+}
+.menu-top,
+.menu-body,
+.menu-bottom {
+  position: relative;
+  opacity: 0;
+}
+.studio-menu:is([data-phase='opening'], [data-phase='open'])
+  :is(.menu-top, .menu-body, .menu-bottom) {
+  opacity: 1;
+  animation: menu-content-in 800ms var(--ease-editorial) var(--menu-reveal-delay, 560ms) both;
+}
+.studio-menu[data-phase='closing'] :is(.menu-top, .menu-body, .menu-bottom) {
+  animation: menu-content-out 160ms ease both;
+}
+.menu-body {
+  --menu-reveal-delay: 620ms;
+}
+.menu-bottom {
+  --menu-reveal-delay: 680ms;
+}
+
+@keyframes menu-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes menu-content-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 .studio-menu button:focus-visible {
   outline-color: var(--color-canvas);

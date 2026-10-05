@@ -86,12 +86,12 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning begins at `0.1.0`. Keep `package.json`, `package-lock.json`,
-`CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
+Semantic Versioning (currently `0.2.0`). Keep `package.json`, `package-lock.json`,
+`.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 
 Future agents start with [project state](.agent/PROJECT_STATE.md),
 [decisions](.agent/DECISIONS.md), and [architecture](.agent/ARCHITECTURE.md), then
-inspect only relevant modules. Update the state and AI changelog after meaningful
-changes. The root changelog records releases; `.agent/CHANGELOG.md` records
-implementation sessions and validation.
+inspect only relevant modules. Update the state and changelog after meaningful
+changes. [`.agent/CHANGELOG.md`](.agent/CHANGELOG.md) is the single changelog for
+releases and implementation sessions.

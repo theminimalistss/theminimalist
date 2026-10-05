@@ -13,7 +13,11 @@ Budgets enforced by `npm run media:audit`:
 - Image derivative: at most 200,000 bytes.
 - Video format: at most 1,250,000 bytes.
 - Videos: 576×720, 24 fps, approximately 8 seconds, no audio.
-- Transform-only continuous movement; no scroll interception or animation library.
+- Transform-only continuous movement; passive wheel steering, no animation library.
+- WebGL effects draw one fullscreen triangle, cap pixel ratio at 2, and run only
+  while the loader is shown or the menu is morphing.
+- View switches use compositor-friendly WAAPI transform animations; the spiral's
+  RAF loop pauses during the flight.
 
 Targets: Lighthouse performance 90+, accessibility/best practices/SEO 95+.
 Measure the production build with representative mobile throttling and autoplay.

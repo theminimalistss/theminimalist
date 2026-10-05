@@ -24,3 +24,8 @@ Object.defineProperty(HTMLMediaElement.prototype, 'play', {
   value: vi.fn().mockResolvedValue(undefined),
 });
 Object.defineProperty(HTMLMediaElement.prototype, 'pause', { writable: true, value: vi.fn() });
+
+Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+  writable: true,
+  value: vi.fn().mockReturnValue(null),
+});

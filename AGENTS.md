@@ -9,7 +9,7 @@ the Phase 1 landing experience only.
 - Browser animation/playback belongs in hooks; domain rules stay in services.
 - Do not hotlink media or represent concept studies as commissioned work.
 - Run `npm run check`; run `npm run test:e2e` for interaction changes.
-- Update `.agent/PROJECT_STATE.md` and `.agent/CHANGELOG.md` after meaningful work.
+- Update `.agent/PROJECT_STATE.md` and `.agent/CHANGELOG.md` (the only changelog) after meaningful work.
 - Keep release versions aligned using `docs/versioning.md`.
 - Do not push or publish remote releases without the user's authorization.
 

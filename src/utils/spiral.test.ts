@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { getSpiralPosition, wrapProgress } from '@/utils/spiral';
+import { MOTION } from '@/constants/motion';
+import {
+  applyWheelImpulse,
+  getCruiseVelocity,
+  getSpiralPosition,
+  normalizeWheelDelta,
+  settleVelocity,
+  wrapProgress,
+} from '@/utils/spiral';
 
 describe('spatial loop', () => {
   const desktop = { width: 900, height: 800, cardWidth: 400, compact: false };
@@ -39,5 +47,35 @@ describe('spatial loop', () => {
       expect(position.scale).toBeGreaterThan(0);
       expect(position.transform).not.toMatch(/NaN|Infinity/);
     }
+  });
+});
+
+describe('wheel steering', () => {
+  const rising = getCruiseVelocity(1);
+
+  it('keeps the default direction for scrolling down and reverses for scrolling up', () => {
+    expect(rising).toBeCloseTo(-1 / MOTION.loopDuration);
+    expect(getCruiseVelocity(-1)).toBeCloseTo(1 / MOTION.loopDuration);
+    expect(applyWheelImpulse(rising, 100)).toBeLessThan(rising);
+    expect(applyWheelImpulse(rising, -400)).toBeGreaterThan(0);
+  });
+
+  it('caps the boost in both directions', () => {
+    expect(applyWheelImpulse(0, 1e6)).toBe(-MOTION.maxVelocity);
+    expect(applyWheelImpulse(0, -1e6)).toBe(MOTION.maxVelocity);
+  });
+
+  it('eases a boosted spin back to cruising speed', () => {
+    const boosted = applyWheelImpulse(rising, 300);
+    const shortly = settleVelocity(boosted, rising, 100);
+    expect(Math.abs(shortly)).toBeLessThan(Math.abs(boosted));
+    expect(Math.abs(shortly)).toBeGreaterThan(Math.abs(rising));
+    expect(settleVelocity(boosted, rising, 10_000)).toBeCloseTo(rising, 8);
+  });
+
+  it('converts line and page wheel deltas to pixels', () => {
+    expect(normalizeWheelDelta(3, 0, 800)).toBe(3);
+    expect(normalizeWheelDelta(3, 1, 800)).toBe(48);
+    expect(normalizeWheelDelta(-1, 2, 800)).toBe(-800);
   });
 });

@@ -14,7 +14,7 @@ type Props = {
 
 export function WorkItem({ work, index, playing, onSelect, priority = false, sizes }: Props) {
   return (
-    <article className={`work-item work-item--${work.artDirection}`}>
+    <article className={`work-item work-item--${work.artDirection}`} data-work-id={work.id}>
       {work.mediaType === 'image' ? (
         <WorkImage
           image={work.image}

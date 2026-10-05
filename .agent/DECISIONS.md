@@ -44,3 +44,43 @@ Semantic Versioning from 0.1.0, separate release and AI-session logs.
 Reason: Future CMS replacement and efficient developer/AI handoff.
 
 Impact: Tested data contract and automated version consistency checking.
+
+## 2026-10-06 — Raw WebGL for brand moments
+
+Decision: Loader and menu morph use small fullscreen WebGL 1 shaders driven by
+hooks; no Three.js or animation library.
+
+Reason: Two single-quad effects do not justify a dependency; WebGL 1 has the
+widest support.
+
+Impact: Each effect has a static/CSS fallback for reduced motion, missing WebGL,
+or context loss. Colors come from CSS tokens at runtime.
+
+## 2026-10-06 — Wheel steers, never intercepts
+
+Decision: A passive window wheel listener adds velocity to the spiral and sets its
+cruise direction; it never calls `preventDefault`.
+
+Reason: Users asked for scroll-driven speed/direction; page scrolling and
+accessibility (pause, reduced motion) must keep working.
+
+Impact: Steering only runs while the spiral is moving; pause stops it.
+
+## 2026-10-06 — Single changelog in `.agent`
+
+Decision: `.agent/CHANGELOG.md` holds release notes and AI session logs; the root
+`CHANGELOG.md` was removed. `npm run version:check` reads the `.agent` file.
+
+Reason: User direction — the changelog belongs with the AI handoff records.
+
+## 2026-10-06 — View switching flies cards with the Web Animations API
+
+Decision: Before a view change, read each card's on-screen pose; after React
+commits the new view, animate each card from that pose with `element.animate`.
+The spiral pauses until the flight lands, and the clip region animates with it.
+
+Reason: The spiral and gallery are different DOM trees; a pose snapshot bridges
+them without a layout library, and WAAPI avoids per-frame React work.
+
+Impact: Spiral cards keep their scale and tilt into the flight; reversing
+mid-flight starts from the in-flight position. Reduced motion never switches views.

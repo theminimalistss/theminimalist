@@ -9,6 +9,7 @@ import '@/ui/styles/hero.css';
 import '@/ui/styles/hero-responsive.css';
 import '@/ui/styles/work.css';
 import '@/ui/styles/dialog.css';
+import '@/ui/styles/loader.css';
 import App from '@/App';
 
 const root = document.getElementById('root');

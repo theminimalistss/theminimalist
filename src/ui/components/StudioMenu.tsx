@@ -1,4 +1,5 @@
 import { useDialog } from '@/hooks/useDialog';
+import { useMenuMorph } from '@/hooks/useMenuMorph';
 import { Icon } from '@/ui/components/Icon';
 
 type Props = {
@@ -9,18 +10,28 @@ type Props = {
 };
 
 export function StudioMenu({ open, onClose, onView, reducedMotion }: Props) {
-  const ref = useDialog(open);
+  const { phase, rendered, canvasRef, originRef, settle } = useMenuMorph(open, reducedMotion);
+  const ref = useDialog(rendered);
   return (
     <dialog
       ref={ref}
       id="studio-menu"
       className="studio-menu"
+      data-phase={phase}
       aria-labelledby="menu-title"
-      onCancel={onClose}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClose={() => {
+        settle();
+        onClose();
+      }}
     >
+      <canvas ref={canvasRef} className="menu-morph" aria-hidden="true" />
       <div className="menu-top">
         <span className="eyebrow">THE MINIMALIST</span>
-        <button className="menu-trigger" onClick={onClose}>
+        <button ref={originRef} className="menu-trigger" onClick={onClose}>
           Close <Icon name="close" />
         </button>
       </div>

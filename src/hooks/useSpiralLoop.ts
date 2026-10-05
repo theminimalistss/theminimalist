@@ -1,12 +1,21 @@
 import { useLayoutEffect, useRef } from 'react';
 import { MOTION } from '@/constants/motion';
-import { getSpiralPosition, wrapProgress } from '@/utils/spiral';
+import {
+  applyWheelImpulse,
+  getCruiseVelocity,
+  getSpiralPosition,
+  normalizeWheelDelta,
+  settleVelocity,
+  wrapProgress,
+} from '@/utils/spiral';
 
 type Options = { count: number; paused: boolean; compact: boolean };
 
 export function useSpiralLoop({ count, paused, compact }: Options) {
   const stageRef = useRef<HTMLDivElement>(null);
   const progress = useRef(0.5);
+  const cruise = useRef(getCruiseVelocity(1));
+  const velocity = useRef(getCruiseVelocity(1));
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -50,19 +59,32 @@ export function useSpiralLoop({ count, paused, compact }: Options) {
     };
     stage.addEventListener('focusin', focusWork);
 
+    const steer = (event: WheelEvent) => {
+      if (event.ctrlKey || !event.deltaY) return;
+      const delta = normalizeWheelDelta(event.deltaY, event.deltaMode, window.innerHeight);
+      cruise.current = getCruiseVelocity(delta > 0 ? 1 : -1);
+      velocity.current = applyWheelImpulse(velocity.current, delta);
+    };
+
     const animate = (time: number) => {
       const delta = lastTime ? Math.min(time - lastTime, MOTION.maxFrameDelta) : 0;
       lastTime = time;
-      progress.current = wrapProgress(progress.current - delta / MOTION.loopDuration);
+      velocity.current = settleVelocity(velocity.current, cruise.current, delta);
+      progress.current = wrapProgress(progress.current + velocity.current * delta);
       draw();
       frame = requestAnimationFrame(animate);
     };
-    if (!paused) frame = requestAnimationFrame(animate);
+    if (!paused) {
+      frame = requestAnimationFrame(animate);
+      window.addEventListener('wheel', steer, { passive: true });
+    }
 
     return () => {
       cancelAnimationFrame(frame);
       resize.disconnect();
       stage.removeEventListener('focusin', focusWork);
+      window.removeEventListener('wheel', steer);
+      velocity.current = cruise.current;
     };
   }, [count, paused, compact]);
 

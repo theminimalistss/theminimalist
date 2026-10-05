@@ -254,3 +254,32 @@
     padding: 0;
   }
 }
+
+.gallery-caption {
+  animation: caption-in 600ms var(--ease-editorial) 550ms both;
+}
+.hero--gallery :is(.collection-heading, .hero-statement, .hero-footer) {
+  animation: chrome-in-gallery 700ms var(--ease-editorial) 120ms both;
+}
+.hero--spiral :is(.collection-heading, .hero-statement, .hero-footer) {
+  animation: chrome-in-spiral 700ms var(--ease-editorial) 120ms both;
+}
+
+@keyframes caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes chrome-in-gallery {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes chrome-in-spiral {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
