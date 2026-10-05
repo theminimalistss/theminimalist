@@ -1,13 +1,9 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-
-async function openPage(page: Page, path: string) {
-  await page.goto(path);
-  await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 10_000 });
-}
+import { openPage, revealAll } from './helpers';
 
 const FOOTER_PAGES = [
-  ['About', /An independent design studio/],
+  ['About', /The Minimalist/],
   ['Founders', /The people/],
   ['Testimonials', /Kind words/],
   ['Works', /Selected works/],
@@ -26,7 +22,7 @@ test('the footer sitemap reaches every page', async ({ page }) => {
   for (const [label, heading] of FOOTER_PAGES) {
     await footer.getByRole('link', { name: label, exact: true }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
-    await expect(page).toHaveTitle(/— The Minimalist$/);
+    await expect(page).toHaveTitle(new RegExp(`^${label}.* — The Minimalist$`));
   }
 });
 
@@ -77,9 +73,38 @@ test('new pages pass accessibility checks', async ({ page }) => {
     '/inquiries/quote',
   ]) {
     await openPage(page, path);
+    await revealAll(page);
     const result = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze();
     expect(result.violations, path).toEqual([]);
   }
+});
+
+test('menu rows open a preview panel and a cursor cue on hover', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Hover previews are for fine pointers.');
+  await openPage(page, '/about');
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  const menu = page.locator('#studio-menu');
+  await expect(menu).toHaveAttribute('data-phase', 'open');
+  const row = page.locator('.menu-row').filter({ hasText: 'Products' }).first();
+  const box = await row.boundingBox();
+  if (!box) throw new Error('Menu row is not visible.');
+  await page.mouse.move(box.x + box.width * 0.7, box.y + 24);
+  await expect(page.locator('.menu-cue')).toHaveAttribute('data-visible', '');
+  await expect(page.locator('.menu-cue')).toHaveText('Browse products');
+  await expect
+    .poll(() => row.locator('.menu-preview').evaluate((preview) => preview.clientHeight))
+    .toBeGreaterThan(60);
+  await page.mouse.move(box.x - 200, box.y - 200);
+  await expect(page.locator('.menu-cue')).not.toHaveAttribute('data-visible', '');
+});
+
+test('content reveals as it scrolls into view', async ({ page }) => {
+  await openPage(page, '/about');
+  const footerNav = page.getByRole('navigation', { name: 'Footer' });
+  await expect(footerNav).not.toHaveAttribute('data-revealed', '');
+  await footerNav.scrollIntoViewIfNeeded();
+  await expect(footerNav).toHaveAttribute('data-revealed', '');
+  await expect(page.locator('.page-intro')).toHaveAttribute('data-revealed', '');
 });

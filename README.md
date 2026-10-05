@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Independent design studio · v0.3.0 · Landing experience + site structure**
+**Design studio · v0.4.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing

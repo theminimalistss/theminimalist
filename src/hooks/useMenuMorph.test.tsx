@@ -38,9 +38,11 @@ describe('menu morph', () => {
     expect(state()).toBe('closed:hidden');
   });
 
-  it('falls back to a clipped CSS reveal without WebGL', async () => {
+  it('prepares the renderer when idle and falls back to a CSS reveal without WebGL', async () => {
     const { container, rerender } = render(<Harness open={false} />);
     const canvas = container.querySelector('canvas');
+    expect(canvas).not.toHaveAttribute('data-renderer');
+    await act(() => vi.advanceTimersByTimeAsync(3_000));
     expect(canvas).toHaveAttribute('data-renderer', 'css');
     rerender(<Harness open />);
     await act(() => vi.advanceTimersByTimeAsync(400));

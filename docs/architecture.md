@@ -44,6 +44,22 @@ viewport and the full window so cards never cut off abruptly. The heading,
 statement, and footer (`data-morph-chrome`) glide from their old position with
 a soft opacity dip instead of fading out and in.
 
+## Transitions and reveals
+
+`AppRouter` uses `createBrowserRouter` with `RouterProvider` from
+`react-router/dom`. `PageLink` (all links except the menu's) sets
+`viewTransition`: CSS lifts and fades the old snapshot while the header, which
+has its own `view-transition-name`, stays still. `SiteLayout` keys the outlet by
+path so every new page fades in, with or without the API. `useScrollReveal`
+watches `[data-reveal="item"]` elements and `[data-reveal="stagger"]` groups with
+one IntersectionObserver (plus a MutationObserver for new routes) and marks them
+`data-revealed`; CSS provides the rise. Reduced motion shows everything at once.
+
+`WorkDialog` uses `useMediaFlight`: on open, a temporary image reuses the card's
+loaded source and animates from the card's box to the preview image box while
+the panel fades up; on close it flies back, then the parent clears the
+selection, so the spiral stays paused until the card is visible again.
+
 ## Loader and menu morph
 
 `usePageReady` waits for the window load event, fonts, and a minimum intro (with
@@ -52,6 +68,15 @@ a maximum cap). `PageLoader` keeps the app shell `inert` until then.
 (`lotusArtwork.ts`) and renders `src/shaders/loader.ts`: a bloom from the
 flower's base, a shimmer while waiting, then an organic opening onto the hero. A
 boot splash in `index.html` matches the loader before JavaScript runs.
+
+`useIntro` asks `visit.service` whether this session has already seen the intro
+(`visit.repository` wraps `sessionStorage` and tolerates blocked storage); the
+first load gets the full bloom, later loads a brief one.
+
+Menu rows reveal a square Cashmere Beige panel, a 4:5 section preview
+(`src/constants/menu.ts`), and a cursor-following eyebrow tag on fine pointers (`usePointerCue`, eased RAF only
+while moving). Keyboard focus shows the same panel without the cue. Each row's
+link is stretched over the row; sub-links sit above it.
 
 `useMenuMorph` keeps the menu dialog rendered through `opening` → `open` →
 `closing` → `closed`, rendering `src/shaders/menuMorph.ts` from the close button's

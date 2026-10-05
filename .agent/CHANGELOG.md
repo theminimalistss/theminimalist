@@ -5,6 +5,68 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-10-06
+
+### Added
+
+- Menu hover effect inspired by list-style project indexes, drawn in the site's
+  own language: the hovered row opens a square Cashmere Beige panel (like the
+  link cards), a 4:5 section preview slides in (like the work cards), the title
+  shifts, and an eyebrow tag (“Meet the studio ↗”) follows the cursor. Keyboard
+  focus shows the same panel. Timing uses the shared reveal/ease tokens.
+- Page transitions: the old page lifts and fades (View Transitions API) while the
+  header stays put; the new page fades in. Browsers without View Transitions get
+  the fade-in only. The menu keeps its own morph.
+- Scroll reveal: page intros, section heads, cards, lists, placeholders, Works
+  gallery items, and the footer rise into place as they enter the viewport.
+- Work previews: the tapped card's media flies into the preview and flies back
+  into the card on close, with a fading backdrop and panel.
+
+### Changed
+
+- Studio name is “The Minimalist — Design Studio” everywhere (logo, titles,
+  meta, footer, menu, About, share image). Page titles use the page name.
+- Router moved to `createBrowserRouter` + `RouterProvider` so links can use view
+  transitions; router errors render the studio error page.
+- Skip link reads “Skip to main content” now that it serves every page.
+- Section tabs use the square radius token instead of pills.
+
+### Fixed
+
+- The spiral now resumes when a work preview closes. Only Tab navigation (not a
+  click or programmatic focus) holds and foregrounds a study.
+- Loader shine: the sweep now starts after the bloom in both intro lengths, and
+  the loader waits for one full sweep before opening; glow strengthened.
+
+### Performance
+
+- Full loader intro plays once per session; repeat loads use a brief intro
+  (≈2s faster to interactive in testing).
+- Inner page chunks prefetch when idle; navigation no longer waits or shows a
+  fallback.
+- Menu WebGL is prepared when idle instead of at startup; the loader releases
+  its WebGL context after exiting.
+- Spiral skips unchanged z-index writes; shared status, index formatting, and
+  e2e helpers remove duplication; unused CSS removed.
+
+### AI session
+
+Changed: `src/hooks/{usePointerCue,useIntro,useMenuMorph,useLoaderScene,useSpiralLoop,useHeroWorks}.ts`,
+`src/repositories/visit.repository.ts`, `src/services/visit.service.ts`,
+`src/router/pageModules.ts`, `src/constants/{menu,motion}.ts`, `src/utils/{idle,format}.ts`,
+`src/ui/components/{StudioMenu,CollectionStatus,PageLoader}.tsx`, `src/App.tsx`,
+styles, tests, docs.
+
+Reason: The user asked for the grigoletti.ch project-list hover effect (in the
+site's design language), an optimization pass, the correct studio name, page
+transitions and scroll reveals, a preview media flight, the spiral to resume
+after a preview, and the loader shine back.
+
+Tests: `npm run check` passed (69 unit tests, build, version, media audit).
+`npm run test:e2e` passed 54 tests, 3 skipped for mobile (keyboard, wheel,
+hover), including preview flight + spiral resume, scroll reveal, and axe after
+reveal. Hover, shine, flight, and page-transition frames reviewed in Chromium.
+
 ## [0.3.0] — 2026-10-06
 
 ### Added

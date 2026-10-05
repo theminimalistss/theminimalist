@@ -1,3 +1,4 @@
+import { useKeyboardModality } from '@/hooks/useKeyboardModality';
 import { useSpiralLoop } from '@/hooks/useSpiralLoop';
 import type { Work } from '@/types/work';
 import { WorkItem } from '@/ui/components/WorkItem';
@@ -14,6 +15,7 @@ type Props = {
   paused?: boolean;
   compact?: boolean;
   onInspect?: (inspecting: boolean) => void;
+  reveal?: boolean;
 };
 
 export function WorkCollection({
@@ -24,9 +26,17 @@ export function WorkCollection({
   paused = true,
   compact = false,
   onInspect,
+  reveal = false,
 }: Props) {
   const spiral = view === 'spiral';
-  const stageRef = useSpiralLoop({ count: works.length, paused, compact, enabled: spiral });
+  const keyboard = useKeyboardModality();
+  const stageRef = useSpiralLoop({
+    count: works.length,
+    paused,
+    compact,
+    enabled: spiral,
+    keyboard,
+  });
   return (
     <div
       className={spiral ? 'spiral-viewport' : 'gallery-viewport'}
@@ -39,7 +49,13 @@ export function WorkCollection({
         ref={stageRef}
         className={spiral ? 'spiral-stage' : 'work-gallery'}
         aria-label="Selected design studies"
-        onFocusCapture={spiral ? () => onInspect?.(true) : undefined}
+        onFocusCapture={
+          spiral
+            ? () => {
+                if (keyboard.current) onInspect?.(true);
+              }
+            : undefined
+        }
         onBlurCapture={
           spiral
             ? (event) => {
@@ -49,7 +65,11 @@ export function WorkCollection({
         }
       >
         {works.map((work, index) => (
-          <li key={work.id} data-spiral-item={spiral ? '' : undefined}>
+          <li
+            key={work.id}
+            data-spiral-item={spiral ? '' : undefined}
+            data-reveal={reveal && !spiral ? 'item' : undefined}
+          >
             <WorkItem
               work={work}
               index={index}

@@ -48,11 +48,6 @@
 .page-section-body > * + * {
   margin-top: 32px;
 }
-.page-copy {
-  max-width: 58ch;
-  font-size: 15px;
-  line-height: 1.7;
-}
 
 .breadcrumbs {
   padding: 32px var(--page-gutter) 0;
@@ -95,7 +90,7 @@
   min-height: 40px;
   padding: 0 18px;
   border: var(--border);
-  border-radius: 999px;
+  border-radius: var(--radius);
   font-size: 12px;
   transition:
     background-color var(--duration-fast) ease,

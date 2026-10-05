@@ -9,6 +9,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 import { useSiteMenu } from '@/hooks/useSiteMenu';
 import type { Work } from '@/types/work';
+import { CollectionStatus } from '@/ui/components/CollectionStatus';
 import { WorkDialog } from '@/ui/components/WorkDialog';
 import { HeroFooter } from '@/ui/sections/Hero/HeroFooter';
 import { HeroStatement } from '@/ui/sections/Hero/HeroStatement';
@@ -51,26 +52,7 @@ export function Hero() {
           reducedMotion={reducedMotion}
           count={works.length}
         />
-        {state.status === 'loading' && (
-          <div className="collection-status" role="status">
-            <span className="loading-line" />
-            Gathering a little inspiration…
-          </div>
-        )}
-        {state.status === 'error' && (
-          <div className="collection-status" role="alert">
-            <p>{state.message}</p>
-            <button className="text-button" onClick={state.retry}>
-              Try again ↗
-            </button>
-          </div>
-        )}
-        {state.status === 'ready' && works.length === 0 && (
-          <div className="collection-status">
-            <p>A new collection is taking shape.</p>
-            <span>Come back soon for a little inspiration.</span>
-          </div>
-        )}
+        <CollectionStatus state={state} className="collection-status" />
         {works.length > 0 && (
           <WorkCollection
             works={works}

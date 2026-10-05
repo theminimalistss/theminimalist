@@ -108,3 +108,38 @@ Reason: Remounting reloaded images and videos mid-transition and caused flashes.
 
 Impact: Switching is continuous; the spiral header links stay hidden over the
 moving spiral (desktop) and appear in gallery view and on other pages.
+
+## 2026-10-06 — Session-aware intro and idle work
+
+Decision: The full loader intro plays once per session (a `sessionStorage` flag
+behind `visit.repository` and `visit.service`); later loads get a brief intro.
+Non-critical work (menu WebGL setup, page chunk prefetch) runs in idle callbacks.
+
+Reason: The brand intro should not tax every reload; startup should only do what
+the first frame needs.
+
+Impact: Repeat loads are about 2s faster in testing; navigation is instant after
+idle. Blocked storage falls back to the full intro.
+
+## 2026-10-06 — Data router for view transitions
+
+Decision: Use `createBrowserRouter` + `RouterProvider` (react-router/dom) and a
+`PageLink` that sets `viewTransition`. CSS animates only the old snapshot; the
+new page uses its own enter and scroll-reveal animations.
+
+Reason: React Router runs View Transitions only in data mode; animating the new
+page with CSS keeps one entrance style whether or not the API exists.
+
+Impact: All links except the menu (which has its own morph) transition. The
+fixed header has its own view-transition name so it stays still.
+
+## 2026-10-06 — Tab modality holds the spiral
+
+Decision: Only Tab navigation (tracked by `useKeyboardModality`) holds and
+foregrounds a spiral study; pointer input clears it.
+
+Reason: WebKit treats programmatic focus as `:focus-visible`, so restoring focus
+after a preview kept the spiral paused for mouse and touch users.
+
+Impact: Keyboard users keep the accessible hold; everyone else sees motion
+resume when a preview closes.

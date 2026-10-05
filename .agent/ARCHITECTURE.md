@@ -13,6 +13,13 @@ UI → hooks → services → repositories. Static presentation is the exception
   `useCollectionMorph` flies them with WAAPI (spiral paused, clip animated) and
   glides the heading, statement, and footer.
 - Loader/menu: hooks own WebGL scenes (`src/shaders/`), with SVG/CSS fallbacks.
+  Menu GL is prepared when idle; full intro once per session (visit service).
+- Menu hover: beige panel + 4:5 preview + `usePointerCue` eyebrow tag (fine pointers),
+  styled with the site's radius, colour, and timing tokens.
+- Pages: `src/router/pageModules.ts` lazy-loads and idle-prefetches page chunks.
+- Transitions: data router + `PageLink` (view transitions), keyed route fade,
+  `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
+- Previews: `useMediaFlight` flies card media into `WorkDialog` and back.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.
 - UI: composed components, native buttons/dialogs, centralized design tokens.
 - Routes: `SiteLayout` (header, menu, route focus) wraps every page; `PageLayout`

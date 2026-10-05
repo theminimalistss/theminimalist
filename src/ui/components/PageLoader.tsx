@@ -2,10 +2,10 @@ import { LOTUS_MARK } from '@/constants/brand';
 import { useLoaderScene } from '@/hooks/useLoaderScene';
 import { LotusMark } from '@/ui/components/LotusMark';
 
-type Props = { ready: boolean; animated: boolean; onExited: () => void };
+type Props = { ready: boolean; animated: boolean; bloomDuration: number; onExited: () => void };
 
-export function PageLoader({ ready, animated, onExited }: Props) {
-  const { rootRef, canvasRef } = useLoaderScene({ ready, animated, onExited });
+export function PageLoader({ ready, animated, bloomDuration, onExited }: Props) {
+  const { rootRef, canvasRef } = useLoaderScene({ ready, animated, bloomDuration, onExited });
   const [before, after] = LOTUS_MARK.established;
   return (
     <div

@@ -17,12 +17,13 @@ export default function FoundersPage() {
     <>
       <PageIntro
         eyebrow="Studio — Founders"
+        documentTitle="Founders"
         title="The people"
         accent="behind the studio."
         lead="A small team with a shared belief: good design should feel calm, honest, and a little personal."
       />
       <PageSection eyebrow="Founders" title="Profiles in progress.">
-        <ul className="profile-cards">
+        <ul className="profile-cards" data-reveal="stagger">
           {PROFILES.map((role) => (
             <li key={role}>
               <div className="profile-portrait">

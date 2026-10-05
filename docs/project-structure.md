@@ -19,6 +19,8 @@
 | `src/ui/sections/Hero/`                 | Hero shell, controls, `WorkCollection`, statement, footer         |
 | `src/ui/sections/Page/`                 | Page intro, sections, link cards, tabs, breadcrumbs, placeholders |
 | `src/constants/pages.ts`                | Temporary product and inquiry copy                                |
+| `src/constants/menu.ts`                 | Menu section previews and cursor cue labels                       |
+| `src/router/pageModules.ts`             | Lazy page imports shared by routes and idle prefetch              |
 | `src/ui/components/`                    | Logo, media, metadata, dialogs, error boundary                    |
 | `src/ui/styles/`                        | Tokens, typography, global and focused component CSS              |
 | `src/assets/`                           | Optimized production media                                        |

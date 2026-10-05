@@ -1,18 +1,18 @@
-import { Link } from 'react-router';
 import { ROUTES } from '@/router/paths';
 import { LotusMark } from '@/ui/components/LotusMark';
+import { PageLink } from '@/ui/components/PageLink';
 
 export function StudioLogo() {
   return (
-    <Link
+    <PageLink
       className="studio-logo"
       to={ROUTES.home}
-      aria-label="The Minimalist Independent Design Studio — Home"
+      aria-label="The Minimalist Design Studio — Home"
     >
       <LotusMark className="studio-mark" />
       <span className="studio-logo-type">
-        THE MINIMALIST<span>INDEPENDENT DESIGN STUDIO</span>
+        THE MINIMALIST<span>DESIGN STUDIO</span>
       </span>
-    </Link>
+    </PageLink>
   );
 }

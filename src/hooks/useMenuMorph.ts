@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { MENU_MORPH, MOTION } from '@/constants/motion';
 import { MENU_MORPH_SHADER } from '@/shaders/menuMorph';
 import { easeInOutCubic } from '@/utils/easing';
+import { scheduleIdle } from '@/utils/idle';
 import {
   createFullscreenScene,
   fitCanvas,
@@ -54,6 +55,7 @@ export function useMenuMorph(open: boolean, reducedMotion: boolean) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originRef = useRef<HTMLButtonElement>(null);
   const sceneRef = useRef<FullscreenScene | null>(null);
+  const prepareRef = useRef<() => void>(() => undefined);
   const progress = useRef(0);
   const [phase, setPhase] = useState<MorphPhase>('closed');
   const [lastOpen, setLastOpen] = useState(open);
@@ -67,24 +69,33 @@ export function useMenuMorph(open: boolean, reducedMotion: boolean) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const scene = createFullscreenScene(canvas, MENU_MORPH_SHADER);
-    canvas.dataset.renderer = scene ? 'webgl' : 'css';
-    if (!scene) return;
-    scene.gl.uniform3fv(scene.uniform('u_brand'), readColorToken('--color-brand'));
-    scene.gl.uniform3fv(scene.uniform('u_lead'), readColorToken('--color-accent'));
-    sceneRef.current = scene;
+    let scene: FullscreenScene | null = null;
     let lost = false;
+    const prepare = () => {
+      if (canvas.dataset.renderer) return;
+      scene = createFullscreenScene(canvas, MENU_MORPH_SHADER);
+      canvas.dataset.renderer = scene ? 'webgl' : 'css';
+      if (!scene) return;
+      scene.gl.uniform3fv(scene.uniform('u_brand'), readColorToken('--color-brand'));
+      scene.gl.uniform3fv(scene.uniform('u_lead'), readColorToken('--color-accent'));
+      sceneRef.current = scene;
+    };
     const handleLost = (event: Event) => {
       event.preventDefault();
       lost = true;
       sceneRef.current = null;
       canvas.dataset.renderer = 'css';
     };
+    prepareRef.current = prepare;
+    const cancelIdle = scheduleIdle(prepare, 3_000);
     canvas.addEventListener('webglcontextlost', handleLost);
     return () => {
+      cancelIdle();
       canvas.removeEventListener('webglcontextlost', handleLost);
+      prepareRef.current = () => undefined;
       sceneRef.current = null;
-      if (!lost) scene.dispose();
+      delete canvas.dataset.renderer;
+      if (scene && !lost) scene.dispose();
     };
   }, []);
 
@@ -96,6 +107,7 @@ export function useMenuMorph(open: boolean, reducedMotion: boolean) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const opening = phase === 'opening';
+    prepareRef.current();
     let origin = opening ? null : measureOrigin(originRef.current);
     let frame = 0;
     let lastTime = 0;

@@ -32,12 +32,13 @@ export default function AboutPage() {
     <>
       <PageIntro
         eyebrow="About the studio"
-        title="An independent design studio."
-        accent="Less, but with feeling."
-        lead="We shape identities and digital experiences with clarity, character, and care. Our full studio story is being written. Here is where we begin."
+        title="The Minimalist"
+        documentTitle="About"
+        accent="Design Studio."
+        lead="We shape identities and digital experiences with clarity, character, and care. Less, but with feeling. Our full studio story is being written; here is where we begin."
       />
       <PageSection eyebrow="Brand essence" title="Warm, editorial, inviting, sophisticated.">
-        <ul className="essence-list">
+        <ul className="essence-list" data-reveal="stagger">
           {ESSENCE.map((item) => (
             <li key={item.text}>
               <Icon name={item.icon} />
@@ -47,7 +48,7 @@ export default function AboutPage() {
         </ul>
       </PageSection>
       <PageSection eyebrow="What we do" title="Brand. Digital. Experience.">
-        <ul className="service-list">
+        <ul className="service-list" data-reveal="stagger">
           {DISCIPLINES.map((discipline) => (
             <li key={discipline.title}>
               <h3>{discipline.title}</h3>

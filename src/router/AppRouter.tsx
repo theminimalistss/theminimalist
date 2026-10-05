@@ -1,43 +1,51 @@
 import { lazy } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { createBrowserRouter } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
+import { PAGE_MODULES } from '@/router/pageModules';
 import { ROUTES } from '@/router/paths';
+import { ErrorFallback } from '@/ui/components/ErrorBoundary';
 import { PageLayout } from '@/ui/layouts/PageLayout';
 import { SiteLayout } from '@/ui/layouts/SiteLayout';
 import HomePage from '@/ui/pages/HomePage';
 
-const WorksPage = lazy(() => import('@/ui/pages/WorksPage'));
-const AboutPage = lazy(() => import('@/ui/pages/AboutPage'));
-const FoundersPage = lazy(() => import('@/ui/pages/FoundersPage'));
-const TestimonialsPage = lazy(() => import('@/ui/pages/TestimonialsPage'));
-const ProductsPage = lazy(() => import('@/ui/pages/ProductsPage'));
-const ProductPage = lazy(() => import('@/ui/pages/ProductPage'));
-const ContactPage = lazy(() => import('@/ui/pages/ContactPage'));
-const InquiryPage = lazy(() => import('@/ui/pages/InquiryPage'));
-const NotFoundPage = lazy(() => import('@/ui/pages/NotFoundPage'));
+const WorksPage = lazy(PAGE_MODULES.works);
+const AboutPage = lazy(PAGE_MODULES.about);
+const FoundersPage = lazy(PAGE_MODULES.founders);
+const TestimonialsPage = lazy(PAGE_MODULES.testimonials);
+const ProductsPage = lazy(PAGE_MODULES.products);
+const ProductPage = lazy(PAGE_MODULES.product);
+const ContactPage = lazy(PAGE_MODULES.contact);
+const InquiryPage = lazy(PAGE_MODULES.inquiry);
+const NotFoundPage = lazy(PAGE_MODULES.notFound);
+
+const router = createBrowserRouter([
+  {
+    element: <SiteLayout />,
+    errorElement: <ErrorFallback />,
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        element: <PageLayout />,
+        children: [
+          { path: ROUTES.works, element: <WorksPage /> },
+          { path: ROUTES.about, element: <AboutPage /> },
+          { path: ROUTES.founders, element: <FoundersPage /> },
+          { path: ROUTES.testimonials, element: <TestimonialsPage /> },
+          { path: ROUTES.products, element: <ProductsPage /> },
+          { path: ROUTES.software, element: <ProductPage product="software" /> },
+          { path: ROUTES.templates, element: <ProductPage product="templates" /> },
+          { path: ROUTES.hardware, element: <ProductPage product="hardware" /> },
+          { path: ROUTES.contact, element: <ContactPage /> },
+          { path: ROUTES.inquiries, element: <InquiryPage inquiry="general" /> },
+          { path: ROUTES.quote, element: <InquiryPage inquiry="quote" /> },
+          { path: ROUTES.appointment, element: <InquiryPage inquiry="appointment" /> },
+          { path: '*', element: <NotFoundPage /> },
+        ],
+      },
+    ],
+  },
+]);
 
 export function AppRouter() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<SiteLayout />}>
-          <Route index element={<HomePage />} />
-          <Route element={<PageLayout />}>
-            <Route path={ROUTES.works} element={<WorksPage />} />
-            <Route path={ROUTES.about} element={<AboutPage />} />
-            <Route path={ROUTES.founders} element={<FoundersPage />} />
-            <Route path={ROUTES.testimonials} element={<TestimonialsPage />} />
-            <Route path={ROUTES.products} element={<ProductsPage />} />
-            <Route path={ROUTES.software} element={<ProductPage product="software" />} />
-            <Route path={ROUTES.templates} element={<ProductPage product="templates" />} />
-            <Route path={ROUTES.hardware} element={<ProductPage product="hardware" />} />
-            <Route path={ROUTES.contact} element={<ContactPage />} />
-            <Route path={ROUTES.inquiries} element={<InquiryPage inquiry="general" />} />
-            <Route path={ROUTES.quote} element={<InquiryPage inquiry="quote" />} />
-            <Route path={ROUTES.appointment} element={<InquiryPage inquiry="appointment" />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }

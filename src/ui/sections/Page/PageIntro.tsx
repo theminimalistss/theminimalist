@@ -4,15 +4,16 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 type Props = {
   eyebrow: string;
   title: string;
+  documentTitle?: string;
   accent: string;
   lead: string;
   children?: ReactNode;
 };
 
-export function PageIntro({ eyebrow, title, accent, lead, children }: Props) {
-  useDocumentTitle(title);
+export function PageIntro({ eyebrow, title, documentTitle, accent, lead, children }: Props) {
+  useDocumentTitle(documentTitle ?? title);
   return (
-    <header className="page-intro">
+    <header className="page-intro" data-reveal="stagger">
       <span className="eyebrow">{eyebrow}</span>
       <h1>
         {title} <em className="serif">{accent}</em>

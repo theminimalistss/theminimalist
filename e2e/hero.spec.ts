@@ -1,22 +1,6 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-
-async function openPage(page: Page, path = '/') {
-  await page.goto(path);
-  await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 10_000 });
-}
-
-async function settle(page: Page) {
-  await page.waitForFunction(() =>
-    document
-      .getAnimations()
-      .every(
-        (animation) =>
-          animation.playState !== 'running' ||
-          animation.effect?.getComputedTiming().endTime === Infinity,
-      ),
-  );
-}
+import { openPage, settle } from './helpers';
 
 test('loads local media, moves continuously, and responds to pause', async ({ page }) => {
   const errors: string[] = [];
@@ -101,7 +85,7 @@ test('keyboard reaches controls and brings focused works into view', async ({
   const tab = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
   await openPage(page);
   await page.keyboard.press(tab);
-  await expect(page.getByRole('link', { name: 'Skip to selected works' })).toBeFocused();
+  await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
   await page.keyboard.press('Enter');
   await page.keyboard.press(tab);
   await expect(page.getByRole('button', { name: 'Spiral', exact: true })).toBeFocused();
@@ -246,6 +230,36 @@ test('switching views flies each card between the spiral and the gallery', async
   expect(await flying('[data-spiral-item]')).toBeGreaterThan(0);
   await settle(page);
   await expect(hero).not.toHaveAttribute('data-morphing', '');
+  const item = page.locator('[data-spiral-item]').first();
+  const settled = await item.getAttribute('style');
+  await expect.poll(() => item.getAttribute('style')).not.toBe(settled);
+});
+
+test('the full intro plays once per session, then a brief one', async ({ page }) => {
+  const timeIntro = async (load: () => Promise<unknown>) => {
+    const start = Date.now();
+    await load();
+    await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 10_000 });
+    return Date.now() - start;
+  };
+  const full = await timeIntro(() => page.goto('/'));
+  const brief = await timeIntro(() => page.reload());
+  expect(brief).toBeLessThan(full);
+});
+
+test('opening a work flies its media in, closing returns it and resumes the spiral', async ({
+  page,
+}) => {
+  await openPage(page);
+  const card = page.locator('[data-work-id]').first();
+  await page.getByRole('button', { name: /Explore Forma/ }).click({ force: true });
+  const dialog = page.getByRole('dialog', { name: /Forma/ });
+  await expect(dialog).toBeVisible();
+  await expect(page.locator('.work-dialog')).toHaveAttribute('data-phase', 'open');
+  await expect(card).toHaveAttribute('data-dialog-source', '');
+  await dialog.getByRole('button', { name: 'Close project' }).click();
+  await expect(dialog).not.toBeVisible();
+  await expect(card).not.toHaveAttribute('data-dialog-source', '');
   const item = page.locator('[data-spiral-item]').first();
   const settled = await item.getAttribute('style');
   await expect.poll(() => item.getAttribute('style')).not.toBe(settled);

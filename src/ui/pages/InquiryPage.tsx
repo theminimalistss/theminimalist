@@ -1,4 +1,3 @@
-import { Link } from 'react-router';
 import { INQUIRY_COPY, type InquiryKey } from '@/constants/pages';
 import { INQUIRY_PAGES } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
@@ -8,6 +7,7 @@ import { PageIntro } from '@/ui/sections/Page/PageIntro';
 import { PageSection } from '@/ui/sections/Page/PageSection';
 import { Placeholder } from '@/ui/sections/Page/Placeholder';
 import { SectionTabs } from '@/ui/sections/Page/SectionTabs';
+import { PageLink } from '@/ui/components/PageLink';
 
 export default function InquiryPage({ inquiry }: { inquiry: InquiryKey }) {
   const copy = INQUIRY_COPY[inquiry];
@@ -20,7 +20,8 @@ export default function InquiryPage({ inquiry }: { inquiry: InquiryKey }) {
         <Checklist items={copy.checklist} label={`${copy.title} details`} />
         <Placeholder title="Online form coming soon">
           This form isn’t accepting submissions yet.{' '}
-          <Link to={ROUTES.contact}>See the contact page</Link> for other ways to reach the studio.
+          <PageLink to={ROUTES.contact}>See the contact page</PageLink> for other ways to reach the
+          studio.
         </Placeholder>
       </PageSection>
     </>

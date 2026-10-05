@@ -34,3 +34,5 @@ export function useHeroWorks() {
 
   return { ...state, retry };
 }
+
+export type HeroWorks = ReturnType<typeof useHeroWorks>;

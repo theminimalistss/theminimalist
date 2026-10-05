@@ -1,10 +1,13 @@
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { useRouteFocus } from '@/hooks/useRouteFocus';
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useScrolledPast } from '@/hooks/useScrolledPast';
 import { SiteMenuContext } from '@/hooks/useSiteMenu';
+import { prefetchPages } from '@/router/pageModules';
 import { SiteHeader } from '@/ui/components/SiteHeader';
 import { StudioMenu } from '@/ui/components/StudioMenu';
+import { scheduleIdle } from '@/utils/idle';
 
 export function SiteLayout() {
   const { pathname } = useLocation();
@@ -15,6 +18,8 @@ export function SiteLayout() {
     [menuOpen],
   );
   useRouteFocus(pathname);
+  useScrollReveal();
+  useEffect(() => scheduleIdle(prefetchPages, 4_000), []);
 
   return (
     <SiteMenuContext.Provider value={menu}>
@@ -27,7 +32,9 @@ export function SiteLayout() {
           </main>
         }
       >
-        <Outlet />
+        <div key={pathname} className="route-view">
+          <Outlet />
+        </div>
       </Suspense>
       <StudioMenu open={menuOpen} onClose={menu.close} />
     </SiteMenuContext.Provider>

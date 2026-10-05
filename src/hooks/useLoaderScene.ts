@@ -11,7 +11,7 @@ import {
   type FullscreenScene,
 } from '@/utils/webgl';
 
-type Options = { ready: boolean; animated: boolean; onExited: () => void };
+type Options = { ready: boolean; animated: boolean; bloomDuration: number; onExited: () => void };
 
 function uploadArtwork(scene: FullscreenScene, texture: WebGLTexture, artwork: LotusArtwork) {
   const { gl } = scene;
@@ -28,7 +28,7 @@ function uploadArtwork(scene: FullscreenScene, texture: WebGLTexture, artwork: L
   gl.uniform2f(scene.uniform('u_logoTexel'), 1 / artwork.width, 1 / artwork.height);
 }
 
-export function useLoaderScene({ ready, animated, onExited }: Options) {
+export function useLoaderScene({ ready, animated, bloomDuration, onExited }: Options) {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const readyRef = useRef(ready);
@@ -59,6 +59,7 @@ export function useLoaderScene({ ready, animated, onExited }: Options) {
     let frame = 0;
     let disposed = false;
     let lost = false;
+    let finished = false;
 
     gl.uniform1i(scene.uniform('u_logo'), 0);
     gl.uniform3fv(scene.uniform('u_ink'), readColorToken('--color-loader-ink'));
@@ -82,8 +83,12 @@ export function useLoaderScene({ ready, animated, onExited }: Options) {
       fitCanvas(canvas, window.innerWidth, window.innerHeight);
       const ratio = canvas.width / window.innerWidth;
       if (artwork && bloomStart === null) bloomStart = time;
-      const bloom = bloomStart === null ? 0 : clamp01((time - bloomStart) / LOADER.bloomDuration);
-      if (readyRef.current && bloom >= 1 && exitStart === null) exitStart = time;
+      const bloom = bloomStart === null ? 0 : clamp01((time - bloomStart) / bloomDuration);
+      const shineStart = bloomStart === null ? null : bloomStart + bloomDuration * LOADER.shineLead;
+      const sinceShine = shineStart === null ? -1 : time - shineStart;
+      const shine = sinceShine < 0 ? -1 : (sinceShine % LOADER.shinePeriod) / LOADER.shineDuration;
+      const shone = sinceShine >= LOADER.shineDuration;
+      if (readyRef.current && bloom >= 1 && shone && exitStart === null) exitStart = time;
       const exit = exitStart === null ? 0 : clamp01((time - exitStart) / LOADER.exitDuration);
 
       gl.uniform2f(scene.uniform('u_resolution'), canvas.width, canvas.height);
@@ -96,6 +101,7 @@ export function useLoaderScene({ ready, animated, onExited }: Options) {
       );
       gl.uniform1f(scene.uniform('u_time'), time / 1000);
       gl.uniform1f(scene.uniform('u_bloom'), bloom);
+      gl.uniform1f(scene.uniform('u_shine'), exitStart === null ? shine : -1);
       gl.uniform1f(scene.uniform('u_exit'), exit);
       scene.draw();
       root.dataset.renderer = 'webgl';
@@ -108,6 +114,7 @@ export function useLoaderScene({ ready, animated, onExited }: Options) {
       clock += lastTime ? Math.min(time - lastTime, MOTION.maxFrameDelta) : 0;
       lastTime = time;
       if (render(clock)) {
+        finished = true;
         exitedRef.current();
         return;
       }
@@ -133,9 +140,10 @@ export function useLoaderScene({ ready, animated, onExited }: Options) {
       if (!lost) {
         gl.deleteTexture(texture);
         scene.dispose();
+        if (finished) gl.getExtension('WEBGL_lose_context')?.loseContext();
       }
     };
-  }, [animated]);
+  }, [animated, bloomDuration]);
 
   useEffect(() => {
     if (!ready || rootRef.current?.dataset.renderer !== 'static') return;

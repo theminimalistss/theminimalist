@@ -1,9 +1,9 @@
 # Current project state
 
-PROJECT: The Minimalist — independent design studio website
-VERSION: 0.3.0
+PROJECT: The Minimalist — Design Studio website
+VERSION: 0.4.0
 STATUS: Landing experience complete; site structure in place with temporary pages
-CURRENT TASK: Review 0.3.0 navigation and placeholder pages.
+CURRENT TASK: Review 0.4.0 menu hover and performance pass.
 
 ## Completed
 
@@ -16,6 +16,9 @@ CURRENT TASK: Review 0.3.0 navigation and placeholder pages.
   animated spiral ↔ gallery switching.
 - 0.3.0: Site structure (Works, Studio, Products, Contact/Inquiries), fixed header,
   site-map menu, footer, breadcrumbs/tabs; persistent cards for smooth switching.
+- 0.4.0: Menu hover panel/preview/cursor cue; page transitions, scroll reveal,
+  preview media flight; session-aware intro, idle prefetch, deferred menu WebGL;
+  name corrected to “The Minimalist — Design Studio”.
 
 ## Known issues / limits
 
@@ -30,7 +33,8 @@ CURRENT TASK: Review 0.3.0 navigation and placeholder pages.
 
 `src/repositories/works.content.ts`, `src/services/works.service.ts`,
 `src/hooks/useSpiralLoop.ts`, `src/hooks/useLoaderScene.ts`,
-`src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/shaders/`,
+`src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/hooks/usePointerCue.ts`,
+`src/router/pageModules.ts`, `src/shaders/`,
 `src/constants/brand.ts`,
 `src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.

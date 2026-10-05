@@ -1,12 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
+import { HOVER_POINTER_QUERY, MENU_PREVIEWS } from '@/constants/menu';
 import { useDialog } from '@/hooks/useDialog';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useMenuMorph } from '@/hooks/useMenuMorph';
+import { usePointerCue } from '@/hooks/usePointerCue';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { focusMainContent } from '@/hooks/useRouteFocus';
 import { isNavGroupActive, PRIMARY_NAVIGATION } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
+import { formatIndex } from '@/utils/format';
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -17,10 +21,15 @@ const MENU_ITEMS = [
 
 export function StudioMenu({ open, onClose }: Props) {
   const reducedMotion = useReducedMotion();
+  const finePointer = useMediaQuery(HOVER_POINTER_QUERY);
   const { pathname } = useLocation();
   const { phase, rendered, canvasRef, originRef, settle } = useMenuMorph(open, reducedMotion);
   const ref = useDialog(rendered);
   const navigated = useRef(false);
+  const { areaRef, cueRef, cue } = usePointerCue<HTMLElement>(
+    finePointer && rendered,
+    !reducedMotion,
+  );
 
   useEffect(() => {
     if (rendered || !navigated.current) return;
@@ -65,22 +74,41 @@ export function StudioMenu({ open, onClose }: Props) {
             <em className="serif">A little feeling.</em>
           </h2>
         </div>
-        <nav aria-label="Site">
+        <nav ref={areaRef} className="menu-site-nav" aria-label="Site">
           <ol className="menu-nav">
             {MENU_ITEMS.map((item, index) => {
+              const preview = MENU_PREVIEWS[item.to];
               const current =
                 item.to === ROUTES.home
                   ? pathname === ROUTES.home
                   : isNavGroupActive(item, pathname);
               return (
-                <li key={item.to}>
+                <li key={item.to} className="menu-row">
+                  <span className="menu-index" aria-hidden="true">
+                    {formatIndex(index)}
+                  </span>
+                  <span className="menu-preview" aria-hidden="true">
+                    {preview && (
+                      <picture>
+                        <source type="image/avif" srcSet={preview.avif} />
+                        <img
+                          src={preview.webp}
+                          alt=""
+                          width="480"
+                          height="600"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    )}
+                  </span>
                   <Link
                     className="menu-link"
                     to={item.to}
                     onClick={navigate}
                     aria-current={current ? 'page' : undefined}
+                    data-cue={preview?.cue}
                   >
-                    <span className="menu-index">{String(index + 1).padStart(2, '0')}</span>
                     {item.label}
                     <Icon name="arrow" />
                   </Link>
@@ -103,11 +131,22 @@ export function StudioMenu({ open, onClose }: Props) {
               );
             })}
           </ol>
+          <span
+            ref={cueRef}
+            className="menu-cue"
+            data-visible={cue.visible ? '' : undefined}
+            aria-hidden="true"
+          >
+            <span className="menu-cue-tag">
+              {cue.label}
+              <Icon name="arrow" />
+            </span>
+          </span>
         </nav>
       </div>
       <div className="menu-bottom">
         <p>
-          We’re an independent design studio.
+          We’re The Minimalist, a design studio.
           <br />
           Shaping identities and digital experiences
           <br />

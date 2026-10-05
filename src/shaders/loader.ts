@@ -11,6 +11,7 @@ uniform float u_logoReach;
 uniform vec2 u_logoTexel;
 uniform float u_time;
 uniform float u_bloom;
+uniform float u_shine;
 uniform float u_exit;
 uniform vec3 u_ink;
 uniform vec3 u_base;
@@ -56,14 +57,15 @@ void main() {
   float revealed = smoothstep(front, front - 0.12, order);
   float crest = smoothstep(0.1, 0.0, abs(order - front + 0.04)) * (1.0 - smoothstep(0.95, 1.0, u_bloom));
 
-  float sweep = logoUv.x * 0.8 + logoUv.y * 0.35 - (fract(u_time / 2.8) * 1.8 - 0.4);
-  float sheen = exp(-sweep * sweep * 90.0) * u_bloom;
+  float shining = step(0.0, u_shine) * step(u_shine, 1.0);
+  float sweep = logoUv.x * 0.85 + logoUv.y * 0.35 - mix(-0.35, 1.55, clamp(u_shine, 0.0, 1.0));
+  float sheen = exp(-sweep * sweep * 55.0) * shining;
   float breathe = 0.5 + 0.5 * sin(u_time * 2.2);
   float fade = 1.0 - smoothstep(0.15, 0.55, u_exit);
 
-  vec3 inkColor = u_ink * (0.84 + 0.16 * breathe) + sheen * 0.35 + crest * 0.6 + exitEase * 0.25;
+  vec3 inkColor = u_ink * (0.84 + 0.16 * breathe) + sheen * 0.75 + crest * 0.6 + exitEase * 0.25;
   color = mix(color, inkColor, ink * revealed * fade);
-  color += u_ink * halo * revealed * fade * (0.08 + 0.06 * breathe + sheen * 0.25 + exitEase * 0.5);
+  color += u_ink * halo * revealed * fade * (0.08 + 0.06 * breathe + sheen * 0.7 + exitEase * 0.5);
   color += (hash(frag + fract(u_time) * 100.0) - 0.5) * 0.018;
 
   float opening = smoothstep(0.15, 1.0, u_exit);

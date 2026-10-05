@@ -16,12 +16,13 @@ export default function TestimonialsPage() {
     <>
       <PageIntro
         eyebrow="Studio — Testimonials"
+        documentTitle="Testimonials"
         title="Kind words,"
         accent="shared with permission."
         lead="What working with the studio feels like, in the words of the people we work with."
       />
       <PageSection eyebrow="Testimonials" title="Words on the way.">
-        <ul className="quote-cards" aria-label="Testimonial placeholders">
+        <ul className="quote-cards" aria-label="Testimonial placeholders" data-reveal="stagger">
           {SLOTS.map((slot) => (
             <li key={slot}>
               <span className="quote-mark" aria-hidden="true">

@@ -14,6 +14,7 @@ export default function ContactPage() {
     <>
       <PageIntro
         eyebrow="Contact"
+        documentTitle="Contact"
         title="Let’s talk."
         accent="Good work starts with a conversation."
         lead="Choose the kind of conversation you’d like to have, or reach the studio directly."
@@ -22,7 +23,7 @@ export default function ContactPage() {
         <LinkCards items={INQUIRY_PAGES} label="Ways to get in touch" />
       </PageSection>
       <PageSection eyebrow="The studio" title="Contact details.">
-        <dl className="contact-details">
+        <dl className="contact-details" data-reveal="stagger">
           {DETAILS.map((detail) => (
             <div key={detail.label}>
               <dt>{detail.label}</dt>

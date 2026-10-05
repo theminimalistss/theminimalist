@@ -7,10 +7,12 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" v
 <text x="60" y="67" font-family="Helvetica,Arial,sans-serif" font-size="20" letter-spacing="1">THE MINIMALIST</text>
 <text x="60" y="267" font-family="Helvetica,Arial,sans-serif" font-size="89" letter-spacing="-4">Less, but</text>
 <text x="60" y="374" font-family="Georgia,serif" font-style="italic" font-size="107" letter-spacing="-4">with feeling.</text>
-<text x="60" y="574" font-family="Helvetica,Arial,sans-serif" font-size="14" letter-spacing="2">INDEPENDENT DESIGN STUDIO</text>
+<text x="60" y="574" font-family="Helvetica,Arial,sans-serif" font-size="14" letter-spacing="2">DESIGN STUDIO</text>
 <text x="1140" y="574" text-anchor="end" font-family="Helvetica,Arial,sans-serif" font-size="14" letter-spacing="2">EST. 2020</text>
-</g><g transform="translate(930 190) scale(5.5)" fill="none" stroke="#1a3122" stroke-width=".7">
-<path d="M17 35V8m0 17C8 23 7 14 9 9c8 3 11 9 8 16Zm0-5c8-2 10-10 8-15-7 3-10 9-8 15ZM17 35C5 34 2 28 2 22c8 0 14 4 15 13Zm0 0c11-1 15-8 15-14-8 1-14 6-15 14Z"/>
+</g><g transform="translate(880 215) scale(.42) translate(-46 -134)" fill="none" stroke="#1a3122" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+<path d="M356 143 409 195 356 247 303 195Z"/>
+<path d="M356 326Q300 280 262 256C252 250 244 256 244 270C242 470 290 560 356 592 448 637 607 450 652 400 660 390 654 378 637 377 602 374 542 376 502 380"/>
+<path d="M315 368Q395 282 450 256C460 250 468 256 468 270C470 470 422 560 356 592 264 637 105 450 60 400 52 390 58 378 75 377 110 374 170 376 210 380"/>
 </g></svg>`;
 await sharp(Buffer.from(svg)).png().toFile('public/social-preview.png');
 console.info('Created public/social-preview.png');

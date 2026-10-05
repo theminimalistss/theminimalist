@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, type RefObject } from 'react';
 import { MOTION } from '@/constants/motion';
 import {
   applyWheelImpulse,
@@ -9,9 +9,15 @@ import {
   wrapProgress,
 } from '@/utils/spiral';
 
-type Options = { count: number; paused: boolean; compact: boolean; enabled: boolean };
+type Options = {
+  count: number;
+  paused: boolean;
+  compact: boolean;
+  enabled: boolean;
+  keyboard: RefObject<boolean>;
+};
 
-export function useSpiralLoop({ count, paused, compact, enabled }: Options) {
+export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Options) {
   const stageRef = useRef<HTMLOListElement>(null);
   const progress = useRef(0.5);
   const cruise = useRef(getCruiseVelocity(1));
@@ -33,8 +39,9 @@ export function useSpiralLoop({ count, paused, compact, enabled }: Options) {
     const draw = () => {
       items.forEach((item, index) => {
         const position = getSpiralPosition(progress.current + index / count, geometry);
+        const zIndex = String(position.zIndex);
         item.style.transform = position.transform;
-        item.style.zIndex = String(position.zIndex);
+        if (item.style.zIndex !== zIndex) item.style.zIndex = zIndex;
       });
     };
     const resize = new ResizeObserver(() => {
@@ -50,7 +57,7 @@ export function useSpiralLoop({ count, paused, compact, enabled }: Options) {
     draw();
 
     const focusWork = (event: FocusEvent) => {
-      if (!(event.target instanceof HTMLElement) || !event.target.matches(':focus-visible')) return;
+      if (!(event.target instanceof HTMLElement) || !keyboard.current) return;
       const item = event.target.closest<HTMLElement>('[data-spiral-item]');
       const index = item ? items.indexOf(item) : -1;
       if (index < 0) return;
@@ -90,7 +97,7 @@ export function useSpiralLoop({ count, paused, compact, enabled }: Options) {
         item.style.zIndex = '';
       });
     };
-  }, [count, paused, compact, enabled]);
+  }, [count, paused, compact, enabled, keyboard]);
 
   return stageRef;
 }
