@@ -16,7 +16,6 @@ export default function TestimonialsPage() {
     <>
       <PageIntro
         eyebrow="Studio — Testimonials"
-        documentTitle="Testimonials"
         title="Kind words,"
         accent="shared with permission."
         lead="What working with the studio feels like, in the words of the people we work with."

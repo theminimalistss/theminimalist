@@ -247,19 +247,16 @@ test('the full intro plays once per session, then a brief one', async ({ page })
   expect(brief).toBeLessThan(full);
 });
 
-test('opening a work flies its media in, closing returns it and resumes the spiral', async ({
-  page,
-}) => {
+test('a work morphs into its preview and back, then the spiral resumes', async ({ page }) => {
   await openPage(page);
-  const card = page.locator('[data-work-id]').first();
   await page.getByRole('button', { name: /Explore Forma/ }).click({ force: true });
   const dialog = page.getByRole('dialog', { name: /Forma/ });
   await expect(dialog).toBeVisible();
-  await expect(page.locator('.work-dialog')).toHaveAttribute('data-phase', 'open');
-  await expect(card).toHaveAttribute('data-dialog-source', '');
+  await expect(page.locator('html')).not.toHaveAttribute('data-transition', 'work');
+  await expect(page.locator('[style*="view-transition-name"]')).toHaveCount(0);
   await dialog.getByRole('button', { name: 'Close project' }).click();
   await expect(dialog).not.toBeVisible();
-  await expect(card).not.toHaveAttribute('data-dialog-source', '');
+  await expect(page.locator('html')).not.toHaveAttribute('data-transition', 'work');
   const item = page.locator('[data-spiral-item]').first();
   const settled = await item.getAttribute('style');
   await expect.poll(() => item.getAttribute('style')).not.toBe(settled);

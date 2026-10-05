@@ -21,6 +21,9 @@
 | `src/constants/pages.ts`                | Temporary product and inquiry copy                                |
 | `src/constants/menu.ts`                 | Menu section previews and cursor cue labels                       |
 | `src/router/pageModules.ts`             | Lazy page imports shared by routes and idle prefetch              |
+| `src/router/pageMeta.json`              | Titles, descriptions, and share-image copy per route              |
+| `scripts/socialMeta.ts`                 | Vite plugin: per-route share HTML, robots, sitemap                |
+| `scripts/create-social-images.mjs`      | Share images, app icons, web manifest                             |
 | `src/ui/components/`                    | Logo, media, metadata, dialogs, error boundary                    |
 | `src/ui/styles/`                        | Tokens, typography, global and focused component CSS              |
 | `src/assets/`                           | Optimized production media                                        |

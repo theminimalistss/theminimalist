@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.4.0 · Landing experience + site structure**
+**Design studio · v0.5.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -33,8 +33,9 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed by Vite (normally `http://127.0.0.1:5173`). No API keys or
-environment variables are required. Production assets are stored locally.
+Open the URL printed by Vite (normally `http://127.0.0.1:5173`). No API keys are
+required. For production, set `VITE_SITE_URL` to the site origin so link previews
+use absolute URLs (see [deployment](docs/deployment.md)). Assets are local.
 
 ## Stack and architecture
 

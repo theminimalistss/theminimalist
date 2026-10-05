@@ -1,17 +1,33 @@
 # Deployment
 
-Run `npm ci && npm run build` and publish `dist/` on a static host. Configure SPA
-fallback to `index.html` for application paths; existing assets must be served
-normally. React Router renders the local 404. The build assumes a domain-root
-deployment.
+Set `VITE_SITE_URL` (for example `https://www.example.com`), then run
+`npm ci && npm run build` and publish `dist/` on a static host. The build assumes
+a domain-root deployment.
 
-Use `npm run preview` locally, not as a public production server. No environment
-variables, API keys, contact endpoints, or analytics are required. `VITE_` values
+Routing: serve existing files first. Every page has `dist/<route>/index.html` and
+`dist/<route>.html`, so clean URLs (`/about`) return HTML with that page's share
+tags on Netlify, Cloudflare Pages, Vercel (`cleanUrls`), GitHub Pages, or nginx
+(`try_files $uri $uri.html $uri/index.html /index.html`). Unknown paths should
+fall back to `index.html` (the app renders its 404) or `404.html`.
+
+## Link previews and ads
+
+Crawlers for Facebook/Instagram/Threads, LinkedIn, X, Reddit, WhatsApp, Slack,
+and ad review read the HTML only. After deploying, check pages with the Facebook
+Sharing Debugger (also “Scrape Again” after changes), the LinkedIn Post
+Inspector, and a generic Open Graph previewer. Share images are 1200×630 PNG
+(≈20–35 KB) at `/social/<page>.png?v=<version>`; keep them publicly reachable
+without authentication, cookies, or bot blocking. Campaign parameters (`utm_*`,
+`fbclid`, `gclid`, …) are ignored by routing and shorten the intro. Regenerate
+images with `npm run media:social` after changing `pageMeta.json`.
+
+Use `npm run preview` locally, not as a public production server. `VITE_SITE_URL`
+is the only environment variable; no API keys, contact endpoints, or analytics
+are required. `VITE_` values
 are public bundle content and must never contain secrets.
 
 Before launch, replace concepts/provisional copy/logo with approved content,
-run quality gates, add a real canonical origin and absolute Open Graph image URL,
-and configure HTTPS, immutable caching for hashed assets, and HTML revalidation.
+run quality gates, set `VITE_SITE_URL`, and configure HTTPS, immutable caching for hashed assets, and HTML revalidation.
 Verify MIME types, video range requests, SPA fallback, and security headers.
 
 Suggested starting CSP:

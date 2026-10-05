@@ -15,36 +15,17 @@ dialog::backdrop {
 .work-dialog::backdrop {
   animation: backdrop-in var(--duration-reveal) ease both;
 }
-.work-dialog[data-phase='closing']::backdrop {
-  animation: backdrop-out var(--duration-reveal) ease both;
-}
 .work-dialog-inner {
   position: relative;
   display: grid;
   background: var(--color-canvas);
 }
-.work-dialog-ghost {
-  position: fixed;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  object-fit: cover;
-  pointer-events: none;
-}
-.work-dialog:is([data-phase='opening'], [data-phase='closing']) .work-dialog-image {
-  visibility: hidden;
-}
-[data-dialog-source] {
-  visibility: hidden;
+.work-dialog-inner:focus {
+  outline: none;
 }
 
 @keyframes backdrop-in {
   from {
-    opacity: 0;
-  }
-}
-@keyframes backdrop-out {
-  to {
     opacity: 0;
   }
 }
@@ -71,8 +52,12 @@ dialog::backdrop {
   line-height: 1.2;
   margin-top: 22px;
 }
-.work-dialog-copy h2 span {
+.work-dialog-title {
+  display: inline-block;
+}
+.work-dialog-copy h2 .work-dialog-tagline {
   display: block;
+  width: fit-content;
   font-style: italic;
   font-size: 28px;
   letter-spacing: -0.015em;

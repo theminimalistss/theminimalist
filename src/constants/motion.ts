@@ -35,13 +35,4 @@ export const COLLECTION_MORPH = {
   chromeDip: 0.25,
 } as const;
 
-export const MEDIA_FLIGHT = {
-  duration: 720,
-  easing: 'cubic-bezier(0.45, 0, 0.15, 1)',
-  panelIn: 520,
-  panelOut: 260,
-  panelDelay: 180,
-  imageWait: 400,
-} as const;
-
 export const COMPACT_QUERY = '(max-width: 767px)';

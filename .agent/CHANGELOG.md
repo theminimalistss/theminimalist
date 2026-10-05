@@ -5,6 +5,55 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-10-06
+
+### Added
+
+- Link previews for Facebook, Instagram, Threads, LinkedIn, X, Reddit, WhatsApp,
+  Slack, and ad placements: the build writes HTML for every route (`/about`,
+  `/about/index.html`, and `/about.html`) with title, description, canonical
+  URL, Open Graph, and X card tags, plus `404.html`, `robots.txt`, and (with
+  `VITE_SITE_URL`) `sitemap.xml` and Organization/WebSite structured data.
+- Per-page 1200×630 share images (center-safe for square crops), an Apple
+  touch icon, app icons, and a web manifest (`npm run media:social`).
+- Visitors arriving from ads or social campaigns (`utm_*`, `fbclid`, `gclid`,
+  and similar) get the brief intro.
+
+### Changed
+
+- Work previews morph with the View Transitions API: the card becomes the
+  preview panel, its media becomes the preview image, and the title, tagline,
+  and category glide and cross-fade into the preview typography (and back).
+- On phones the spiral runs the full screen height, behind the header and
+  footer, with a soft fade so headings stay readable.
+- Page titles and descriptions come from one source (`src/router/pageMeta.json`).
+
+### Fixed
+
+- Preview panel no longer shows a scrollbar or translucent half-open state.
+- Close requests made during a preview animation are queued, not dropped.
+
+### Removed
+
+- WAAPI preview flight (`useMediaFlight`), the static social preview image, and
+  the static `robots.txt` (now generated).
+
+### AI session
+
+Changed: `scripts/{socialMeta.ts,create-social-images.mjs}`, `vite.config.ts`,
+`index.html`, `src/router/pageMeta.{json,ts}`, `src/hooks/{useWorkPreview,useDocumentMeta,useDialog}.ts`,
+`src/services/visit.service.ts`, `src/ui/components/WorkDialog.tsx`, styles,
+`public/` icons and share images, tests, docs.
+
+Reason: The user reported the preview's mid-animation state, asked for a text
+and media morph into the preview, a full-bleed mobile spiral, and link previews
+that work on every social platform and in ads.
+
+Tests: `npm run check` passed (77 unit tests). `npm run test:e2e` passed 64,
+8 skipped on mobile, including crawler-style requests for per-route share tags
+and images, and campaign links. Morph frames reviewed in Chromium; mobile
+spiral reviewed in WebKit (iPhone 13).
+
 ## [0.4.0] — 2026-10-06
 
 ### Added

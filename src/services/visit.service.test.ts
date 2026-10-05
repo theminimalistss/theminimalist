@@ -20,4 +20,11 @@ describe('visit service', () => {
     expect(() => sessionVisitRepository.markIntroSeen()).not.toThrow();
     expect(getIntroMode()).toBe('full');
   });
+
+  it('keeps ad and social campaign visits brief', () => {
+    window.sessionStorage.clear();
+    expect(getIntroMode(undefined, '?utm_source=instagram&utm_medium=paid')).toBe('brief');
+    expect(getIntroMode(undefined, '?fbclid=abc')).toBe('brief');
+    expect(getIntroMode(undefined, '?ref=newsletter')).toBe('full');
+  });
 });

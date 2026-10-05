@@ -14,7 +14,6 @@ export default function ContactPage() {
     <>
       <PageIntro
         eyebrow="Contact"
-        documentTitle="Contact"
         title="Let’s talk."
         accent="Good work starts with a conversation."
         lead="Choose the kind of conversation you’d like to have, or reach the studio directly."

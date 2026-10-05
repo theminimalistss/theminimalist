@@ -1,0 +1,110 @@
+{
+  "site": {
+    "name": "The Minimalist",
+    "title": "The Minimalist — Design Studio",
+    "locale": "en_US",
+    "themeColor": "#1A3122",
+    "background": "#F4EEE5",
+    "established": "2020"
+  },
+  "pages": {
+    "/": {
+      "title": "The Minimalist — Design Studio",
+      "eyebrow": "Design studio",
+      "heading": "Less, but\nwith feeling.",
+      "description": "The Minimalist is a design studio shaping thoughtful identities and digital experiences. Explore a moving collection of design studies.",
+      "image": "home"
+    },
+    "/works": {
+      "title": "Works",
+      "eyebrow": "Works",
+      "heading": "Selected works.",
+      "description": "Selected brand, digital, and motion studies from The Minimalist — Design Studio.",
+      "image": "works"
+    },
+    "/about": {
+      "title": "About",
+      "eyebrow": "About the studio",
+      "heading": "Less, but\nwith feeling.",
+      "description": "We shape identities and digital experiences with clarity, character, and care. Meet The Minimalist — Design Studio.",
+      "image": "about"
+    },
+    "/founders": {
+      "title": "Founders",
+      "eyebrow": "Studio — Founders",
+      "heading": "The people behind the studio.",
+      "description": "Meet the people behind The Minimalist — Design Studio.",
+      "image": "founders"
+    },
+    "/testimonials": {
+      "title": "Testimonials",
+      "eyebrow": "Studio — Testimonials",
+      "heading": "Kind words, shared with permission.",
+      "description": "What working with The Minimalist — Design Studio feels like, in the words of the people we work with.",
+      "image": "testimonials"
+    },
+    "/products": {
+      "title": "Products",
+      "eyebrow": "Products",
+      "heading": "Made by the studio, made to last.",
+      "description": "Software, website templates, and hardware, designed and selected with care by The Minimalist — Design Studio.",
+      "image": "products"
+    },
+    "/products/software": {
+      "title": "Software solutions",
+      "eyebrow": "Products — Software",
+      "heading": "Software built to feel calm.",
+      "description": "Digital tools and platforms shaped with the same restraint as our identities. From The Minimalist — Design Studio.",
+      "image": "software"
+    },
+    "/products/templates": {
+      "title": "Website templates",
+      "eyebrow": "Products — Templates",
+      "heading": "Considered starting points.",
+      "description": "Editorial website templates for studios, brands, and makers who value quiet, purposeful design.",
+      "image": "templates"
+    },
+    "/products/hardware": {
+      "title": "Hardware products",
+      "eyebrow": "Products — Hardware",
+      "heading": "Specified with intention.",
+      "description": "Physical products selected and specified with attention to material and detail by The Minimalist — Design Studio.",
+      "image": "hardware"
+    },
+    "/contact": {
+      "title": "Contact",
+      "eyebrow": "Contact",
+      "heading": "Let’s talk.",
+      "description": "Start a conversation with The Minimalist — Design Studio: inquiries, quotes, and appointments.",
+      "image": "contact"
+    },
+    "/inquiries": {
+      "title": "General inquiry",
+      "eyebrow": "Inquiries",
+      "heading": "Say hello.",
+      "description": "Questions, ideas, introductions. Tell The Minimalist — Design Studio a little about what you have in mind.",
+      "image": "inquiries"
+    },
+    "/inquiries/quote": {
+      "title": "Request a quote",
+      "eyebrow": "Inquiries — Quote",
+      "heading": "Let’s scope it together.",
+      "description": "Share the shape of a project or product order and The Minimalist — Design Studio will prepare a considered estimate.",
+      "image": "quote"
+    },
+    "/inquiries/appointment": {
+      "title": "Book an appointment",
+      "eyebrow": "Inquiries — Appointment",
+      "heading": "In person or online.",
+      "description": "Reserve time with The Minimalist — Design Studio to talk through a project, a product, or an idea.",
+      "image": "appointment"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "eyebrow": "404",
+    "heading": "Something good awaits.",
+    "description": "This page has moved or doesn’t exist yet. Explore The Minimalist — Design Studio.",
+    "image": "home"
+  }
+}

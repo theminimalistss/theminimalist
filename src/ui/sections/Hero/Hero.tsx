@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { COMPACT_QUERY } from '@/constants/motion';
 import { useCollectionMorph } from '@/hooks/useCollectionMorph';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useHeroWorks } from '@/hooks/useHeroWorks';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 import { useSiteMenu } from '@/hooks/useSiteMenu';
-import type { Work } from '@/types/work';
+import { useWorkPreview } from '@/hooks/useWorkPreview';
 import { CollectionStatus } from '@/ui/components/CollectionStatus';
 import { WorkDialog } from '@/ui/components/WorkDialog';
 import { HeroFooter } from '@/ui/sections/Hero/HeroFooter';
@@ -25,12 +24,11 @@ export function Hero() {
   const [preferredView, setView] = useState<CollectionView>('spiral');
   const [paused, setPaused] = useState(false);
   const [inspecting, setInspecting] = useState(false);
-  const [selectedWork, setSelectedWork] = useState<Work | null>(null);
+  const preview = useWorkPreview();
   const view = reducedMotion ? 'gallery' : preferredView;
   const works = state.status === 'ready' ? state.works : [];
-  const mediaPlaying = !paused && !reducedMotion && !menuOpen && !selectedWork && pageVisible;
+  const mediaPlaying = !paused && !reducedMotion && !menuOpen && !preview.work && pageVisible;
   const { rootRef, morphing, capture } = useCollectionMorph(view);
-  useDocumentTitle();
 
   function changeView(nextView: CollectionView) {
     if (nextView !== view) capture();
@@ -58,9 +56,9 @@ export function Hero() {
             works={works}
             view={view}
             playing={mediaPlaying}
-            paused={!mediaPlaying || inspecting || morphing}
+            paused={!mediaPlaying || inspecting || morphing || preview.transitioning}
             compact={compact}
-            onSelect={setSelectedWork}
+            onSelect={preview.open}
             onInspect={setInspecting}
           />
         )}
@@ -78,7 +76,7 @@ export function Hero() {
         gallery={view === 'gallery'}
         onBrowse={() => changeView('gallery')}
       />
-      <WorkDialog work={selectedWork} onClose={() => setSelectedWork(null)} />
+      <WorkDialog work={preview.work} onClose={preview.close} />
     </div>
   );
 }

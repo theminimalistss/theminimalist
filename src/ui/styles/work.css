@@ -107,7 +107,7 @@
   text-align: center;
 }
 .work-wordmark {
-  display: block;
+  display: inline-block;
   font-size: clamp(52px, 6vw, 86px);
   font-weight: 500;
   line-height: 0.9;
@@ -115,6 +115,8 @@
 }
 .work-tagline {
   display: block;
+  width: fit-content;
+  margin-inline: auto;
   margin-top: 15px;
   font-size: 9px;
   font-weight: 400;

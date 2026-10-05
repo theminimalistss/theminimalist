@@ -34,6 +34,7 @@
   }
   .spiral-viewport {
     inset: 0 9% 75px 27%;
+    mask-image: none;
   }
   .spiral-stage {
     inset: 0;
@@ -157,8 +158,7 @@
     top: 103px;
   }
   .spiral-viewport {
-    top: 180px;
-    bottom: 150px;
+    inset: 0;
   }
 }
 

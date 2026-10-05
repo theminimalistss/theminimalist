@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 export function useDialog(open: boolean) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog || !open) return;
     const previousFocus = document.activeElement;

@@ -78,9 +78,21 @@
 }
 .spiral-viewport {
   position: absolute;
-  inset: 195px 0 178px;
+  inset: 0;
   overflow: clip;
   z-index: var(--layer-works);
+  --spiral-fade: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 0.08) 0,
+    rgb(0 0 0 / 0.16) 14%,
+    rgb(0 0 0 / 0.4) 27%,
+    #000 38%,
+    #000 68%,
+    rgb(0 0 0 / 0.4) 80%,
+    rgb(0 0 0 / 0.14) 90%,
+    rgb(0 0 0 / 0.06) 100%
+  );
+  mask-image: var(--spiral-fade);
 }
 .hero[data-morphing] .spiral-viewport {
   overflow: visible;

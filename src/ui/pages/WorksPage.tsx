@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { useHeroWorks } from '@/hooks/useHeroWorks';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useWorkPreview } from '@/hooks/useWorkPreview';
 import { ROUTES } from '@/router/paths';
-import type { Work } from '@/types/work';
 import { CollectionStatus } from '@/ui/components/CollectionStatus';
 import { WorkDialog } from '@/ui/components/WorkDialog';
 import { WorkCollection } from '@/ui/sections/Hero/WorkCollection';
@@ -14,14 +13,13 @@ export default function WorksPage() {
   const state = useHeroWorks();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisibility();
-  const [selectedWork, setSelectedWork] = useState<Work | null>(null);
+  const preview = useWorkPreview();
   const works = state.status === 'ready' ? state.works : [];
 
   return (
     <div className="collection-page">
       <PageIntro
         eyebrow="Works"
-        documentTitle="Works"
         title="Selected works."
         accent="Brand, digital, experience."
         lead="Independent concept studies exploring identity, digital experience, and motion. Commissioned work joins the collection as it is approved for publication."
@@ -39,11 +37,11 @@ export default function WorksPage() {
           works={works}
           view="gallery"
           reveal
-          playing={!reducedMotion && !selectedWork && pageVisible}
-          onSelect={setSelectedWork}
+          playing={!reducedMotion && !preview.work && pageVisible}
+          onSelect={preview.open}
         />
       )}
-      <WorkDialog work={selectedWork} onClose={() => setSelectedWork(null)} />
+      <WorkDialog work={preview.work} onClose={preview.close} />
     </div>
   );
 }

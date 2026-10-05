@@ -55,10 +55,27 @@ watches `[data-reveal="item"]` elements and `[data-reveal="stagger"]` groups wit
 one IntersectionObserver (plus a MutationObserver for new routes) and marks them
 `data-revealed`; CSS provides the rise. Reduced motion shows everything at once.
 
-`WorkDialog` uses `useMediaFlight`: on open, a temporary image reuses the card's
-loaded source and animates from the card's box to the preview image box while
-the panel fades up; on close it flies back, then the parent clears the
-selection, so the spiral stays paused until the card is visible again.
+`useWorkPreview` opens and closes `WorkDialog` inside
+`document.startViewTransition`. Before the swap it names the card's parts
+(`work-card`, `work-media`, `work-title`, `work-tagline`, `work-category`); after
+the synchronous swap the same names move to the dialog's parts, so the browser
+morphs the box, the media (cropped with `object-fit: cover`), and the type
+(cross-faded between fonts). Closing reverses it. Without the API or with
+reduced motion the dialog opens instantly. The spiral stays paused while a morph
+runs, and requests made mid-morph are queued.
+
+## Sharing and metadata
+
+`src/router/pageMeta.json` holds each route's title, description, share image,
+and the headline used on that image. `useDocumentMeta` applies the title and
+description at runtime. At build time `scripts/socialMeta.ts` writes the head
+(title, description, canonical, Open Graph, X card, image size/alt, structured
+data on home) into `index.html` and emits per-route HTML (`/about/index.html`
+and `/about.html`), `404.html` (noindex), `robots.txt`, and `sitemap.xml`.
+`VITE_SITE_URL` supplies the origin for absolute URLs; image URLs carry the
+package version so platforms refetch after a release.
+`scripts/create-social-images.mjs` renders the 1200×630 share images (content
+centered so square crops keep it), app icons, and the web manifest.
 
 ## Loader and menu morph
 

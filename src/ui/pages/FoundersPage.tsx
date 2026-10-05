@@ -17,7 +17,6 @@ export default function FoundersPage() {
     <>
       <PageIntro
         eyebrow="Studio — Founders"
-        documentTitle="Founders"
         title="The people"
         accent="behind the studio."
         lead="A small team with a shared belief: good design should feel calm, honest, and a little personal."

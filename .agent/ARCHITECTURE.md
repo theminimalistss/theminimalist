@@ -19,7 +19,9 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Pages: `src/router/pageModules.ts` lazy-loads and idle-prefetches page chunks.
 - Transitions: data router + `PageLink` (view transitions), keyed route fade,
   `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
-- Previews: `useMediaFlight` flies card media into `WorkDialog` and back.
+- Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.
+- Sharing: `src/router/pageMeta.json` → runtime titles (`useDocumentMeta`) and
+  build-time per-route HTML (`scripts/socialMeta.ts`); images via `media:social`.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.
 - UI: composed components, native buttons/dialogs, centralized design tokens.
 - Routes: `SiteLayout` (header, menu, route focus) wraps every page; `PageLayout`

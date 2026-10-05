@@ -143,3 +143,27 @@ after a preview kept the spiral paused for mouse and touch users.
 
 Impact: Keyboard users keep the accessible hold; everyone else sees motion
 resume when a preview closes.
+
+## 2026-10-06 — Build-time share HTML for every route
+
+Decision: A Vite plugin (`scripts/socialMeta.ts`) writes the head tags for each
+route from `src/router/pageMeta.json` into `<route>/index.html` and
+`<route>.html`, plus `404.html`, `robots.txt`, and a sitemap.
+
+Reason: Social and ad crawlers do not run JavaScript; a single SPA shell would
+preview every link as the home page.
+
+Impact: `VITE_SITE_URL` must be set for absolute URLs. Adding a route means
+adding a `pageMeta.json` entry (a unit test enforces it) and re-running
+`npm run media:social`.
+
+## 2026-10-06 — Preview morph with View Transitions
+
+Decision: `useWorkPreview` names the card's parts and the dialog's parts only
+during a `document.startViewTransition` and swaps the dialog synchronously.
+
+Reason: A real shared-element morph (box, media, and type) is not practical
+with hand-built FLIP across fonts; the browser cross-fades text natively.
+
+Impact: Browsers without the API (or reduced motion) open instantly. The spiral
+stays paused while a morph runs so the card lands where it left.

@@ -10,7 +10,17 @@
     "noEmit": true,
     "strict": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["vite.config.ts", "playwright.config.ts", "e2e"]
+  "include": [
+    "vite.config.ts",
+    "playwright.config.ts",
+    "e2e",
+    "scripts/**/*.ts",
+    "src/router/pageMeta.ts",
+    "src/router/pageMeta.json",
+    "package.json"
+  ]
 }

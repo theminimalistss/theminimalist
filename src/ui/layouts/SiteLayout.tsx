@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
+import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useRouteFocus } from '@/hooks/useRouteFocus';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useScrolledPast } from '@/hooks/useScrolledPast';
@@ -18,6 +19,7 @@ export function SiteLayout() {
     [menuOpen],
   );
   useRouteFocus(pathname);
+  useDocumentMeta(pathname);
   useScrollReveal();
   useEffect(() => scheduleIdle(prefetchPages, 4_000), []);
 

@@ -33,7 +33,6 @@ export default function AboutPage() {
       <PageIntro
         eyebrow="About the studio"
         title="The Minimalist"
-        documentTitle="About"
         accent="Design Studio."
         lead="We shape identities and digital experiences with clarity, character, and care. Less, but with feeling. Our full studio story is being written; here is where we begin."
       />

@@ -1,49 +1,29 @@
 import { useDialog } from '@/hooks/useDialog';
-import { useMediaFlight } from '@/hooks/useMediaFlight';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { Work } from '@/types/work';
 import { Icon } from '@/ui/components/Icon';
 import { WorkImage } from '@/ui/components/WorkImage';
 
 export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () => void }) {
-  const reducedMotion = useReducedMotion();
   const ref = useDialog(work !== null);
-  const { phase, ghostRef, targetRef, panelRef, requestClose } = useMediaFlight(
-    work?.id ?? null,
-    !reducedMotion,
-    onClose,
-  );
-
   return (
     <dialog
       ref={ref}
       className="work-dialog"
-      data-phase={phase}
       aria-labelledby="work-dialog-title"
       onCancel={(event) => {
         event.preventDefault();
-        requestClose();
-      }}
-      onClose={() => {
-        if (work) onClose();
+        onClose();
       }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) requestClose();
+        if (event.target === event.currentTarget) onClose();
       }}
     >
-      {(phase === 'opening' || phase === 'closing') && (
-        <img ref={ghostRef} className="work-dialog-ghost" alt="" aria-hidden="true" />
-      )}
       {work && (
-        <div ref={panelRef} className="work-dialog-inner">
-          <button
-            className="icon-button dialog-close"
-            aria-label="Close project"
-            onClick={requestClose}
-          >
+        <div className="work-dialog-inner" tabIndex={-1}>
+          <button className="icon-button dialog-close" aria-label="Close project" onClick={onClose}>
             <Icon name="close" />
           </button>
-          <div ref={targetRef} className="work-dialog-image">
+          <div className="work-dialog-image" data-work-part="media">
             <WorkImage
               image={work.mediaType === 'image' ? work.image : work.poster}
               alt={work.alt}
@@ -51,12 +31,16 @@ export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () =
             />
           </div>
           <div className="work-dialog-copy">
-            <span className="eyebrow">
+            <span className="eyebrow" data-work-part="category">
               {work.category} · {work.year}
             </span>
             <h2 id="work-dialog-title">
-              {work.title}
-              <span className="serif">{work.tagline}</span>
+              <span className="work-dialog-title" data-work-part="title">
+                {work.title}
+              </span>
+              <span className="serif work-dialog-tagline" data-work-part="tagline">
+                {work.tagline}
+              </span>
             </h2>
             <p>{work.description}</p>
             {work.isConcept && (
@@ -65,7 +49,7 @@ export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () =
                 client work.
               </p>
             )}
-            <button className="text-button" onClick={requestClose}>
+            <button className="text-button" onClick={onClose}>
               Back to the collection <span aria-hidden="true">↗</span>
             </button>
           </div>

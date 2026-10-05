@@ -9,7 +9,6 @@ export default function ProductsPage() {
     <>
       <PageIntro
         eyebrow="Products"
-        documentTitle="Products"
         title="Made by the studio,"
         accent="made to last."
         lead="Software, website templates, and hardware, designed and selected with the same care as our identities."

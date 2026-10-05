@@ -6,7 +6,6 @@ export default function NotFoundPage() {
   return (
     <PageIntro
       eyebrow="404 — A little too minimal"
-      documentTitle="Page not found"
       title="Nothing here."
       accent="Something good awaits."
       lead="The page you’re looking for has moved or doesn’t exist yet."
