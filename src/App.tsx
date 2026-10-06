@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LOADER } from '@/constants/motion';
+import { markAppEntered } from '@/hooks/useAppEntered';
 import { useIntro } from '@/hooks/useIntro';
 import { usePageLoad } from '@/hooks/usePageLoad';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -15,6 +16,10 @@ export default function App() {
     maximum: LOADER.maximumDuration,
   });
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (ready) markAppEntered();
+  }, [ready]);
 
   return (
     <ErrorBoundary>

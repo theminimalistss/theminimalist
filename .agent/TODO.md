@@ -8,6 +8,8 @@
   forms through hooks, service validation, and a repository. Email is available now.
 - Add product data behind a repository once a catalog exists.
 - Check WebGL loader/menu morph frame pacing on real phones and Safari.
+- Check the Works tesseract, particle assembly, and touch dragging on real phones;
+  automated Chromium/WebKit checks do not replace GPU and touch-device review.
 - Listen to sound levels on real speakers/phones; tune `SOUNDS` and `AMBIENT`.
 - Set `VITE_SITE_URL` and validate link previews with platform debuggers.
 - Perform real-device motion and screen-reader checks on approved content.

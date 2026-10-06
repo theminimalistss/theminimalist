@@ -1,0 +1,591 @@
+/* The spatial view is one uninterrupted ivory viewport; the gallery remains normal page flow. */
+.works-page--spatial {
+  position: relative;
+  margin-top: calc(-1 * var(--header-height));
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--color-canvas);
+  isolation: isolate;
+}
+.works-intro {
+  padding: 48px var(--page-gutter);
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+.works-intro h1 {
+  margin-top: 20px;
+  font-size: clamp(38px, 4.5vw, 64px);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
+  view-transition-name: works-title;
+}
+.works-intro h1 em {
+  display: block;
+  font-size: 0.85em;
+  letter-spacing: -0.025em;
+}
+.works-intro-note {
+  max-width: 300px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+.works-intro-note .text-button {
+  margin-top: 16px;
+}
+.works-page--spatial .works-intro {
+  position: absolute;
+  top: calc(var(--header-height) + 34px);
+  left: var(--page-gutter);
+  right: var(--page-gutter);
+  padding: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.works-page--spatial .works-intro h1 {
+  font-size: clamp(28px, 3vw, 44px);
+}
+.works-page--spatial .works-intro .eyebrow {
+  font-size: 9px;
+  color: var(--color-muted);
+}
+.works-page--spatial .works-intro-note {
+  display: none;
+}
+.works-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 var(--page-gutter);
+  padding: 18px 0;
+  border-top: var(--border);
+  font-size: 12px;
+}
+.works-toolbar p span {
+  margin-left: 8px;
+}
+.works-toolbar [role='group'] {
+  display: flex;
+  gap: 4px;
+  view-transition-name: works-toggle;
+}
+.works-toolbar button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+}
+.works-toolbar button[aria-pressed='true'] {
+  border-color: currentColor;
+}
+.works-page--spatial .works-toolbar {
+  position: absolute;
+  bottom: 28px;
+  left: var(--page-gutter);
+  z-index: 90;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  flex-direction: row-reverse;
+  gap: 18px;
+}
+.works-page--spatial .works-toolbar p {
+  font-size: 10px;
+  color: var(--color-muted);
+}
+
+.work-explorer {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 47%, #fbf8f3 0%, #fbf8f300 70%),
+    radial-gradient(ellipse 120% 90% at 50% 100%, var(--color-surface), var(--color-canvas) 62%);
+}
+.tesseract-stage,
+.tesseract-viewport {
+  position: absolute;
+  inset: 0;
+}
+.tesseract-canvas,
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.tesseract-fallback {
+  position: absolute;
+  width: 55%;
+  height: 55%;
+  left: 22.5%;
+  top: 22.5%;
+  stroke: var(--color-brand);
+  stroke-width: 0.8;
+  opacity: 0.5;
+}
+.tesseract-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--color-line) 0.7px, transparent 0.9px);
+  background-size: 48px 48px;
+  opacity: 0.55;
+  mask-image: radial-gradient(ellipse at center, #000, transparent 70%);
+  pointer-events: none;
+}
+.tesseract-orbit-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(78vw, 850px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -7%) rotateX(76deg);
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.tesseract-orbit-control {
+  position: absolute;
+  inset: calc(var(--header-height) + 8px) 8px 96px;
+  width: calc(100% - 16px);
+  cursor: grab;
+  touch-action: pan-y;
+  border-radius: 0;
+}
+.tesseract-viewport[data-dragging] .tesseract-orbit-control {
+  cursor: grabbing;
+}
+.tesseract-orbit-control:focus-visible {
+  outline-offset: -12px !important;
+}
+.tesseract-nodes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.tesseract-node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  pointer-events: auto;
+  transition: opacity var(--duration-reveal) ease;
+}
+/* Points appear once the traced edges have reached them. */
+.tesseract-viewport:not([data-traced]) .tesseract-node {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tesseract-node:nth-child(2) {
+    transition-delay: 70ms;
+  }
+  .tesseract-node:nth-child(3) {
+    transition-delay: 140ms;
+  }
+  .tesseract-node:nth-child(4) {
+    transition-delay: 210ms;
+  }
+  .tesseract-node:nth-child(5) {
+    transition-delay: 280ms;
+  }
+  .tesseract-node:nth-child(n + 6) {
+    transition-delay: 350ms;
+  }
+}
+.tesseract-node-core {
+  width: 9px;
+  height: 9px;
+  background: var(--color-brand);
+  transform: rotate(45deg);
+  transition:
+    transform var(--duration-reveal) var(--ease-editorial),
+    background-color var(--duration-fast) ease;
+}
+.tesseract-node-core::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border: 1px solid #1a312252;
+  transition:
+    inset var(--duration-reveal) var(--ease-editorial),
+    border-color var(--duration-reveal) ease;
+}
+.tesseract-node[data-front] .tesseract-node-core::before {
+  inset: -10px;
+  border-color: var(--color-brand);
+}
+.tesseract-node:is(:hover, :focus-visible, [aria-pressed='true']) .tesseract-node-core {
+  transform: rotate(135deg) scale(1.4);
+  background: var(--color-warm-accent);
+}
+.tesseract-node-number {
+  position: absolute;
+  left: 38px;
+  top: 7px;
+  font-size: 9px;
+  color: var(--color-muted);
+  letter-spacing: 0.1em;
+}
+.tesseract-node[data-front] .tesseract-node-number {
+  color: var(--color-text);
+}
+.tesseract-node-label {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-canvas);
+  background: var(--color-brand);
+  padding: 4px 8px;
+  white-space: nowrap;
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) ease;
+}
+.tesseract-node:is(:hover, :focus-visible, [aria-pressed='true']) .tesseract-node-label {
+  opacity: 1;
+}
+
+.tesseract-tools {
+  display: contents;
+}
+.tesseract-hint {
+  position: absolute;
+  z-index: 70;
+  top: calc(var(--header-height) + 170px);
+  left: var(--page-gutter);
+  max-width: 220px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--color-muted);
+  pointer-events: none;
+}
+.hint-coarse {
+  display: none;
+}
+@media (hover: none) {
+  .hint-fine {
+    display: none;
+  }
+  .hint-coarse {
+    display: inline;
+  }
+}
+.tesseract-actions {
+  position: absolute;
+  z-index: 70;
+  right: var(--page-gutter);
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tesseract-reset {
+  min-height: 44px;
+  padding: 8px 0;
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.tesseract-reset:disabled {
+  opacity: 0.5;
+}
+
+.focus-stepper {
+  position: absolute;
+  z-index: 70;
+  left: 50%;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transform: translateX(-50%);
+  padding: 4px;
+  border: 1px solid var(--color-line);
+  background: var(--color-canvas);
+}
+.focus-step {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 15px;
+  transition:
+    background-color var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
+}
+.focus-step:hover {
+  background: var(--color-surface);
+}
+.focus-step:first-child:hover span {
+  transform: translateX(-2px);
+}
+.focus-step:last-child:hover span {
+  transform: translateX(2px);
+}
+.focus-step span {
+  transition: transform var(--duration-fast) ease;
+}
+.focus-step:disabled {
+  opacity: 0.4;
+}
+.focus-current {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 250px;
+  min-height: 44px;
+  padding: 0 14px;
+  text-align: left;
+}
+.focus-thumb {
+  width: 32px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  animation: focus-in 420ms var(--ease-editorial) both;
+}
+.focus-count {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.focus-title {
+  display: grid;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  animation: focus-in 420ms var(--ease-editorial) both;
+}
+.focus-category {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.particle-preview {
+  position: absolute;
+  inset: 0;
+  z-index: 120;
+  pointer-events: none;
+}
+.particle-card {
+  position: absolute;
+  pointer-events: none;
+}
+.particle-preview[data-active] .particle-card {
+  pointer-events: auto;
+}
+.particle-media {
+  aspect-ratio: 4/5;
+  opacity: 0;
+  transition: opacity 220ms ease;
+  box-shadow: 0 26px 60px -24px var(--color-scrim);
+}
+.particle-preview[data-active] .particle-media[data-resolved] {
+  opacity: 1;
+}
+.particle-open {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  z-index: 1;
+}
+.particle-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  background: var(--color-canvas);
+  opacity: 0;
+}
+.particle-copy {
+  padding: 14px 0 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 280ms ease,
+    transform 400ms var(--ease-editorial);
+}
+.particle-preview:not([data-docked]) .particle-copy {
+  padding: 14px;
+  background: var(--color-canvas);
+}
+.particle-preview[data-active]:is([data-phase='ready'], [data-phase='fallback'])
+  :is(.particle-copy, .particle-close) {
+  opacity: 1;
+  transform: none;
+}
+.particle-copy .eyebrow {
+  font-size: 8px;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.particle-copy h2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: -0.04em;
+  margin-top: 4px;
+}
+.particle-copy h2 span {
+  font-size: 18px;
+}
+.particle-copy p {
+  margin-top: 4px;
+  font-size: 17px;
+}
+.works-provenance {
+  max-width: 650px;
+  padding: 28px var(--page-gutter) 72px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+/* Without view transitions, the new presentation still fades in. */
+@supports not (view-transition-name: none) {
+  .work-explorer,
+  .works-page--gallery .work-gallery {
+    animation: works-enter var(--duration-reveal) var(--ease-editorial) both;
+  }
+}
+
+@keyframes works-enter {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes focus-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* Spatial ↔ gallery: the page crossfades while the title and view toggle glide. */
+html[data-transition='works-view']::view-transition-group(*) {
+  animation-duration: 800ms;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
+}
+html[data-transition='works-view']::view-transition-old(root) {
+  animation: 420ms ease both works-view-out;
+}
+html[data-transition='works-view']::view-transition-new(root) {
+  animation: 700ms var(--ease-editorial) 120ms both works-view-in;
+}
+@keyframes works-view-out {
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+@keyframes works-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (max-width: 767px) {
+  .works-intro {
+    display: block;
+    padding-top: 32px;
+  }
+  .works-intro-note {
+    margin-top: 20px;
+  }
+  .works-page--spatial .works-intro {
+    top: calc(var(--header-height) + 28px);
+    right: auto;
+  }
+  .works-page--spatial .works-intro h1 {
+    font-size: 28px;
+  }
+  .works-page--spatial .works-intro .eyebrow {
+    font-size: 7px;
+  }
+  .tesseract-hint {
+    top: calc(var(--header-height) + 128px);
+    font-size: 10px;
+  }
+  .works-page--spatial .works-toolbar {
+    bottom: 80px;
+  }
+  .works-page--spatial .works-toolbar p {
+    display: none;
+  }
+  .works-toolbar button {
+    font-size: 11px;
+    padding-inline: 12px;
+  }
+  .tesseract-actions {
+    bottom: 80px;
+    gap: 4px;
+  }
+  .tesseract-reset {
+    font-size: 10px;
+  }
+  .focus-stepper {
+    left: var(--page-gutter);
+    right: var(--page-gutter);
+    bottom: 16px;
+    transform: none;
+  }
+  .focus-current {
+    flex: 1;
+    min-width: 0;
+    padding: 0 8px;
+    gap: 10px;
+  }
+  .focus-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .work-explorer {
+    min-height: 680px;
+  }
+  .tesseract-orbit-control {
+    bottom: 140px;
+  }
+  .tesseract-node-number {
+    font-size: 8px;
+  }
+  .particle-copy h2 {
+    font-size: 22px;
+  }
+}
+@media (max-height: 700px) and (min-width: 768px) {
+  .works-page--spatial .works-intro h1 {
+    font-size: 28px;
+  }
+  .tesseract-hint {
+    top: calc(var(--header-height) + 120px);
+  }
+}
+body:has(.works-page--spatial) .contact-fab {
+  bottom: 104px;
+}
+@media (max-width: 767px) {
+  body:has(.works-page--spatial) .contact-fab {
+    bottom: 148px;
+  }
+}

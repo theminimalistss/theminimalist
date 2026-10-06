@@ -240,3 +240,27 @@ Impact: Keyframes that move a spiral card (`getSpiralKeyframes`,
 `getGalleryKeyframes`) must start with the same `perspective()` so transforms
 interpolate per function. Text that should morph needs its own transformable
 element (`.morph-word`) and a unique `data-morph-chrome` key.
+
+## 2026-10-07 — Works sculpture on ivory, with automatic focus
+
+Decision: Native WebGL 1 draws a rigid projected hypercube (16 vertices, 32 edges,
+12 translucent faces) in forest ink on the ivory canvas, with a separate textured
+point-cloud preview. Project media and selection stay in semantic DOM controls,
+and the canvas is decorative to assistive technology. The point nearest the
+viewer is the focus: it is shown in a fixed slot on wide screens and named in a
+single-study stepper everywhere. Hover, focus, and tap override it.
+
+Reason: The forest field set Works apart from every other page, clashed with the
+green studies, and forced a colour flip on the gallery switch. Ivory keeps one
+palette across the site. The animated 4D fold read as the shape deforming, and the
+corner cells as clutter. A title row cannot grow with the collection, but a
+stepper and the gallery can.
+
+Impact: No new runtime dependencies or media. GPU math lives in utils and
+shaders; input, easing, loading, playback, and lifecycle live in hooks. Frames run
+at display rate only while moving, tracing, or easing, and stop at rest; back
+buffers are capped at 1.5× DPR and 1800 px. Only the shown poster is uploaded for
+particles; native image or video takes over once assembled. The sculpture waits
+for the loader (`useAppEntered`) before tracing in. Pages may switch the sound
+scene with `useSoundScene`; the Works palette is synthesized, so it adds no audio
+files.

@@ -26,6 +26,15 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Transitions: data router + `PageLink` (view transitions), keyed route fade,
   `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
 - Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.
+- Works: the existing work repository → validation service → `useHeroWorks` feeds
+  `WorkExplorer`. `useWorkHover` owns preview intent; `useTesseract` owns rotation,
+  easing, momentum, the entrance trace, the front-most focus, and the GPU lifecycle.
+  `useParticlePreview` hands studies off (disperse, then assemble) and then shows
+  native image/video. `useWorksView` switches views in a view transition.
+  `useAppEntered` holds the trace until the loader reveals the page. Pure geometry,
+  trace, and placement live in utils; GLSL lives in `src/shaders/`.
+- Sound scenes: `useSoundScene` swaps the ambient preset; Works synthesizes glass
+  feedback in `soundEngine` with no extra audio files.
 - Sound: `soundEngine` (Web Audio, samples + synthesis + ambient) driven by
   `useSound`/`useInteractionSounds`; preference via repository → service.
 - Sharing: `src/router/pageMeta.json` → runtime titles (`useDocumentMeta`) and

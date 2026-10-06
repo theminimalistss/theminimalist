@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.10.0
+VERSION: 0.11.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.10.0 reviewed and verified; ready for the next scoped change.
+CURRENT TASK: Review the refined 0.11.0 Works sculpture (ivory, auto focus, trace-in, sound).
 
 ## Completed
 
@@ -29,12 +29,15 @@ CURRENT TASK: 0.10.0 reviewed and verified; ready for the next scoped change.
   pause/resume with a layout-stable motion label.
 - 0.10.0: Animated mobile ↔ desktop resize; per-word text glide on view switch;
   Safari preview flatten fix; spiral → gallery stacking/angle fix; founder LinkedIn.
+- 0.11.0: Works tesseract on ivory: traced entrance, automatic front-study preview,
+  focus stepper, eased hover/drag motion, view-transition gallery switch, and a
+  Works sound scene; reduced-motion and WebGL fallbacks.
 
-## Latest verification — 2026-10-06
+## Latest verification — 2026-10-07
 
-- `npm run check`: passed, including 85 unit tests, production build, version
+- `npm run check`: passed, including 97 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 78 passed, 9 configured skips across desktop Chromium,
+- `npm run test:e2e`: 101 passed, 10 configured skips across desktop Chromium,
   desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits

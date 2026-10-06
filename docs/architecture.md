@@ -161,3 +161,60 @@ Replace the repository for a CMS while retaining the validated service contract.
 Add runtime configuration only when integrations need it. Avoid global state or
 another animation engine without a demonstrated requirement. Routing is
 centralized; the homepage is eager for LCP and the fallback route is lazy.
+
+## Immersive Works
+
+`works.repository` → `works.service` → `useHeroWorks` → `WorkExplorer` supplies the
+same validated, ordered collection used on Home. No rendering component imports
+repository content. `useWorkHover` coordinates hover, keyboard focus, tap, Escape,
+and the short pointer gap between a point and its preview.
+
+`useTesseract` owns the canvas lifecycle, input capture, easing, observers, page
+visibility, and requestAnimationFrame. `utils/tesseract.ts` projects the 16-vertex,
+32-edge hypercube through a fixed 4D perspective (`toSolid`, computed once, so the
+shape never deforms) and a 3D rotation. `tesseractScene` batches the 32 edges and
+12 faces into one draw call. Nodes use the same projection for DOM hit targets.
+Context loss shows a static SVG, and restoration rebuilds resources.
+
+Motion: the cruise factor eases between 0 and 1 over `holdDuration` whenever a
+study is pinned, the control has keyboard focus, or the sculpture is paused. A
+drag records its velocity, and on release that momentum decays
+(`flingDecay`) into the cruise. Arrow keys, Home/Reset, and "bring to front"
+(`getFrontAngles`) run eased glides. The frame loop stops once everything is at
+rest.
+
+Entrance: after `useAppEntered` (the loader revealing the page, or any later
+navigation), `reveal` runs over `traceDuration`. `getTraceSchedule` staggers the
+outer cube, the edges reaching inward, and the inner cube. Faces fade in last,
+and `data-traced` reveals the points and the first preview.
+
+Focus: each frame, `pickFront` takes the point nearest the viewer, with a margin so
+the focus does not flicker. When `getFocusPlacement` finds room beside the
+sculpture, the focused study is shown there automatically; otherwise only the
+`FocusStepper` names it. The stepper's arrows glide the neighbouring study to the
+front, so the control keeps its size for any collection.
+
+`useParticlePreview` owns poster decoding, placement, GPU cleanup, and the
+assembly/dispersal timeline. When the requested study changes, the shown one
+disperses into its own point before the next assembles from its point. A reusable
+canvas draws 5,120 particles on narrow screens or 11,520 on desktop from a 480px
+WebP texture. Once assembled, native responsive images or the visibility-aware
+video component take over, so settled previews need no particle frames. Failed
+textures or contexts fall back to native media.
+
+Spatial ↔ gallery switches run in a view transition (`useWorksView`). The root
+crossfades while `works-title` and `works-toggle` glide; without the API, the new
+presentation fades in. Both use the ivory canvas.
+
+Sound: `useSoundScene('works')` crossfades the ambient bed to `AMBIENT_WORKS`.
+While it is active, `soundEngine` answers hover, click, and switch with
+synthesized glass tones, and adds per-point notes (`note`), assembly sparkle
+(`shimmer`), and `grab`/`fling` gestures through a shared short reverb.
+
+Offscreen or hidden scenes, and scenes behind menus or dialogs, stop scheduling
+frames. Input uses pointer capture with `pan-y`, so touch scrolling remains
+available. Reduced motion defaults to the normal gallery. All geometry, shaders,
+and CSS arrive with the lazy Works route.
+
+Implementation references: [WebGL best practices](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices)
+and [Pointer events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events).

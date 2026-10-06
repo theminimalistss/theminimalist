@@ -65,6 +65,7 @@ test('header, breadcrumbs, and section tabs show where you are', async ({ page, 
 });
 
 test('new pages pass accessibility checks', async ({ page }) => {
+  test.slow(); // Loads and audits five pages in turn.
   for (const path of [
     '/about',
     '/founders',

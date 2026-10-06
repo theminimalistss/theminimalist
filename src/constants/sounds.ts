@@ -50,6 +50,26 @@ export const SWELL = {
   close: [440, 659.25],
 } as const;
 
+export type AmbientPreset = {
+  level: number;
+  fadeIn: number;
+  glide: number;
+  reverbSeconds: number;
+  chordSeconds: number;
+  filter: number;
+  filterSweep: number;
+  chimeLevel: number;
+  chimeEvery: readonly [number, number];
+  /** Bell overtone (ratio, relative level) layered on each chime; 0 keeps a pure tone. */
+  chimeBell: readonly [number, number];
+  /** The noise layer: a low surf at home, high air in the Works sculpture. */
+  air: { type: BiquadFilterType; frequency: number };
+  waveLevel: readonly [number, number];
+  waveSeconds: number;
+  chords: readonly (readonly number[])[];
+  chimes: readonly number[];
+};
+
 export const AMBIENT = {
   level: 0.06,
   fadeIn: 8,
@@ -60,6 +80,8 @@ export const AMBIENT = {
   filterSweep: 200,
   chimeLevel: 0.028,
   chimeEvery: [14, 26],
+  chimeBell: [1, 0],
+  air: { type: 'lowpass', frequency: 650 },
   waveLevel: [0.002, 0.011],
   waveSeconds: 14,
   chords: [
@@ -69,4 +91,51 @@ export const AMBIENT = {
     [110, 164.81, 220, 277.18, 329.63],
   ],
   chimes: [587.33, 659.25, 739.99, 880],
+} as const satisfies AmbientPreset;
+
+/** A brighter, more spacious bed for the Works sculpture: glassy voicings and air. */
+export const AMBIENT_WORKS = {
+  level: 0.05,
+  fadeIn: 6,
+  glide: 6,
+  reverbSeconds: 7,
+  chordSeconds: 28,
+  filter: 1500,
+  filterSweep: 420,
+  chimeLevel: 0.02,
+  chimeEvery: [7, 13],
+  chimeBell: [2.76, 0.32],
+  air: { type: 'highpass', frequency: 2600 },
+  waveLevel: [0.0012, 0.005],
+  waveSeconds: 18,
+  chords: [
+    [220, 329.63, 493.88, 554.37, 659.25],
+    [196, 293.66, 440, 493.88, 587.33],
+    [246.94, 369.99, 440, 554.37, 739.99],
+    [174.61, 261.63, 392, 440, 523.25],
+  ],
+  chimes: [1318.51, 1479.98, 1760, 1975.53, 2217.46],
+} as const satisfies AmbientPreset;
+
+export const AMBIENTS = { home: AMBIENT, works: AMBIENT_WORKS } as const;
+
+export type SoundScene = keyof typeof AMBIENTS;
+
+/** Synthesized glass feedback for the Works sculpture; each point has its own note. */
+export const GLASS = {
+  scale: [880, 987.77, 1108.73, 1318.51, 1479.98, 1760, 1975.53, 2217.46],
+  room: 1.8,
+  wet: 0.35,
+  partials: [
+    [1, 1],
+    [2.76, 0.35],
+    [5.4, 0.12],
+  ],
+  hover: { frequency: 2349.32, level: 0.022, decay: 0.28 },
+  click: { frequency: 880, level: 0.055, decay: 0.7 },
+  note: { level: 0.045, decay: 1.1 },
+  focus: { level: 0.016, decay: 1.6 },
+  shimmer: { level: 0.011, steps: 6, spread: 0.52 },
+  grab: { level: 0.05 },
+  fling: { level: 0.05, threshold: 0.08 },
 } as const;

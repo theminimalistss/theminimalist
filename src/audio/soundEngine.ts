@@ -1,5 +1,13 @@
-import { createAmbient, type Ambient } from '@/audio/ambient';
-import { SOUND_MIX, SOUNDS, SWELL, type SoundName } from '@/constants/sounds';
+import { createAmbient, createImpulse, type Ambient } from '@/audio/ambient';
+import {
+  AMBIENTS,
+  GLASS,
+  SOUND_MIX,
+  SOUNDS,
+  SWELL,
+  type SoundName,
+  type SoundScene,
+} from '@/constants/sounds';
 
 type Listener = () => void;
 type PlayOptions = { volume?: number };
@@ -34,6 +42,8 @@ class SoundEngine {
   private master: GainNode | null = null;
   private noise: AudioBuffer | null = null;
   private ambient: Ambient | null = null;
+  private room: GainNode | null = null;
+  private scene: SoundScene = 'home';
   private visible = true;
   private suspendTimer = 0;
   private enabled = true;
@@ -65,6 +75,16 @@ class SoundEngine {
     this.applyState();
   }
 
+  /** Each scene has its own ambient bed; switching crossfades between them. */
+  setScene(scene: SoundScene) {
+    if (this.scene === scene) return;
+    this.scene = scene;
+    const context = this.context;
+    if (!context || !this.master || !this.noise || !this.ambient) return;
+    this.ambient.stop(2.5);
+    this.ambient = createAmbient(context, this.master, this.noise, AMBIENTS[scene], 4);
+  }
+
   private applyState() {
     const context = this.context;
     if (!context || !this.master) return;
@@ -74,7 +94,7 @@ class SoundEngine {
     if (audible) {
       void context.resume();
       if (!this.ambient && this.noise)
-        this.ambient = createAmbient(context, this.master, this.noise);
+        this.ambient = createAmbient(context, this.master, this.noise, AMBIENTS[this.scene]);
       return;
     }
     this.suspendTimer = window.setTimeout(() => void context.suspend(), 400);
@@ -140,9 +160,11 @@ class SoundEngine {
     const context = this.ready();
     const buffer = this.buffers.get(name);
     const spec: { volume: number; throttle?: number; group?: string } = SOUNDS[name];
-    if (!context || !buffer || !this.master) return;
+    if (!context || !this.master || (!buffer && this.scene !== 'works')) return;
     if (spec.throttle && !this.allowed(name, spec.throttle)) return;
     if (spec.group && !this.allowed(spec.group, SOUND_MIX.groupGap)) return;
+    if (this.scene === 'works' && this.playGlass(name, volume)) return;
+    if (!buffer) return;
     const source = context.createBufferSource();
     const gain = context.createGain();
     source.buffer = buffer;
@@ -172,6 +194,124 @@ class SoundEngine {
     source.connect(filter).connect(gain).connect(this.master);
     source.start(start, Math.random() * 0.4);
     source.stop(start + 0.55);
+  };
+
+  /** A short reverb shared by the glass sounds so they ring in one space. */
+  private glassRoom(context: AudioContext, master: GainNode) {
+    if (this.room) return this.room;
+    const input = context.createGain();
+    const reverb = context.createConvolver();
+    const wet = context.createGain();
+    reverb.buffer = createImpulse(context, GLASS.room);
+    wet.gain.value = GLASS.wet;
+    input.connect(master);
+    input.connect(reverb).connect(wet).connect(master);
+    this.room = input;
+    return input;
+  }
+
+  private glass(frequency: number, level: number, decay: number, delay = 0) {
+    const context = this.ready();
+    const master = this.master;
+    if (!context || !master) return;
+    const output = this.glassRoom(context, master);
+    const start = context.currentTime + delay;
+    GLASS.partials.forEach(([ratio, weight], index) => {
+      const tone = context.createOscillator();
+      const envelope = context.createGain();
+      const length = decay / (1 + index);
+      tone.type = 'sine';
+      tone.frequency.value = frequency * ratio;
+      envelope.gain.setValueAtTime(0.0001, start);
+      envelope.gain.exponentialRampToValueAtTime(level * weight, start + 0.005);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, start + length);
+      tone.connect(envelope).connect(output);
+      tone.start(start);
+      tone.stop(start + length + 0.05);
+    });
+  }
+
+  private playGlass(name: SoundName, volume: number) {
+    const shift = 1 + (Math.random() - 0.5) * SOUND_MIX.pitchVariation * 0.5;
+    if (name === 'hover') {
+      const { frequency, level, decay } = GLASS.hover;
+      this.glass(frequency * shift, level * volume, decay);
+      return true;
+    }
+    if (name === 'click') {
+      const { frequency, level, decay } = GLASS.click;
+      this.glass(frequency * shift, level * volume, decay);
+      this.glass(frequency * 1.5 * shift, level * 0.5 * volume, decay * 0.7, 0.012);
+      return true;
+    }
+    if (name === 'switch') {
+      this.glass(659.25, 0.04 * volume, 0.9);
+      this.glass(987.77, 0.035 * volume, 0.9, 0.07);
+      return true;
+    }
+    return false;
+  }
+
+  /** The note belonging to a point in the sculpture: its tactile identity. */
+  note = (index: number, kind: 'hover' | 'focus') => {
+    if (!this.allowed(`note-${kind}`, kind === 'hover' ? 60 : 400)) return;
+    const pitch = GLASS.scale[index % GLASS.scale.length] ?? 880;
+    const { level, decay } = kind === 'hover' ? GLASS.note : GLASS.focus;
+    this.glass(kind === 'hover' ? pitch : pitch / 2, level, decay);
+  };
+
+  /** Particles gathering into an image: a brief rising sparkle. */
+  shimmer = () => {
+    if (!this.allowed('shimmer', 300)) return;
+    const { level, steps, spread } = GLASS.shimmer;
+    for (let step = 0; step < steps; step++) {
+      const pitch = GLASS.scale[(step * 2 + 3) % GLASS.scale.length] ?? 1760;
+      this.glass(pitch * 2, level * (1 - step / (steps + 2)), 0.35, (step / steps) * spread);
+    }
+  };
+
+  /** Taking hold of the sculpture: a soft, low touch. */
+  grab = () => {
+    const context = this.ready();
+    const master = this.master;
+    if (!context || !master || !this.allowed('grab', 120)) return;
+    const start = context.currentTime;
+    const tone = context.createOscillator();
+    const envelope = context.createGain();
+    tone.type = 'sine';
+    tone.frequency.setValueAtTime(150, start);
+    tone.frequency.exponentialRampToValueAtTime(92, start + 0.14);
+    envelope.gain.setValueAtTime(0.0001, start);
+    envelope.gain.exponentialRampToValueAtTime(GLASS.grab.level, start + 0.008);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + 0.2);
+    tone.connect(envelope).connect(master);
+    tone.start(start);
+    tone.stop(start + 0.22);
+  };
+
+  /** Letting go with momentum: air that trails off with the spin. */
+  fling = (intensity: number) => {
+    const context = this.ready();
+    const master = this.master;
+    if (!context || !master || !this.noise || intensity < GLASS.fling.threshold) return;
+    if (!this.allowed('fling', 200)) return;
+    const amount = Math.min(1, intensity);
+    const start = context.currentTime;
+    const length = 0.4 + amount * 0.5;
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    const envelope = context.createGain();
+    source.buffer = this.noise;
+    filter.type = 'bandpass';
+    filter.Q.value = 1.4;
+    filter.frequency.setValueAtTime(1_600 + 1_400 * amount, start);
+    filter.frequency.exponentialRampToValueAtTime(520, start + length);
+    envelope.gain.setValueAtTime(0.0001, start);
+    envelope.gain.exponentialRampToValueAtTime(GLASS.fling.level * amount, start + 0.05);
+    envelope.gain.exponentialRampToValueAtTime(0.0001, start + length);
+    source.connect(filter).connect(envelope).connect(this.glassRoom(context, master));
+    source.start(start, Math.random() * 0.4);
+    source.stop(start + length + 0.05);
   };
 
   swell = (direction: 'in' | 'out') => {

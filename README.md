@@ -1,10 +1,11 @@
 # The Minimalist
 
-**Design studio · v0.10.0 · Landing experience + site structure**
+**Design studio · v0.11.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
-experience is complete; the other pages exist with temporary content.
+experience, Works explorer, Founders, and Contact are implemented; remaining
+pages contain provisional content.
 
 The six projects are **independent concept studies with licensed stock media**,
 not commissioned client work. Replace them with approved portfolio content
@@ -16,6 +17,13 @@ Spatial spiral and gallery with morphing transitions, a WebGL lotus intro and
 menu, page transitions, scroll reveals, and quiet interface sound with a
 generative ambient bed (toggle “Sound” in the header). Built for Chrome/Edge 90+,
 Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
+
+Works fills the viewport with an interactive WebGL tesseract on the ivory canvas.
+It traces itself in, then shows the study nearest the viewer, assembled from
+particles. Drag (with momentum) or use the arrow keys to rotate. Hover, focus, or
+tap a point to preview it, and step through studies with the focus control. Works
+has its own ambient bed and glass-like sounds. A gallery, a reduced-motion
+presentation, and WebGL fallbacks keep every study accessible.
 
 ## Site map
 

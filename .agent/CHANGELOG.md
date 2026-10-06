@@ -5,6 +5,62 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-10-07
+
+### Added
+
+- Full-viewport Works sculpture: a rigid WebGL tesseract drawn in forest ink on the
+  ivory canvas, with faint glass faces and selectable points. On arrival, whether
+  after the loader or a navigation, the edges trace themselves in. The outer cube
+  draws first, then the edges reaching inward, then the inner cube; the faces,
+  points, and first preview follow.
+- The study nearest the viewer is shown automatically. On wide screens it sits in
+  a fixed slot beside the sculpture, assembled from particles that stream out of
+  its point. When the front point changes, the old study flows back into its point
+  and the next assembles from its own.
+- Hovering, focusing, or tapping a point shows that study instead. Hovering the
+  shown study pins it, and choosing it opens the accessible project dialog.
+- A focus stepper (← 03 / 06 Solenne →) replaces the row of every title. The
+  arrows glide the next study to the front, and the control keeps its size for any
+  number of works; the gallery remains the full list.
+- Motion eases rather than stops. Hover, keyboard focus, and pause ease the
+  rotation to rest and back (0.9 s). A released drag keeps its momentum and blends
+  into the slow cruise; arrow keys, Home, and Reset glide.
+- Switching between Spatial and Gallery crossfades in a view transition while the
+  title and toggle glide, with no colour change between the two.
+- A Works sound scene: a brighter, more spacious ambient bed (glassy voicings,
+  high air, bell-like chimes) crossfades in. Glass tones replace the sampled
+  hover, click, and switch sounds; each point has its own note. Assembly, grabbing,
+  and releasing the sculpture have their own sounds.
+- Reduced motion defaults to the gallery and shows previews without particles;
+  WebGL failures keep static geometry and native previews.
+
+### AI session
+
+Changed: Works page, explorer, stage, preview, and stepper UI; `useTesseract`,
+`useParticlePreview`, `useWorkHover`, `useWorksView`, `useAppEntered`, and
+`useSoundScene`; geometry, trace, focus, and placement utils; GPU scenes and
+shaders; the sound engine, ambient presets, and glass sounds; styles, tests,
+version files, and handoff documentation.
+
+Reason: The user requested an immersive tesseract Works page with particle
+previews, then refined it. They asked to remove the corner cubes and keep the shape
+from deforming, and to ease hover pauses and drag releases. They wanted the front
+study shown automatically, a smooth spatial ↔ gallery switch, a control that
+scales beyond six works, and a traced entrance. They doubted the green background
+and asked for Works-specific sound.
+
+Verification: Frame recordings in headless Chromium and WebKit covered the
+entrance trace (after the loader and after navigation), the study handoff, both
+view switches, and drag momentum. Measurements confirmed the hover ease (motion to
+zero over 0.7 s) and the release (momentum decaying into the cruise). A
+Web Audio probe confirmed the scene change and gesture sounds without errors;
+levels still need listening on real speakers.
+
+Tests: `npm run check` passes (97 unit tests); Playwright 101 passed, 10 skipped
+(Firefox in CI; hover-only checks on touch). The five-page accessibility sweep is
+marked slow because it can time out under parallel WebGL load.
+
 ## [0.10.0] — 2026-10-06
 
 ### Added
