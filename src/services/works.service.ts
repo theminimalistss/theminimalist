@@ -56,7 +56,8 @@ export function normalizeWork(value: unknown): Work {
     artDirection !== 'solenne' &&
     artDirection !== 'earth' &&
     artDirection !== 'arc' &&
-    artDirection !== 'wild'
+    artDirection !== 'wild' &&
+    artDirection !== 'ink'
   ) {
     throw new WorkValidationError('Unknown work art direction.');
   }
@@ -102,11 +103,8 @@ export function normalizeWork(value: unknown): Work {
   throw new WorkValidationError('Unsupported work media type.');
 }
 
-export async function getHeroWorks(
-  repository: WorksRepository = worksRepository,
-  signal?: AbortSignal,
-): Promise<Work[]> {
-  const data = await repository.getFeaturedWorks(signal);
+async function getWorks(repository: WorksRepository, signal?: AbortSignal): Promise<Work[]> {
+  const data = await repository.getWorks(signal);
   if (!Array.isArray(data)) throw new WorkValidationError('The work collection must be an array.');
   const works = data.map((value: unknown) => normalizeWork(value));
   if (
@@ -115,7 +113,19 @@ export async function getHeroWorks(
   ) {
     throw new WorkValidationError('Work IDs and slugs must be unique.');
   }
-  return works
-    .filter((work) => work.featured)
-    .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+  return works.sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+}
+
+export async function getHeroWorks(
+  repository: WorksRepository = worksRepository,
+  signal?: AbortSignal,
+): Promise<Work[]> {
+  return (await getWorks(repository, signal)).filter((work) => work.featured);
+}
+
+export async function getCollectionWorks(
+  repository: WorksRepository = worksRepository,
+  signal?: AbortSignal,
+): Promise<Work[]> {
+  return getWorks(repository, signal);
 }

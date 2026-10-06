@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { getHeroWorks } from '@/services/works.service';
+import { getCollectionWorks, getHeroWorks } from '@/services/works.service';
 import type { Work } from '@/types/work';
 
 type WorksState =
   { status: 'loading' } | { status: 'ready'; works: Work[] } | { status: 'error'; message: string };
 
-export function useHeroWorks() {
+function useWorks(load: typeof getHeroWorks) {
   const [state, setState] = useState<WorksState>({ status: 'loading' });
   const [request, setRequest] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
-    void getHeroWorks(undefined, controller.signal).then(
+    void load(undefined, controller.signal).then(
       (works) => {
         if (!controller.signal.aborted) setState({ status: 'ready', works });
       },
@@ -25,7 +25,7 @@ export function useHeroWorks() {
       },
     );
     return () => controller.abort();
-  }, [request]);
+  }, [load, request]);
 
   function retry() {
     setState({ status: 'loading' });
@@ -33,6 +33,14 @@ export function useHeroWorks() {
   }
 
   return { ...state, retry };
+}
+
+export function useHeroWorks() {
+  return useWorks(getHeroWorks);
+}
+
+export function useCollectionWorks() {
+  return useWorks(getCollectionWorks);
 }
 
 export type HeroWorks = ReturnType<typeof useHeroWorks>;

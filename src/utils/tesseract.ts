@@ -32,8 +32,19 @@ export function projectPoint(point: Point3, yaw: number, pitch: number): Point3 
   return { x: x * perspective, y: y * perspective, z };
 }
 
+const EDGE_MIDPOINTS: readonly Point3[] = (() => {
+  const reach = 1.3 / Math.SQRT2;
+  const points: Point3[] = [];
+  for (const a of [reach, -reach])
+    for (const b of [reach, -reach])
+      points.push({ x: a, y: b, z: 0 }, { x: a, y: 0, z: b }, { x: 0, y: a, z: b });
+  const depth = (point: Point3) => projectPoint(point, TESSERACT.yaw, TESSERACT.pitch).z;
+  return points.sort((p, q) => depth(q) - depth(p));
+})();
+
 /** Face centres for six studies; an even spherical arrangement for other collection sizes. */
 export function getWorkAnchor(index: number, count: number): Point3 {
+  if (count === 12) return EDGE_MIDPOINTS[index] ?? EDGE_MIDPOINTS[0]!;
   if (count === 6) {
     const faces = [
       { x: 0, y: 0, z: 1.3 },

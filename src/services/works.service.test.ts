@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { getHeroWorks, normalizeWork, WorkValidationError } from '@/services/works.service';
+import {
+  getCollectionWorks,
+  getHeroWorks,
+  normalizeWork,
+  WorkValidationError,
+} from '@/services/works.service';
 import { imageWork, videoWork } from '@/tests/fixtures';
 
 describe('work validation and selection', () => {
@@ -46,33 +51,42 @@ describe('work validation and selection', () => {
       { ...imageWork, order: 1 },
       { ...imageWork, id: 'hidden', slug: 'hidden', featured: false },
     ];
-    const works = await getHeroWorks({ getFeaturedWorks: async () => raw });
+    const works = await getHeroWorks({ getWorks: async () => raw });
     expect(works.map((work) => work.id)).toEqual(['test', 'video']);
     expect(raw[0]?.id).toBe('video');
   });
 
+  it('includes studies that are not featured in the full collection', async () => {
+    const raw = [
+      { ...imageWork, id: 'hidden', slug: 'hidden', featured: false, order: 2 },
+      { ...videoWork, order: 1 },
+    ];
+    const works = await getCollectionWorks({ getWorks: async () => raw });
+    expect(works.map((work) => work.id)).toEqual(['video', 'hidden']);
+  });
+
   it('uses stable ID ordering for equal explicit order values', async () => {
-    const works = await getHeroWorks({ getFeaturedWorks: async () => [videoWork, imageWork] });
+    const works = await getHeroWorks({ getWorks: async () => [videoWork, imageWork] });
     expect(works.map((work) => work.id)).toEqual(['test', 'video']);
   });
 
   it('supports an empty collection', async () => {
-    await expect(getHeroWorks({ getFeaturedWorks: async () => [] })).resolves.toEqual([]);
+    await expect(getHeroWorks({ getWorks: async () => [] })).resolves.toEqual([]);
   });
 
   it.each([null, {}, 'invalid'])('rejects malformed collections', async (value) => {
-    await expect(getHeroWorks({ getFeaturedWorks: async () => value })).rejects.toThrow(
+    await expect(getHeroWorks({ getWorks: async () => value })).rejects.toThrow(
       WorkValidationError,
     );
   });
 
   it('rejects duplicate IDs and duplicate slugs', async () => {
-    await expect(
-      getHeroWorks({ getFeaturedWorks: async () => [imageWork, imageWork] }),
-    ).rejects.toThrow('unique');
+    await expect(getHeroWorks({ getWorks: async () => [imageWork, imageWork] })).rejects.toThrow(
+      'unique',
+    );
     await expect(
       getHeroWorks({
-        getFeaturedWorks: async () => [imageWork, { ...imageWork, id: 'different' }],
+        getWorks: async () => [imageWork, { ...imageWork, id: 'different' }],
       }),
     ).rejects.toThrow('unique');
   });
@@ -80,7 +94,7 @@ describe('work validation and selection', () => {
   it('propagates repository failures', async () => {
     await expect(
       getHeroWorks({
-        getFeaturedWorks: async () => {
+        getWorks: async () => {
           throw new Error('Offline');
         },
       }),

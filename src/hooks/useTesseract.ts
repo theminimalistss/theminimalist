@@ -35,6 +35,14 @@ type Glide = {
   elapsed: number;
 };
 
+function focusVisible(element: Element) {
+  try {
+    return element.matches(':focus-visible');
+  } catch {
+    return false;
+  }
+}
+
 const clampPitch = (pitch: number) =>
   Math.max(-TESSERACT.maxPitch, Math.min(TESSERACT.maxPitch, pitch));
 const clampFling = (speed: number) =>
@@ -153,6 +161,17 @@ export function useTesseract({
         // Resume from rest after a dialog, the menu, or a hidden tab.
         speed = speedFrom = speedGoal = 0;
         last = 0;
+        return;
+      }
+      const cruising =
+        reveal >= 1 &&
+        !settings.current.leaving &&
+        !held() &&
+        speed > 0.999 &&
+        !flingYaw &&
+        !flingPitch;
+      if (cruising && last && time - last < TESSERACT.idleFrame) {
+        frame = requestAnimationFrame(animate);
         return;
       }
       const delta = last ? Math.min(64, time - last) : 0;
@@ -331,7 +350,7 @@ export function useTesseract({
     };
     // Only keyboard focus holds the sculpture; a pointer drag focuses the control too.
     const focusIn = (event: FocusEvent) => {
-      keyboardFocus = event.target instanceof Element && event.target.matches(':focus-visible');
+      keyboardFocus = event.target instanceof Element && focusVisible(event.target);
       wake();
     };
     const focusOut = (event: FocusEvent) => {

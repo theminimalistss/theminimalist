@@ -22,8 +22,9 @@ function image(name: string): ImageSources {
 }
 
 const base = { year: 2026, featured: true, isConcept: true, width: 960, height: 1200 };
+const collection = { ...base, featured: false };
 
-export const featuredWorks = [
+export const works = [
   {
     ...base,
     id: 'forma',
@@ -119,5 +120,101 @@ export const featuredWorks = [
     src: asset('videos/hero/wild.webm'),
     mp4: asset('videos/hero/wild.mp4'),
     poster: image('wild-poster'),
+  },
+  {
+    ...collection,
+    id: 'terra',
+    slug: 'terra-ceramics',
+    title: 'Terra',
+    category: 'Packaging & identity',
+    tagline: 'Made of earth, made to keep.',
+    order: 6,
+    artDirection: 'solenne',
+    alt: 'Pastel ceramic vases holding dried grasses on a soft linen surface.',
+    description:
+      'A packaging and identity study for a small ceramics studio. Soft glazes, honest forms, and labels that feel made by hand.',
+    mediaType: 'image',
+    image: image('terra'),
+  },
+  {
+    ...collection,
+    id: 'lumen',
+    slug: 'lumen-focus',
+    title: 'Lumen',
+    category: 'Software product',
+    tagline: 'Work in better light.',
+    order: 7,
+    artDirection: 'ink',
+    alt: 'The shadow of a palm sways across a warm, sunlit wall.',
+    description:
+      'A software concept for a calm focus app. The interface follows the light of the day, with fewer alerts and more room to think.',
+    mediaType: 'video',
+    src: asset('videos/hero/lumen.webm'),
+    mp4: asset('videos/hero/lumen.mp4'),
+    poster: image('lumen-poster'),
+  },
+  {
+    ...collection,
+    id: 'folio',
+    slug: 'folio-press',
+    title: 'Folio',
+    category: 'Editorial website',
+    tagline: 'Words, given room.',
+    order: 8,
+    artDirection: 'arc',
+    alt: 'A blank sheet of white paper beside a black pen on a grey surface.',
+    description:
+      'An editorial website study for an independent publisher. Generous margins, quiet typography, and reading that feels like paper.',
+    mediaType: 'image',
+    image: image('folio'),
+  },
+  {
+    ...collection,
+    id: 'grain',
+    slug: 'grain-bakery',
+    title: 'Grain',
+    category: 'Brand & website',
+    tagline: 'Slow bread, honest crust.',
+    order: 9,
+    artDirection: 'wild',
+    alt: 'Floured hands knead soft dough on a dusted work surface.',
+    description:
+      'A brand and ordering website for a neighbourhood bakery. Warm textures, a daily menu, and pickup arranged in a few taps.',
+    mediaType: 'video',
+    src: asset('videos/hero/grain.webm'),
+    mp4: asset('videos/hero/grain.mp4'),
+    poster: image('grain-poster'),
+  },
+  {
+    ...collection,
+    id: 'linnea',
+    slug: 'linnea-linen',
+    title: 'Linnea',
+    category: 'E-commerce',
+    tagline: 'Wear it softly.',
+    order: 10,
+    artDirection: 'forma',
+    alt: 'Linen garments hang on wooden hangers in a softly lit wardrobe.',
+    description:
+      'An e-commerce study for a linen label. Natural textures, unhurried product pages, and a checkout that stays out of the way.',
+    mediaType: 'image',
+    image: image('linnea'),
+  },
+  {
+    ...collection,
+    id: 'haven',
+    slug: 'haven-retreat',
+    title: 'Haven',
+    category: 'Booking platform',
+    tagline: 'Arrive somewhere quiet.',
+    order: 11,
+    artDirection: 'ink',
+    alt: 'A sheer white curtain moves softly in warm morning light.',
+    description:
+      'A booking platform concept for a concrete retreat. Clear availability, calm imagery, and a stay planned in minutes.',
+    mediaType: 'video',
+    src: asset('videos/hero/haven.webm'),
+    mp4: asset('videos/hero/haven.mp4'),
+    poster: image('haven-poster'),
   },
 ] satisfies Work[];

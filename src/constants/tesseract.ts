@@ -8,6 +8,7 @@ export const TESSERACT = {
   maxBufferSize: 1800,
   cameraDistance: 5,
   scale: 0.18,
+  idleFrame: 1000 / 30,
   /** Pause and resume ease over this many milliseconds. */
   holdDuration: 900,
   /** A released drag keeps its momentum, decaying with this time constant (ms). */

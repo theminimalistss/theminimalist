@@ -19,7 +19,7 @@ export type WorkBase = {
   featured: boolean;
   order: number;
   isConcept: boolean;
-  artDirection: 'forma' | 'still' | 'solenne' | 'earth' | 'arc' | 'wild';
+  artDirection: 'forma' | 'still' | 'solenne' | 'earth' | 'arc' | 'wild' | 'ink';
 };
 
 export type ImageWork = WorkBase & {
@@ -37,5 +37,5 @@ export type VideoWork = WorkBase & {
 export type Work = ImageWork | VideoWork;
 
 export interface WorksRepository {
-  getFeaturedWorks(signal?: AbortSignal): Promise<unknown>;
+  getWorks(signal?: AbortSignal): Promise<unknown>;
 }

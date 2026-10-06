@@ -7,6 +7,8 @@ const cache = '.cache/media';
 const imageDir = 'src/assets/images/hero';
 const videoDir = 'src/assets/videos/hero';
 for (const directory of [cache, imageDir, videoDir]) await mkdir(directory, { recursive: true });
+const only = new Set(process.argv.slice(2));
+const selected = (asset) => !only.size || only.has(asset.name);
 
 async function download(url, output) {
   try {
@@ -20,24 +22,30 @@ async function download(url, output) {
   }
 }
 
-async function imageVariants(input, name) {
+async function imageVariants(input, name, quality = {}) {
   for (const width of [480, 960]) {
     const crop = sharp(input)
       .rotate()
       .resize(width, Math.round(width * 1.25), { fit: 'cover', position: 'attention' });
-    await crop.clone().avif({ quality: 55, effort: 5 }).toFile(`${imageDir}/${name}-${width}.avif`);
-    await crop.clone().webp({ quality: 78 }).toFile(`${imageDir}/${name}-${width}.webp`);
+    await crop
+      .clone()
+      .avif({ quality: quality.avif ?? 55, effort: 5 })
+      .toFile(`${imageDir}/${name}-${width}.avif`);
+    await crop
+      .clone()
+      .webp({ quality: quality.webp ?? 78 })
+      .toFile(`${imageDir}/${name}-${width}.webp`);
   }
 }
 
-for (const asset of images) {
+for (const asset of images.filter(selected)) {
   const input = `${cache}/${asset.name}.jpg`;
   await download(asset.url, input);
-  await imageVariants(input, asset.name);
+  await imageVariants(input, asset.name, asset.quality);
   console.info(`Prepared image: ${asset.name}`);
 }
 
-for (const asset of videos) {
+for (const asset of videos.filter(selected)) {
   const input = `${cache}/${asset.name}.mp4`;
   await download(asset.url, input);
   // A short dissolve joins the closing second to the opening second, avoiding a hard loop cut.

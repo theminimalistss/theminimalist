@@ -74,7 +74,7 @@ describe('tesseract geometry', () => {
   });
 
   it('provides distinct finite anchors for collections of different sizes', () => {
-    for (const count of [1, 4, 6, 10]) {
+    for (const count of [1, 4, 6, 10, 12]) {
       const anchors = Array.from({ length: count }, (_, index) => getWorkAnchor(index, count));
       expect(new Set(anchors.map((point) => JSON.stringify(point))).size).toBe(count);
       for (const anchor of anchors)
@@ -89,7 +89,7 @@ describe('tesseract geometry', () => {
   });
 
   it('brings any anchor nearest the viewer', () => {
-    for (const count of [6, 10]) {
+    for (const count of [6, 10, 12]) {
       const anchors = Array.from({ length: count }, (_, index) => getWorkAnchor(index, count));
       anchors.forEach((anchor, index) => {
         const { yaw, pitch } = getFrontAngles(anchor);
@@ -132,5 +132,13 @@ describe('tesseract geometry', () => {
     const flipped = chooseHeading(TESSERACT.rotationSpeed, 0.4, sequence(0.5, 0.1, 0.5, 0));
     expect(flipped.yaw).toBeLessThan(0);
     expect(0.4 + flipped.pitch * flipped.duration).toBeCloseTo(TESSERACT.wander.pitch[0]);
+  });
+
+  it('opens a twelve-study collection with the first study nearest the viewer', () => {
+    const depths = Array.from(
+      { length: 12 },
+      (_, index) => projectPoint(getWorkAnchor(index, 12), TESSERACT.yaw, TESSERACT.pitch).z,
+    );
+    expect(pickFront(depths, -1, 0)).toBe(0);
   });
 });

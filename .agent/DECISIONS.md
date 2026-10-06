@@ -283,3 +283,18 @@ Impact: Keep beat timing in `HEARTBEAT`; adjust the music in `AMBIENT_WORKS.puls
 Elements that should glide on reflow need `data-glide` and no CSS transform of
 their own. Only floating previews get the surface panel; docked ones caption
 directly on the page, like the gallery.
+
+## 2026-10-07 — Featured six on Home, full collection of twelve on Works
+
+Decision: One works list. `featured` marks the six Home studies, and Works shows
+every study through `getCollectionWorks`. The new studies continue the
+image–video alternation and stay labelled as concept studies with locally
+optimized Pexels media. A small `ink` art direction gives pale footage a dark
+serif wordmark.
+
+Reason: Home's spiral and timing were designed around six works, while Works
+should scale. The `arc` wordmark is sized for very short titles.
+
+Impact: Add a study to the list. Set `featured` only for Home. Keep alternation
+and media budgets (`npm run media:audit`). Process new media with
+`node scripts/prepare-media.mjs <names>` so existing loops are not re-encoded.

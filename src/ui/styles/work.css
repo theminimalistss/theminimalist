@@ -190,6 +190,21 @@
 .work-item--wild .work-artwork {
   top: 53%;
 }
+.work-item--ink {
+  color: var(--color-media-ink);
+}
+.work-item--ink::after {
+  background: none;
+}
+.work-item--ink .work-wordmark {
+  font-family: var(--font-serif);
+  font-size: clamp(60px, 7vw, 104px);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+}
+.work-item--ink .work-artwork {
+  top: 50%;
+}
 .work-gallery {
   padding: 0;
   margin: 0 var(--page-gutter);

@@ -1,14 +1,15 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.12.0
+VERSION: 0.13.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.12.0 Works refinements (heartbeat, particle morph, music, wander, resize).
+CURRENT TASK: Review 0.13.0 (doodle logo, cross-browser/mobile pass, twelve Works studies).
 
 ## Completed
 
 - Strict React/TypeScript/Vite; repository → service → hooks → UI.
-- Six local licensed concepts, responsive images, silent loops/posters, media scripts.
+- Twelve local licensed concepts (six featured on Home), responsive images, silent
+  loops/posters, media scripts.
 - Spatial hero, gallery, menu, concept previews, and fallback route.
 - Pause/reduced-motion support, keyboard foregrounding, native dialogs.
 - Unit/browser tests, CI, tokens, source briefs, docs, and handoff records.
@@ -35,12 +36,14 @@ CURRENT TASK: Review 0.12.0 Works refinements (heartbeat, particle morph, music,
 - 0.12.0: Works heartbeat in time with new 60 BPM music; particle morph with
   un-drawing between sculpture and gallery; wandering rotation; breakpoint glide;
   card-consistent floating preview; rotation resumes after Reset.
+- 0.13.0: Doodle logo (hover sketch, click pop, scroll sway); cross-browser and
+  battery pass; Works collection of twelve alternating studies (Home keeps six).
 
 ## Latest verification — 2026-10-07
 
-- `npm run check`: passed, including 100 unit tests, production build, version
+- `npm run check`: passed, including 103 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 103 passed, 11 configured skips across desktop Chromium,
+- `npm run test:e2e`: 108 passed, 12 configured skips across desktop Chromium,
   desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits

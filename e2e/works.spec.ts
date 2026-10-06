@@ -57,7 +57,7 @@ test('the full viewport sculpture assembles a preview on hover or tap, then open
       .evaluate((element) => (element as HTMLElement).style.getPropertyValue('--beat-delay')),
   ).toMatch(/^-?\d+(\.\d+)?ms$/);
   await page.getByRole('button', { name: 'Gallery', exact: true }).click();
-  await expect(page.locator('.work-gallery>li')).toHaveCount(6);
+  await expect(page.locator('.work-gallery>li')).toHaveCount(12);
   await expect(page.locator('.tesseract-canvas')).toHaveCount(0);
   await expect(page.locator('html')).not.toHaveAttribute('data-works-morph', /.*/, {
     timeout: 5000,
@@ -76,7 +76,7 @@ test('the study nearest the viewer shows itself, and the stepper brings the next
   await openWorks(page);
   const stepper = page.getByRole('group', { name: 'Study in focus' });
   const preview = page.locator('.particle-preview');
-  await expect(stepper).toContainText('01 / 06');
+  await expect(stepper).toContainText('01 / 12');
   await expect(stepper).toContainText('Forma');
   if (isMobile) {
     await expect(preview).not.toHaveAttribute('data-active', '');
@@ -86,7 +86,7 @@ test('the study nearest the viewer shows itself, and the stepper brings the next
     await expect(preview.getByRole('heading', { level: 2 })).toHaveText(/Forma/);
   }
   await page.getByRole('button', { name: 'Next study: Still' }).click();
-  await expect(stepper).toContainText('02 / 06');
+  await expect(stepper).toContainText('02 / 12');
   await expect(page.locator('[data-work-node][data-front]')).toHaveAttribute(
     'aria-label',
     'Select Still',
@@ -102,8 +102,18 @@ test('the study nearest the viewer shows itself, and the stepper brings the next
   await page.waitForTimeout(1600);
   const reset = await node.getAttribute('style');
   await expect.poll(() => node.getAttribute('style'), { timeout: 5000 }).not.toBe(reset);
-  await page.getByRole('button', { name: /^Open .+, study \d of 6$/ }).click();
+  await page.getByRole('button', { name: /^Open .+, study \d+ of 12$/ }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
+});
+
+test('Works shows the full collection of twelve while Home keeps six', async ({ page }) => {
+  await openWorks(page);
+  await expect(page.locator('[data-work-node]')).toHaveCount(12);
+  await page.getByRole('button', { name: 'Gallery', exact: true }).click();
+  await expect(page.locator('.work-gallery>li')).toHaveCount(12);
+  await expect(page.locator('.work-gallery')).toContainText('Haven');
+  await openPage(page, '/');
+  await expect(page.locator('[data-spiral-item]')).toHaveCount(6);
 });
 
 test('hovering a point eases the sculpture to a stop, then it turns again', async ({
@@ -180,7 +190,7 @@ test('reduced motion defaults to the gallery and shows previews without particle
 }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await openPage(page, '/works');
-  await expect(page.locator('.work-gallery>li')).toHaveCount(6);
+  await expect(page.locator('.work-gallery>li')).toHaveCount(12);
   await expect(page.locator('.tesseract-canvas')).toHaveCount(0);
   expect(
     await page

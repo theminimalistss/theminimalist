@@ -1,9 +1,9 @@
-import { featuredWorks } from '@/repositories/works.content';
+import { works } from '@/repositories/works.content';
 import type { WorksRepository } from '@/types/work';
 
 export const worksRepository: WorksRepository = {
-  async getFeaturedWorks(signal) {
+  async getWorks(signal) {
     if (signal?.aborted) throw new DOMException('The request was aborted.', 'AbortError');
-    return JSON.parse(JSON.stringify(featuredWorks)) as unknown;
+    return JSON.parse(JSON.stringify(works)) as unknown;
   },
 };

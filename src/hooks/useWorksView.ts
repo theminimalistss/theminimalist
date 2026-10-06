@@ -12,7 +12,7 @@ export type WorksView = 'spatial' | 'gallery';
 type Point = { x: number; y: number };
 type Flight = { work: Work; slot: number; point: Point; box: PreviewPlacement; delay: number };
 
-const FLIGHT = { duration: 1250, stagger: 70, settle: 380, columns: 72 };
+const FLIGHT = { duration: 1250, stagger: 70, settle: 380, columns: 72, denseColumns: 52 };
 
 const posterOf = (work: Work) =>
   work.mediaType === 'image' ? work.image.webpSmall : work.poster.webpSmall;
@@ -77,7 +77,8 @@ export function useWorksView(reducedMotion: boolean, works: readonly Work[]) {
   const fly = useCallback((flights: Flight[], toGallery: boolean) => {
     const root = document.documentElement;
     const layer = layerRef.current;
-    const scene = layer && flights.length ? createParticleScene(layer, FLIGHT.columns) : null;
+    const columns = flights.length > 6 ? FLIGHT.denseColumns : FLIGHT.columns;
+    const scene = layer && flights.length ? createParticleScene(layer, columns) : null;
     if (!layer || !scene) {
       delete root.dataset.worksMorph;
       return;

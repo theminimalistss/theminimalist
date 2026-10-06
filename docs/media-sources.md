@@ -17,9 +17,16 @@ unaltered assets as a stock library. Review rights when replacing media/context.
 | `earth.*`, `earth-poster-*` | Video/poster | [Spinning clay pot, 5633932](https://www.pexels.com/video/close-up-view-of-a-spinning-clay-pot-5633932/)                   | 8 K (profile display name) | Pexels; optional credit | 2026-10-06 | Silent loop/crop/poster; Earth & Hand concept |
 | `arc-*`                     | Image        | [Architectural arches, 9530311](https://www.pexels.com/photo/architecture-arches-monochromatic-9530311/)                   | Jan van der Wolf           | Pexels; optional credit | 2026-10-06 | Crop/encode; Arc concept                      |
 | `wild.*`, `wild-poster-*`   | Video/poster | [Forest sunlight, 3493297](https://www.pexels.com/video/sunlight-peeking-through-the-leaves-of-trees-in-a-forest-3493297/) | lam loi                    | Pexels; optional credit | 2026-10-06 | Silent loop/crop/poster; Wild Ground concept  |
+| `terra-*`                   | Image        | [Ceramics home decor, 27180805](https://www.pexels.com/photo/ceramics-home-decor-27180805/)                                | Ionela Mat                 | Pexels; optional credit | 2026-10-07 | Crop/encode; Terra concept                    |
+| `lumen.*`, `lumen-poster-*` | Video/poster | [Plant shadow on a wall, 5732088](https://www.pexels.com/video/video-of-a-plant-shadow-on-the-wall-5732088/)               | Thiago José Amaral         | Pexels; optional credit | 2026-10-07 | Silent loop/crop/poster; Lumen concept        |
+| `folio-*`                   | Image        | [Paper and a pen, 5420903](https://www.pexels.com/photo/blank-white-sheet-of-paper-and-a-pen-5420903/)                     | Karola G                   | Pexels; optional credit | 2026-10-07 | Crop/encode; Folio concept                    |
+| `grain.*`, `grain-poster-*` | Video/poster | [Kneading dough, 8190079](https://www.pexels.com/video/close-up-of-a-person-kneading-a-dough-8190079/)                     | ROMAN ODINTSOV             | Pexels; optional credit | 2026-10-07 | Silent loop/crop/poster; Grain concept        |
+| `linnea-*`                  | Image        | [Linen clothes on hangers, 15923917](https://www.pexels.com/photo/linen-clothes-on-clothes-hangers-15923917/)              | Алеся Горбунова            | Pexels; optional credit | 2026-10-07 | Crop/encode; Linnea concept                   |
+| `haven.*`, `haven-poster-*` | Video/poster | [White curtain in sunlight, 4623746](https://www.pexels.com/video/a-white-curtain-in-the-sunlight-4623746/)                | Artem Podrez               | Pexels; optional credit | 2026-10-07 | Silent loop/crop/poster; Haven concept        |
 
 Download URLs are in `scripts/media-manifest.mjs`. Posters derive from their
-videos. Outputs live in `src/assets/images/hero` and `src/assets/videos/hero`.
+videos. `node scripts/prepare-media.mjs <names>` processes only the named assets.
+The first six studies are featured on Home; Works shows all twelve. Outputs live in `src/assets/images/hero` and `src/assets/videos/hero`.
 
 ## Fonts and original assets
 

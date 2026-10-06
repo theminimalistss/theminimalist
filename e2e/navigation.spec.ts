@@ -82,6 +82,42 @@ test('new pages pass accessibility checks', async ({ page }) => {
   }
 });
 
+test('the logo doodles on hover, pops on click, and sways with scrolling', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Hover and wheel are for desktop pointers.');
+  await openPage(page, '/about');
+  const logo = page.locator('.studio-logo');
+  const mark = page.locator('.studio-mark');
+  await logo.hover();
+  await expect
+    .poll(() => mark.evaluate((element) => (element as SVGElement).style.filter))
+    .toContain('url(');
+  await page.evaluate(() =>
+    document
+      .querySelector('.studio-logo')
+      ?.addEventListener('click', (event) => event.preventDefault(), { once: true }),
+  );
+  await logo.click();
+  expect(
+    await page
+      .locator('.studio-logo-pop path')
+      .evaluateAll((strokes) => strokes.filter((stroke) => stroke.getAnimations().length).length),
+  ).toBe(5);
+  await page.mouse.move(640, 600);
+  await page.mouse.wheel(0, 700);
+  await expect
+    .poll(() =>
+      page
+        .locator('.studio-logo-mark')
+        .evaluate((element) =>
+          Math.abs(Number((element as HTMLElement).style.getPropertyValue('--logo-sway') || 0)),
+        ),
+    )
+    .toBeGreaterThan(0.1);
+});
+
 test('menu rows open a preview panel and a cursor cue on hover', async ({ page, isMobile }) => {
   test.skip(isMobile, 'Hover previews are for fine pointers.');
   await openPage(page, '/about');

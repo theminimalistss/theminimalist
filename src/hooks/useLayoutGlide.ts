@@ -22,8 +22,9 @@ export function useLayoutGlide<T extends HTMLElement>() {
     const observer = new ResizeObserver(() => {
       const next = { width: window.innerWidth, height: window.innerHeight };
       const resized = Math.hypot(next.width - view.width, next.height - view.height);
+      const current = read();
       if (resized > 0 && !reduced.matches) {
-        read().forEach((box, element) => {
+        current.forEach((box, element) => {
           const previous = boxes.get(element);
           if (!previous || !box.width || !element.animate) return;
           const moved = Math.hypot(previous.left - box.left, previous.top - box.top);
@@ -37,7 +38,7 @@ export function useLayoutGlide<T extends HTMLElement>() {
         });
       }
       view = next;
-      boxes = read();
+      boxes = current;
     });
     observer.observe(root);
     return () => observer.disconnect();

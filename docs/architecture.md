@@ -162,10 +162,22 @@ Add runtime configuration only when integrations need it. Avoid global state or
 another animation engine without a demonstrated requirement. Routing is
 centralized; the homepage is eager for LCP and the fallback route is lazy.
 
+## Logo
+
+`StudioLogo` uses `useLogoDoodle`. On hover, CSS re-traces the lotus strokes
+(`lotus-draw`), and the hook applies an SVG turbulence and displacement filter,
+stepping its seed about nine times a second for a hand-drawn wobble. A click
+squashes the mark, hops the diamond, and draws five emphasis strokes out and away
+(WAAPI). Scrolling (or the wheel on pages that do not scroll) pushes a damped
+spring that rotates the mark about its base and briefly sets the lines wobbling.
+The loop stops at rest, and reduced motion skips all of it. Tuning lives in
+`LOGO_DOODLE`.
+
 ## Immersive Works
 
-`works.repository` → `works.service` → `useHeroWorks` → `WorkExplorer` supplies the
-same validated, ordered collection used on Home. No rendering component imports
+`works.repository` (`getWorks`) → `works.service` → hooks supply validated,
+ordered studies: `getHeroWorks`/`useHeroWorks` keep Home to the featured six, and
+`getCollectionWorks`/`useCollectionWorks` give Works all twelve. No rendering component imports
 repository content. `useWorkHover` coordinates hover, keyboard focus, tap, Escape,
 and the short pointer gap between a point and its preview.
 

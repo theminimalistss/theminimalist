@@ -1,4 +1,4 @@
-import { useHeroWorks } from '@/hooks/useHeroWorks';
+import { useCollectionWorks } from '@/hooks/useHeroWorks';
 import { useLayoutGlide } from '@/hooks/useLayoutGlide';
 import type { Work } from '@/types/work';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
@@ -18,7 +18,7 @@ import '@/ui/styles/works-explorer.css';
 const NO_WORKS: Work[] = [];
 
 export default function WorksPage() {
-  const state = useHeroWorks();
+  const state = useCollectionWorks();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisibility();
   const preview = useWorkPreview();

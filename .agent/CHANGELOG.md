@@ -5,6 +5,59 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.13.0] — 2026-10-07
+
+### Added
+
+- The header logo doodles wherever it appears. On hover, the lotus re-sketches its
+  strokes and its lines wobble like hand-drawn animation. On click, short
+  hand-drawn emphasis strokes pop out as the mark squashes and stretches and the
+  diamond hops. Scrolling, or the wheel on Home, sways the lotus on a soft spring
+  and briefly sets its lines wobbling. All of this is off under reduced motion.
+- Works shows twelve studies; Home keeps its six featured ones. The six new
+  concept studies alternate image and video like the first six: Terra (packaging &
+  identity), Lumen (software product, video), Folio (editorial website), Grain
+  (brand & website, video), Linnea (e-commerce), and Haven (booking platform,
+  video). Their media are licensed Pexels assets, stored and optimized locally.
+  On the sculpture, twelve studies sit at the midpoints of the cube's edges, with
+  the first nearest the viewer.
+
+### Changed
+
+- A cross-browser and mobile pass, with behaviour preserved. The logo uses plain
+  transforms (Chrome 90–103 ignore the individual `rotate`/`scale`/`translate`
+  properties), and the stepper keyframes no longer use them. A guarded
+  `:focus-visible` check no longer throws in Safari 15.0–15.3. The hover re-sketch
+  is limited to devices that can hover, so it does not stick after a tap.
+- Lighter work per frame. The logo's wobble filter updates only on its boil steps,
+  and CSS variables are written only when they change. The wheel no longer forces
+  a layout read. Slow idle cruising draws at about 30 fps (interaction and easing
+  stay at full rate). The resize glide reads each box once per resize, and the
+  particle flight uses fewer particles when more than six studies fly.
+
+### AI session
+
+Changed: `StudioLogo`, a new `useLogoDoodle` hook, `LOGO_DOODLE` in `motion.ts`,
+`site.css`; the works content, repository (`getWorks`), service
+(`getCollectionWorks`), and hooks (`useCollectionWorks`); a new `ink` art
+direction; 12-point anchors; media manifest and script (named assets, per-image
+quality); `useTesseract`, `useLayoutGlide`, and `useWorksView` optimizations; tests
+and handoff documentation.
+
+Reason: The user asked for hover, click, and scroll animation on the logo across
+the site, in a doodle style, and then asked to remove the underline that had been
+added. They then asked for a review of the recent work for optimization across
+browsers and mobile, with behaviour preserved, and for twelve studies on Works
+(six new, alternating image and video) while Home keeps six.
+
+Verification: 2× screenshots of the hover sketch and wobble, the click pop, and
+scroll sway settling back to a clean mark. A wheel probe on Home showed the spring
+(about 1° peak, settling with a soft overshoot) without scrolling the page. The
+browser test covers all three triggers.
+
+Tests: `npm run check` passes (103 unit tests); Playwright 108 passed, 12 skipped
+(Firefox in CI; desktop-only checks on touch).
+
 ## [0.12.0] — 2026-10-07
 
 ### Added

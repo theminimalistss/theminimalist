@@ -1,13 +1,14 @@
 # The Minimalist
 
-**Design studio · v0.12.0 · Immersive studio portfolio**
+**Design studio · v0.13.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
 experience, Works explorer, Founders, and Contact are implemented; remaining
 pages contain provisional content.
 
-The six projects are **independent concept studies with licensed stock media**,
+The twelve projects (six featured on Home, all twelve on Works) are **independent
+concept studies with licensed stock media**,
 not commissioned client work. Replace them with approved portfolio content
 before a public studio launch.
 

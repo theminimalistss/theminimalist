@@ -41,3 +41,8 @@ export const COLLECTION_MORPH = {
 } as const;
 
 export const COMPACT_QUERY = '(max-width: 767px)';
+
+export const LOGO_DOODLE = {
+  boil: { scale: 2.6, frames: 3, interval: 110, decay: 0.35, push: 0.012 },
+  sway: { stiffness: 90, damping: 7, push: 0.35, limit: 60 },
+} as const;
