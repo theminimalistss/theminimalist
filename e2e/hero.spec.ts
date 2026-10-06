@@ -238,6 +238,7 @@ test('switching views flies each card between the spiral and the gallery', async
 
   await page.getByRole('button', { name: 'Gallery', exact: true }).click();
   expect(await flying('.work-gallery [data-work-id]')).toBe(6);
+  expect(await flying('[data-morph-chrome="title-accent"]')).toBe(1);
   await settle(page);
   expect(await flying('.work-gallery [data-work-id]')).toBe(0);
 
@@ -250,6 +251,22 @@ test('switching views flies each card between the spiral and the gallery', async
   const item = page.locator('[data-spiral-item]').first();
   const settled = await item.getAttribute('style');
   await expect.poll(() => item.getAttribute('style')).not.toBe(settled);
+});
+
+test('crossing the mobile breakpoint reshapes the spiral and glides the text', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Resizes a desktop window across the breakpoint.');
+  await openPage(page);
+  const viewport = page.locator('.spiral-viewport');
+  const title = page.locator('[data-morph-chrome="title-accent"]');
+  await page.setViewportSize({ width: 700, height: 800 });
+  await expect(viewport).toHaveAttribute('data-reshaping', '');
+  expect(await title.evaluate((element) => element.getAnimations().length)).toBe(1);
+  await expect(viewport).not.toHaveAttribute('data-reshaping', { timeout: 3_000 });
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect(viewport).toHaveAttribute('data-reshaping', '');
 });
 
 test('the full intro plays once per session, then a brief one', async ({ page }) => {

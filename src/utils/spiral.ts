@@ -7,6 +7,11 @@ export type SpiralGeometry = {
   compact: boolean;
 };
 
+/** A spiral geometry plus its stage centre in page coordinates. */
+export type SpiralLayout = SpiralGeometry & { centerX: number; centerY: number };
+
+type SpiralPose = { x: number; y: number; scale: number; rotateY: number; rotateZ: number };
+
 const WHEEL_LINE_HEIGHT = 16;
 const POSE_PATTERN = /scale\(([-\d.]+)\) rotateY\(([-\d.]+)deg\) rotateZ\(([-\d.]+)deg\)/;
 
@@ -47,15 +52,40 @@ export function getSpiralPosition(progress: number, geometry: SpiralGeometry) {
   const y = position * travel;
   const rotateY = Math.sin(angle) * (geometry.compact ? -8 : -18);
   const rotateZ = Math.sin(angle) * (geometry.compact ? 3 : 5);
+  return withTransform({ x, y, scale, rotateY, rotateZ });
+}
+
+// Perspective lives in each card's transform, not on the stage: Safari flattens an
+// inherited perspective while a view transition snapshots the page.
+function withTransform(pose: SpiralPose, depthScale = pose.scale) {
+  const { x, y, scale, rotateY, rotateZ } = pose;
   return {
-    x,
-    y,
-    scale,
-    rotateY,
-    rotateZ,
-    zIndex: Math.round(scale * 100),
-    transform: `translate3d(${x.toFixed(3)}px, ${y.toFixed(3)}px, 0) scale(${scale.toFixed(5)}) rotateY(${rotateY.toFixed(3)}deg) rotateZ(${rotateZ.toFixed(3)}deg)`,
+    ...pose,
+    zIndex: Math.round(depthScale * 100),
+    transform: `perspective(${MOTION.perspective}px) translate3d(${x.toFixed(3)}px, ${y.toFixed(3)}px, 0) scale(${scale.toFixed(5)}) rotateY(${rotateY.toFixed(3)}deg) rotateZ(${rotateZ.toFixed(3)}deg)`,
   };
+}
+
+/** Mixes the same point on two spiral layouts, positioned relative to the `to` stage. */
+export function getSpiralBlend(
+  progress: number,
+  from: SpiralLayout,
+  to: SpiralLayout,
+  amount: number,
+) {
+  const start = getSpiralPosition(progress, from);
+  const end = getSpiralPosition(progress, to);
+  const mix = (a: number, b: number) => a + (b - a) * amount;
+  return withTransform(
+    {
+      x: mix(start.x + from.centerX - to.centerX, end.x),
+      y: mix(start.y + from.centerY - to.centerY, end.y),
+      scale: mix((start.scale * from.cardWidth) / to.cardWidth, end.scale),
+      rotateY: mix(start.rotateY, end.rotateY),
+      rotateZ: mix(start.rotateZ, end.rotateZ),
+    },
+    mix(start.scale, end.scale),
+  );
 }
 
 export function readSpiralPose(transform: string) {

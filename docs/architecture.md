@@ -29,6 +29,14 @@ Keyboard-focused work moves to the foreground and holds still. Reduced motion
 selects a normal scrolling gallery and prevents video playback. Compact geometry
 changes radius, depth, and rotation; CSS handles other layout differences.
 
+Each card's transform starts with `perspective()` (its origin is the stage
+centre), not an inherited `perspective` on the stage: Safari flattens inherited
+perspective while a view transition snapshots the page. When the window crosses
+`COMPACT_QUERY`, `getSpiralBlend` mixes the old and new layouts (stage centre,
+card size, depth, rotation) over the collection-morph duration while the spiral
+keeps moving. The viewport's clip animates between the old and new regions, and
+the registered `--spiral-fade-depth` property transitions the mobile edge fade.
+
 A passive wheel listener steers the moving spiral: each wheel delta adds velocity
 (capped), the scroll direction sets the cruise direction, and velocity eases back
 to cruising speed. Normal scrolling is never intercepted.
@@ -41,10 +49,13 @@ captures each card's pose (`data-work-id`) when the view changes: centre, width,
 spiral transform. After React commits the new view, a layout effect animates
 each card from that pose with the Web Animations API (staggered). Gallery cards
 settle flat; spiral cards land on their live spiral transform, which stays
-paused until the flight ends. The clip window animates between the spiral
-viewport and the full window so cards never cut off abruptly. The heading,
-statement, and footer (`data-morph-chrome`) glide from their old position with
-a soft opacity dip instead of fading out and in.
+paused until the flight ends. Cards leaving the spiral keep its stacking order
+and vanishing point until they land. The clip window animates between the spiral
+viewport and the full window so cards never cut off abruptly. Each text piece
+marked `data-morph-chrome` (title words, controls, statement lines, footer items,
+gallery captions) glides and scales from its old box. Long moves dip in opacity,
+and pieces that only exist in the new view fade in. The same FLIP runs when the
+window crosses the mobile breakpoint, along with gallery cards reflowing.
 
 ## Transitions and reveals
 

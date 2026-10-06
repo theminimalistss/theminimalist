@@ -36,7 +36,12 @@ function structuredData(siteUrl: string, image: string) {
         logo: `${siteUrl}/icon-512.png`,
         image,
         foundingDate: SITE.established,
-        founder: founders.map(({ name, role }) => ({ '@type': 'Person', name, jobTitle: role })),
+        founder: founders.map(({ name, role, linkedin }) => ({
+          '@type': 'Person',
+          name,
+          jobTitle: role,
+          sameAs: linkedin,
+        })),
         sameAs: social.map(({ url }) => url),
         email: contact.email,
       },

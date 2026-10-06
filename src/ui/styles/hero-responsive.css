@@ -34,6 +34,9 @@
   }
   .spiral-viewport {
     inset: 0 9% 75px 27%;
+    --spiral-fade-depth: 0;
+  }
+  .spiral-viewport:not([data-reshaping]) {
     mask-image: none;
   }
   .spiral-stage {

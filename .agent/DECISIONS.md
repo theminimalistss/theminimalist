@@ -225,3 +225,18 @@ preview and collection transitions need stationary cards.
 
 Impact: Keep browser timing in the hook and tune the duration in `motion.ts`.
 Wheel impulses are ignored while paused or frozen, and the frame loop stops at rest.
+
+## 2026-10-06 — Spiral perspective in each card's transform
+
+Decision: Spiral cards carry `perspective(MOTION.perspective)` at the start of their own
+transform. The stage no longer sets `perspective`. Breakpoint changes blend
+between two spiral layouts in `useSpiralLoop` rather than re-running the effect.
+
+Reason: Safari drops inherited perspective while a view transition snapshots
+the page, so cards flattened when a preview opened. Re-running the loop on a
+breakpoint change snapped every card.
+
+Impact: Keyframes that move a spiral card (`getSpiralKeyframes`,
+`getGalleryKeyframes`) must start with the same `perspective()` so transforms
+interpolate per function. Text that should morph needs its own transformable
+element (`.morph-word`) and a unique `data-morph-chrome` key.

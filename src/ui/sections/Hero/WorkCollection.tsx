@@ -14,7 +14,6 @@ type Props = {
   onSelect: (work: Work) => void;
   paused?: boolean;
   frozen?: boolean;
-  compact?: boolean;
   onInspect?: (inspecting: boolean) => void;
   reveal?: boolean;
 };
@@ -26,7 +25,6 @@ export function WorkCollection({
   onSelect,
   paused = true,
   frozen = false,
-  compact = false,
   onInspect,
   reveal = false,
 }: Props) {
@@ -36,7 +34,6 @@ export function WorkCollection({
     count: works.length,
     paused,
     frozen,
-    compact,
     enabled: spiral,
     keyboard,
   });
@@ -82,7 +79,7 @@ export function WorkCollection({
               {...(spiral ? { sizes: SPIRAL_SIZES } : {})}
             />
             {!spiral && (
-              <div className="gallery-caption">
+              <div className="gallery-caption" data-morph-chrome={`caption-${work.id}`}>
                 <h2>{work.title}</h2>
                 <span>{work.category}</span>
               </div>

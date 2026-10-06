@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.9.0
+VERSION: 0.10.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.9.0 documented and verified; ready for the next scoped change.
+CURRENT TASK: 0.10.0 reviewed and verified; ready for the next scoped change.
 
 ## Completed
 
@@ -27,12 +27,14 @@ CURRENT TASK: 0.9.0 documented and verified; ready for the next scoped change.
 - 0.8.0: Real Founders page (Daisy Nuique, Rex Pinili) with matched portraits.
 - 0.9.0: Contact social channels (main + More), email, and hours; smooth hero
   pause/resume with a layout-stable motion label.
+- 0.10.0: Animated mobile ↔ desktop resize; per-word text glide on view switch;
+  Safari preview flatten fix; spiral → gallery stacking/angle fix; founder LinkedIn.
 
 ## Latest verification — 2026-10-06
 
-- `npm run check`: passed, including 81 unit tests, production build, version
+- `npm run check`: passed, including 85 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 76 passed, 8 configured skips across desktop Chromium,
+- `npm run test:e2e`: 78 passed, 9 configured skips across desktop Chromium,
   desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits
@@ -46,6 +48,8 @@ CURRENT TASK: 0.9.0 documented and verified; ready for the next scoped change.
 - Sound was designed by measurement and synthesis, not by ear in this session;
   listen on real speakers/headphones and adjust `SOUNDS`/`AMBIENT` levels.
 - Playwright Firefox cannot launch on macOS 27 locally; Firefox runs in CI.
+- “The full intro plays once per session” can fail in WebKit under parallel load
+  (reload timing). It predates 0.10.0; consider timing with a single worker.
 - No production domain, commissioned portfolio content, or inquiry submission backend yet.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
 

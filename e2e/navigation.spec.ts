@@ -123,15 +123,22 @@ test('the founders page introduces both partners equally', async ({ page }) => {
   await openPage(page, '/founders');
   const cards = page.locator('.profile-cards > li');
   await expect(cards).toHaveCount(2);
-  for (const [name, role] of [
-    ['Daisy Nuique', 'Product / Visual Designer'],
-    ['Rex Pinili', 'Software Engineer'],
+  for (const [name, role, linkedin] of [
+    [
+      'Daisy Nuique',
+      'Product / Visual Designer',
+      'https://www.linkedin.com/in/daisy-grace-nuique/',
+    ],
+    ['Rex Pinili', 'Software Engineer', 'https://www.linkedin.com/in/rex-james-pinili-260135116/'],
   ]) {
     const card = cards.filter({ hasText: name });
     await expect(card.getByRole('heading', { name })).toBeVisible();
     await expect(card).toContainText('Founding partner');
     await expect(card).toContainText(role);
     await expect(card.getByRole('img', { name: `Portrait of ${name}` })).toBeVisible();
+    const profile = card.getByRole('link', { name: `${name} on LinkedIn (opens in a new tab)` });
+    await expect(profile).toHaveAttribute('href', linkedin ?? '');
+    await expect(profile).toHaveAttribute('target', '_blank');
   }
 });
 

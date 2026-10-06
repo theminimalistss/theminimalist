@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { COMPACT_QUERY } from '@/constants/motion';
 import { useCollectionMorph } from '@/hooks/useCollectionMorph';
 import { useHeroWorks } from '@/hooks/useHeroWorks';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
@@ -19,7 +17,6 @@ import { WorkCollection } from '@/ui/sections/Hero/WorkCollection';
 export function Hero() {
   const state = useHeroWorks();
   const reducedMotion = useReducedMotion();
-  const compact = useMediaQuery(COMPACT_QUERY);
   const pageVisible = usePageVisibility();
   const { open: menuOpen } = useSiteMenu();
   const [preferredView, setView] = useState<CollectionView>('spiral');
@@ -63,14 +60,13 @@ export function Hero() {
             playing={mediaPlaying}
             paused={!mediaPlaying}
             frozen={inspecting || morphing || preview.transitioning}
-            compact={compact}
             onSelect={preview.open}
             onInspect={setInspecting}
           />
         )}
         <HeroStatement />
         {view === 'spiral' && (
-          <span className="hero-side-note" aria-hidden="true">
+          <span className="hero-side-note" aria-hidden="true" data-morph-chrome="side-note">
             BRAND · DIGITAL · EXPERIENCE
           </span>
         )}

@@ -1,4 +1,14 @@
 [
-  { "slug": "daisy-nuique", "name": "Daisy Nuique", "role": "Product / Visual Designer" },
-  { "slug": "rex-pinili", "name": "Rex Pinili", "role": "Software Engineer" }
+  {
+    "slug": "daisy-nuique",
+    "name": "Daisy Nuique",
+    "role": "Product / Visual Designer",
+    "linkedin": "https://www.linkedin.com/in/daisy-grace-nuique/"
+  },
+  {
+    "slug": "rex-pinili",
+    "name": "Rex Pinili",
+    "role": "Software Engineer",
+    "linkedin": "https://www.linkedin.com/in/rex-james-pinili-260135116/"
+  }
 ]

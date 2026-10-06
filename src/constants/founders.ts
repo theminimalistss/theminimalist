@@ -9,7 +9,13 @@ import rexWebp960 from '@/assets/images/founders/rex-pinili-960.webp';
 import founders from '@/constants/founders.json';
 
 export type FounderPortrait = { avif: string; webp: string; avifSmall: string; webpSmall: string };
-export type Founder = { slug: string; name: string; role: string; portrait: FounderPortrait };
+export type Founder = {
+  slug: string;
+  name: string;
+  role: string;
+  linkedin: string;
+  portrait: FounderPortrait;
+};
 
 const PORTRAITS: Record<string, FounderPortrait> = {
   'daisy-nuique': {

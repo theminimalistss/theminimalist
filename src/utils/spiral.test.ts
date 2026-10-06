@@ -3,6 +3,7 @@ import { MOTION } from '@/constants/motion';
 import {
   applyWheelImpulse,
   getCruiseVelocity,
+  getSpiralBlend,
   getSpiralPosition,
   normalizeWheelDelta,
   settleVelocity,
@@ -47,6 +48,36 @@ describe('spatial loop', () => {
       expect(position.scale).toBeGreaterThan(0);
       expect(position.transform).not.toMatch(/NaN|Infinity/);
     }
+  });
+});
+
+describe('layout reshape', () => {
+  const from = {
+    width: 900,
+    height: 800,
+    cardWidth: 400,
+    compact: false,
+    centerX: 700,
+    centerY: 400,
+  };
+  const to = { width: 390, height: 700, cardWidth: 290, compact: true, centerX: 195, centerY: 350 };
+
+  it('starts on the old stage and card size and ends on the new spiral', () => {
+    const old = getSpiralPosition(0.4, from);
+    const start = getSpiralBlend(0.4, from, to, 0);
+    expect(start.x).toBeCloseTo(old.x + 505);
+    expect(start.y).toBeCloseTo(old.y + 50);
+    expect(start.scale).toBeCloseTo((old.scale * 400) / 290);
+    expect(start.zIndex).toBe(old.zIndex);
+    const end = getSpiralBlend(0.4, from, to, 1);
+    const target = getSpiralPosition(0.4, to);
+    for (const key of ['x', 'y', 'scale', 'rotateY', 'rotateZ'] as const) {
+      expect(end[key]).toBeCloseTo(target[key]);
+    }
+  });
+
+  it('carries the perspective in each card transform', () => {
+    expect(getSpiralPosition(0.4, from).transform).toMatch(/^perspective\(\d+px\) translate3d/);
   });
 });
 

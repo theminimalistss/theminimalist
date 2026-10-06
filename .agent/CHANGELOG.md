@@ -5,6 +5,55 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-10-06
+
+### Added
+
+- Resizing across the mobile breakpoint is animated. The spiral blends from its
+  desktop shape to its mobile shape (or back) while it keeps moving. Its clip
+  window and top/bottom fade animate with it, the hero text glides and scales to
+  its new place and size, and gallery cards fly into the new grid.
+- Founder cards link to each partner's LinkedIn (opens in a new tab), with the
+  same circle-to-square badge morph as the contact channels. Structured data
+  lists each profile under the founder's `sameAs`.
+
+### Fixed
+
+- Opening a work preview no longer flattens or shifts the spiral cards in
+  Safari. Perspective now lives in each card's transform instead of being
+  inherited from the stage, which Safari dropped while snapshotting the page.
+- Switching from spiral to gallery no longer pops cards in front of each other
+  or snaps their angle on the first frame. Each card keeps its spiral stacking
+  order and vanishing point as it leaves.
+- Hero text no longer reshapes suddenly when switching views. “Selected” /
+  “works.”, “Less, but” / “with feeling.”, the controls, and the footer items
+  glide individually into the new arrangement. Only long moves dip in opacity,
+  and newly shown text fades in.
+
+### AI session
+
+Changed: `src/utils/{spiral,collectionMorph}.ts`, `src/hooks/{useSpiralLoop,useCollectionMorph}.ts`,
+`src/ui/sections/Hero/{Hero,ViewControls,HeroStatement,HeroFooter,WorkCollection}.tsx`,
+`src/ui/styles/{hero,hero-responsive,pages}.css`, `src/constants/{founders.json,founders.ts,motion.ts}`,
+`src/ui/pages/FoundersPage.tsx`, `scripts/socialMeta.ts`, tests, docs.
+
+Reason: The user reported spiral cards flickering or changing angle when a
+preview opens, sudden size and position changes when switching between spiral
+and gallery (cards and text), and asked for a smooth resize between mobile and
+desktop. They also supplied the founders' LinkedIn profiles.
+
+Verification: Frame-by-frame screen recordings in headless Chromium and WebKit
+located the causes: Safari's snapshot flattening, the stacking order and
+vanishing point at the start of the gallery flight, and the whole-block text
+glide. The same recordings confirmed the fixes and the breakpoint reshape. A
+suspected video-poster swap in Safari was a recording artifact and was left
+alone.
+
+Tests: Revalidated before the authorized commit and push: `npm run check` passes
+(85 unit tests); `npm run test:e2e` has 78 passed and 9 configured skips (Firefox
+runs in CI only). The WebKit intro-timing test passed this run but has previously
+been flaky under parallel load, including on 0.9.0.
+
 ## [0.9.0] — 2026-10-06
 
 ### Added

@@ -1,26 +1,30 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { soundEngine } from '@/audio/soundEngine';
-import { MOTION } from '@/constants/motion';
+import { COLLECTION_MORPH, COMPACT_QUERY, MOTION } from '@/constants/motion';
+import { getClipInset, type Region } from '@/utils/collectionMorph';
 import { clamp01, easeInOutCubic } from '@/utils/easing';
 import {
   applyWheelImpulse,
   getCruiseVelocity,
+  getSpiralBlend,
   getSpiralPosition,
   normalizeWheelDelta,
   settleVelocity,
   wrapProgress,
+  type SpiralLayout,
 } from '@/utils/spiral';
 
 type Options = {
   count: number;
   paused: boolean;
   frozen: boolean;
-  compact: boolean;
   enabled: boolean;
   keyboard: RefObject<boolean>;
 };
 
-export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboard }: Options) {
+type Reshape = { from: SpiralLayout; elapsed: number; clip: Animation | null };
+
+export function useSpiralLoop({ count, paused, frozen, enabled, keyboard }: Options) {
   const stageRef = useRef<HTMLOListElement>(null);
   const progress = useRef(0.5);
   const cruise = useRef(getCruiseVelocity(1));
@@ -39,6 +43,8 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
     const stage = stageRef.current;
     if (!stage || !count || !enabled) return;
     const items = Array.from(stage.querySelectorAll<HTMLElement>('[data-spiral-item]'));
+    const viewport = stage.parentElement;
+    const compactQuery = window.matchMedia(COMPACT_QUERY);
     let frame = 0;
     let lastTime = 0;
     let motion = pausedRef.current || frozenRef.current ? 0 : 1;
@@ -56,31 +62,70 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
     const leave = () => {
       hovering = false;
     };
-    let geometry = {
-      width: stage.clientWidth,
-      height: stage.clientHeight,
-      cardWidth: items[0]?.offsetWidth ?? 320,
-      compact,
+    const measure = (): SpiralLayout => {
+      const rect = stage.getBoundingClientRect();
+      return {
+        width: stage.clientWidth,
+        height: stage.clientHeight,
+        cardWidth: items[0]?.offsetWidth ?? 320,
+        compact: compactQuery.matches,
+        centerX: rect.left + rect.width / 2 + window.scrollX,
+        centerY: rect.top + rect.height / 2 + window.scrollY,
+      };
     };
+    const clipRegion = (): Region | null => viewport?.getBoundingClientRect() ?? null;
+    let layout = measure();
+    let clip = clipRegion();
+    let reshape: Reshape | null = null;
 
     const draw = () => {
+      const amount = reshape
+        ? easeInOutCubic(clamp01(reshape.elapsed / COLLECTION_MORPH.duration))
+        : 1;
       items.forEach((item, index) => {
-        const position = getSpiralPosition(progress.current + index / count, geometry);
+        const at = progress.current + index / count;
+        const position = reshape
+          ? getSpiralBlend(at, reshape.from, layout, amount)
+          : getSpiralPosition(at, layout);
         const zIndex = String(position.zIndex);
         item.style.transform = position.transform;
         if (item.style.zIndex !== zIndex) item.style.zIndex = zIndex;
       });
     };
-    const resize = new ResizeObserver(() => {
-      geometry = {
-        width: stage.clientWidth,
-        height: stage.clientHeight,
-        cardWidth: items[0]?.offsetWidth ?? 320,
-        compact,
-      };
+    const endReshape = () => {
+      reshape?.clip?.cancel();
+      reshape = null;
+      if (viewport) delete viewport.dataset.reshaping;
+    };
+    // Crossing the mobile breakpoint blends between the two spiral shapes instead of snapping.
+    const relayout = () => {
+      const next = measure();
+      const nextClip = clipRegion();
+      const crossed = next.compact !== layout.compact;
+      if (crossed && !frozenRef.current && viewport?.animate && clip && nextClip) {
+        const elapsed = reshape ? Math.max(0, COLLECTION_MORPH.duration - reshape.elapsed) : 0;
+        reshape?.clip?.cancel();
+        viewport.dataset.reshaping = '';
+        const clipAnimation = viewport.animate(
+          [
+            { clipPath: getClipInset(nextClip, clip) },
+            { clipPath: getClipInset(nextClip, nextClip) },
+          ],
+          { duration: COLLECTION_MORPH.duration, easing: COLLECTION_MORPH.easing },
+        );
+        clipAnimation.currentTime = elapsed;
+        reshape = { from: layout, elapsed, clip: clipAnimation };
+      } else if (crossed) {
+        endReshape();
+      }
+      layout = next;
+      clip = nextClip;
       draw();
-    });
+      wake();
+    };
+    const resize = new ResizeObserver(relayout);
     resize.observe(stage);
+    compactQuery.addEventListener('change', relayout);
     draw();
 
     const focusWork = (event: FocusEvent) => {
@@ -114,6 +159,7 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
         elapsed = 0;
       }
       elapsed += delta;
+      if (reshape) reshape.elapsed += delta;
       const eased = easeInOutCubic(clamp01(elapsed / MOTION.motionDuration));
       motion = frozenRef.current ? 0 : from + (goal - from) * eased;
       const target = cruise.current * (hovering ? MOTION.hoverCruise : 1);
@@ -127,7 +173,9 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
         }
       }
       draw();
-      if (resting && (frozenRef.current || elapsed >= MOTION.motionDuration)) {
+      if (reshape && reshape.elapsed >= COLLECTION_MORPH.duration) endReshape();
+      const settled = elapsed >= MOTION.motionDuration && !reshape;
+      if (resting && (frozenRef.current || settled)) {
         motion = 0;
         frame = 0;
         lastTime = 0;
@@ -135,10 +183,10 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
       }
       frame = requestAnimationFrame(animate);
     };
-    const wake = () => {
-      if (frame || (pausedRef.current && motion === 0) || frozenRef.current) return;
+    function wake() {
+      if (frame || frozenRef.current || (pausedRef.current && motion === 0 && !reshape)) return;
       frame = requestAnimationFrame(animate);
-    };
+    }
     wakeRef.current = wake;
     wake();
     window.addEventListener('wheel', steer, { passive: true });
@@ -147,6 +195,8 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
       wakeRef.current = () => undefined;
       cancelAnimationFrame(frame);
       resize.disconnect();
+      compactQuery.removeEventListener('change', relayout);
+      endReshape();
       stage.removeEventListener('focusin', focusWork);
       stage.removeEventListener('pointerover', hover);
       stage.removeEventListener('pointerleave', leave);
@@ -157,7 +207,7 @@ export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboar
         item.style.zIndex = '';
       });
     };
-  }, [count, compact, enabled, keyboard]);
+  }, [count, enabled, keyboard]);
 
   return stageRef;
 }

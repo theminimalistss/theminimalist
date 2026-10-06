@@ -272,6 +272,37 @@
   font-size: 13px;
   color: var(--color-muted);
 }
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.profile-link .social-badge {
+  width: 32px;
+  height: 32px;
+}
+.profile-link .social-badge svg {
+  width: 16px;
+  height: 16px;
+}
+.profile-link-arrow {
+  transition: transform var(--duration-fast) ease;
+}
+.profile-link:is(:hover, :focus-visible) .social-badge {
+  border-color: var(--color-brand);
+  border-radius: var(--radius);
+  color: var(--color-canvas);
+  background: var(--color-brand);
+  transform: rotate(-6deg) scale(1.04);
+}
+.profile-link:is(:hover, :focus-visible) .profile-link-arrow {
+  transform: translate(3px, -3px);
+}
 .quote-cards li {
   display: grid;
   gap: 18px;

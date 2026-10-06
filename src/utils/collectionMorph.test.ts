@@ -7,7 +7,7 @@ import {
 } from '@/utils/collectionMorph';
 import { getSpiralPosition, readSpiralPose } from '@/utils/spiral';
 
-const pose = { x: 300, y: 200, width: 200, rotateY: -12, rotateZ: 4 };
+const pose = { x: 300, y: 200, width: 200, rotateY: -12, rotateZ: 4, depth: 97 };
 
 describe('collection morph', () => {
   it('reads the pose back from a spiral transform', () => {
@@ -31,6 +31,18 @@ describe('collection morph', () => {
     expect(to?.transform).toContain('translate3d(0.00px, 0.00px, 0) scale(1.0000)');
   });
 
+  it('keeps the spiral vanishing point and stacking order while a card leaves', () => {
+    const [from, to] = getGalleryKeyframes(
+      pose,
+      { x: 100, y: 500, width: 400 },
+      { x: 600, y: 400 },
+    );
+    expect(from?.transform).toMatch(/^translate\(500\.00px, -100\.00px\) perspective\(/);
+    expect(from?.transform).toContain('translate3d(-300.00px, -200.00px, 0)');
+    expect(to?.transform).toMatch(/^translate\(0px, 0px\) perspective\(/);
+    expect([from?.zIndex, to?.zIndex]).toEqual([97, 97]);
+  });
+
   it('starts spiral cards on their gallery box and ends on the live spiral pose', () => {
     const flat = { ...pose, rotateY: 0, rotateZ: 0 };
     const spiral = 'translate3d(10px, 20px, 0) scale(0.9) rotateY(5deg) rotateZ(1deg)';
@@ -51,8 +63,17 @@ describe('collection morph', () => {
     const from = { left: 40, top: 300, right: 400, bottom: 500 };
     const to = { left: 40, top: 160, right: 900, bottom: 240 };
     const [start, middle, end] = getChromeKeyframes(from, to, 0.25);
-    expect(start?.transform).toBe('translate(0.0px, 140.0px)');
+    expect(start?.transform).toBe('translate(0.0px, 140.0px) scale(1.0000)');
     expect(middle).toEqual({ opacity: 0.25, offset: 0.4 });
-    expect(end?.transform).toBe('translate(0px, 0px)');
+    expect(end?.transform).toBe('translate(0px, 0px) scale(1)');
+  });
+
+  it('scales text between font sizes and skips the dip for short moves', () => {
+    const from = { left: 40, top: 100, right: 140, bottom: 140 };
+    const to = { left: 60, top: 120, right: 133.3, bottom: 150 };
+    const keyframes = getChromeKeyframes(from, to, 0.25);
+    expect(keyframes).toHaveLength(2);
+    expect(keyframes[0]?.transform).toBe('translate(-20.0px, -20.0px) scale(1.3333)');
+    expect(keyframes[0]?.transformOrigin).toBe('0 0');
   });
 });

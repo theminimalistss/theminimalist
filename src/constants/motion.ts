@@ -37,6 +37,7 @@ export const COLLECTION_MORPH = {
   stagger: 40,
   easing: 'cubic-bezier(0.45, 0, 0.15, 1)',
   chromeDip: 0.25,
+  chromeDipDistance: 120,
 } as const;
 
 export const COMPACT_QUERY = '(max-width: 767px)';

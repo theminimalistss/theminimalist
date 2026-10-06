@@ -1,16 +1,24 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { COLLECTION_MORPH } from '@/constants/motion';
+import { COLLECTION_MORPH, COMPACT_QUERY } from '@/constants/motion';
 import {
+  getChromeEntrance,
   getChromeKeyframes,
   getClipInset,
   getGalleryKeyframes,
   getSpiralKeyframes,
+  needsChromeMove,
   type CardPose,
+  type Point,
   type Region,
 } from '@/utils/collectionMorph';
 import { readSpiralPose } from '@/utils/spiral';
 
-type Snapshot = { poses: Map<string, CardPose>; chrome: Map<string, Region>; region: Region };
+type Snapshot = {
+  poses: Map<string, CardPose>;
+  chrome: Map<string, Region>;
+  region: Region;
+  vanish: Point | null;
+};
 
 const cardTiming = (index: number): KeyframeAnimationOptions => ({
   duration: COLLECTION_MORPH.duration,
@@ -46,29 +54,33 @@ function readSnapshot(root: HTMLElement): Snapshot {
       width: pose ? card.offsetWidth * pose.scale : rect.width,
       rotateY: pose?.rotateY ?? 0,
       rotateZ: pose?.rotateZ ?? 0,
+      depth: Number(holder?.style.zIndex) || 0,
     });
   }
   const chrome = new Map<string, Region>();
   for (const element of root.querySelectorAll<HTMLElement>('[data-morph-chrome]')) {
-    if (element.dataset.morphChrome)
-      chrome.set(element.dataset.morphChrome, element.getBoundingClientRect());
+    const rect = element.getBoundingClientRect();
+    if (element.dataset.morphChrome && rect.width) chrome.set(element.dataset.morphChrome, rect);
   }
   const clip = root.querySelector('.spiral-viewport')?.getBoundingClientRect();
-  return { poses, chrome, region: clip ?? windowRegion() };
+  const stage = root.querySelector('.spiral-stage')?.getBoundingClientRect();
+  const vanish = stage
+    ? { x: stage.left + stage.width / 2, y: stage.top + stage.height / 2 }
+    : null;
+  return { poses, chrome, region: clip ?? windowRegion(), vanish };
 }
 
 function playChrome(root: HTMLElement, from: Map<string, Region>) {
+  const timing = { duration: COLLECTION_MORPH.duration, easing: COLLECTION_MORPH.easing };
   return Array.from(root.querySelectorAll<HTMLElement>('[data-morph-chrome]')).flatMap(
     (element) => {
       const previous = from.get(element.dataset.morphChrome ?? '');
       const next = element.getBoundingClientRect();
-      const moved = previous && Math.hypot(previous.left - next.left, previous.top - next.top) > 1;
-      if (!moved || !element.animate) return [];
+      if (!next.width || !element.animate) return [];
+      if (!previous) return [element.animate(getChromeEntrance(), timing)];
+      if (!needsChromeMove(previous, next)) return [];
       return [
-        element.animate(getChromeKeyframes(previous, next, COLLECTION_MORPH.chromeDip), {
-          duration: COLLECTION_MORPH.duration,
-          easing: COLLECTION_MORPH.easing,
-        }),
+        element.animate(getChromeKeyframes(previous, next, COLLECTION_MORPH.chromeDip), timing),
       ];
     },
   );
@@ -81,14 +93,14 @@ function animateClip(container: HTMLElement | null, from: Region, to: Region, co
   return [container.animate(keyframes, clipTiming(count))];
 }
 
-function playIntoGallery(root: HTMLElement, { poses, region }: Snapshot) {
+function playIntoGallery(root: HTMLElement, { poses, region, vanish }: Snapshot) {
   const cards = Array.from(root.querySelectorAll<HTMLElement>('.work-gallery [data-work-id]'));
   const flights = cards.flatMap((card, index) => {
     const pose = poses.get(card.dataset.workId ?? '');
     if (!pose || !card.animate) return [];
     const rect = card.getBoundingClientRect();
     const box = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, width: rect.width };
-    return [card.animate(getGalleryKeyframes(pose, box), cardTiming(index))];
+    return [card.animate(getGalleryKeyframes(pose, box, vanish ?? box), cardTiming(index))];
   });
   const gallery = root.querySelector<HTMLElement>('.work-gallery');
   return [...flights, ...animateClip(gallery, region, windowRegion(), cards.length)];
@@ -119,6 +131,7 @@ function playIntoSpiral(root: HTMLElement, { poses, region }: Snapshot) {
 export function useCollectionMorph(view: 'spiral' | 'gallery') {
   const rootRef = useRef<HTMLDivElement>(null);
   const snapshot = useRef<Snapshot | null>(null);
+  const resting = useRef<Snapshot | null>(null);
   const generation = useRef(0);
   const [morphing, setMorphing] = useState(false);
 
@@ -142,9 +155,43 @@ export function useCollectionMorph(view: 'spiral' | 'gallery') {
       ...playChrome(root, from.chrome),
     ];
     void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-      if (generation.current === token) setMorphing(false);
+      if (generation.current !== token) return;
+      resting.current = readSnapshot(root);
+      setMorphing(false);
     });
     return () => animations.forEach((animation) => animation.cancel());
+  }, [view]);
+
+  // Crossing the mobile breakpoint glides the text, and gallery cards, into the new layout.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof ResizeObserver !== 'function') return;
+    const compactQuery = window.matchMedia(COMPACT_QUERY);
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let compact = compactQuery.matches;
+    let flights: Animation[] = [];
+    resting.current ??= readSnapshot(root);
+    const observer = new ResizeObserver(() => {
+      const before = resting.current;
+      if (compactQuery.matches !== compact && before && !reducedQuery.matches) {
+        flights.forEach((flight) => flight.cancel());
+        const current = [
+          ...playChrome(root, before.chrome),
+          ...(view === 'gallery' ? playIntoGallery(root, before) : []),
+        ];
+        flights = current;
+        void Promise.allSettled(current.map((flight) => flight.finished)).then(() => {
+          if (flights === current) resting.current = readSnapshot(root);
+        });
+      }
+      compact = compactQuery.matches;
+      resting.current = readSnapshot(root);
+    });
+    observer.observe(root);
+    return () => {
+      observer.disconnect();
+      flights.forEach((flight) => flight.cancel());
+    };
   }, [view]);
 
   return { rootRef, morphing, capture };

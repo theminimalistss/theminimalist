@@ -1,5 +1,6 @@
 import { FOUNDER_TITLE, FOUNDERS } from '@/constants/founders';
 import { ROUTES } from '@/router/paths';
+import { Icon } from '@/ui/components/Icon';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
 import { PageSection } from '@/ui/sections/Page/PageSection';
@@ -44,6 +45,21 @@ export default function FoundersPage() {
               <span className="eyebrow profile-title">{FOUNDER_TITLE}</span>
               <h3>{founder.name}</h3>
               <p>{founder.role}</p>
+              <a
+                className="profile-link"
+                href={founder.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="social-badge" aria-hidden="true">
+                  <Icon name="linkedin" />
+                </span>
+                <span>
+                  <span className="sr-only">{founder.name} on </span>LinkedIn
+                </span>
+                <Icon name="arrow" className="profile-link-arrow" />
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
             </li>
           ))}
         </ul>
