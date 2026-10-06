@@ -3,11 +3,17 @@
 UI → hooks → services → repositories. Static presentation is the exception.
 
 - Content: local media and replaceable concept data.
+- Studio details: `src/constants/founders.json`, `contact.json`, and `social.json`
+  feed page content and build-time structured data. Social channels use `primary`
+  to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
 - Repository: cancellable unknown-data boundary, isolated snapshots.
 - Service: field validation, local media/posters, identity uniqueness, filtering/order.
 - Hooks: data state, preferences, visibility, playback, dialogs.
 - Spiral: pure normalized math + one RAF; wrapping outside the clip; no per-frame
   React state; mobile geometry; keyboard foregrounding/pause.
+- Motion control: `useSpiralLoop` eases pause/resume over `MOTION.motionDuration`
+  and cancels frames at rest. A separate `frozen` flag stops inspection, previews,
+  and view switches immediately; overlapping footer labels preserve layout width.
 - Wheel: passive listener boosts spiral velocity; scroll direction sets spin.
 - View switch: one `WorkCollection` keeps the same card elements in both views;
   `useCollectionMorph` flies them with WAAPI (spiral paused, clip animated) and

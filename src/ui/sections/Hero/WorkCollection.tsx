@@ -13,6 +13,7 @@ type Props = {
   playing: boolean;
   onSelect: (work: Work) => void;
   paused?: boolean;
+  frozen?: boolean;
   compact?: boolean;
   onInspect?: (inspecting: boolean) => void;
   reveal?: boolean;
@@ -24,6 +25,7 @@ export function WorkCollection({
   playing,
   onSelect,
   paused = true,
+  frozen = false,
   compact = false,
   onInspect,
   reveal = false,
@@ -33,6 +35,7 @@ export function WorkCollection({
   const stageRef = useSpiralLoop({
     count: works.length,
     paused,
+    frozen,
     compact,
     enabled: spiral,
     keyboard,

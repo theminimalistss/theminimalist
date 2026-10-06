@@ -201,3 +201,27 @@ Reason: The studio is a partnership; order and labels must not imply seniority.
 
 Impact: Add future partners to the JSON (and a portrait via
 `npm run media:founders`); keep alphabetical order.
+
+## 2026-10-06 — Contact data and social hierarchy in shared JSON
+
+Decision: `src/constants/social.json` (with a `primary` flag) and
+`src/constants/contact.json` feed both the Contact page and the build-time
+structured data.
+
+Reason: Facebook, Instagram, and LinkedIn are the main channels; the rest stay
+one click away. One source keeps the page and search metadata in step.
+
+Impact: Promote or demote a channel by flipping `primary`; update contact
+details in one file.
+
+## 2026-10-06 — Separate motion easing from interaction freezes
+
+Decision: `useSpiralLoop` eases pause/resume over `MOTION.motionDuration`, while
+the separate `frozen` input stops movement for inspection, previews, and view
+switches. Both footer labels share a grid cell to keep the control's width stable.
+
+Reason: The motion control should settle smoothly without shifting the footer;
+preview and collection transitions need stationary cards.
+
+Impact: Keep browser timing in the hook and tune the duration in `motion.ts`.
+Wheel impulses are ignored while paused or frozen, and the frame loop stops at rest.

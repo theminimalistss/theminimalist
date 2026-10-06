@@ -1,6 +1,8 @@
 import type { Plugin } from 'vite';
 import packageJson from '../package.json' with { type: 'json' };
 import founders from '../src/constants/founders.json' with { type: 'json' };
+import social from '../src/constants/social.json' with { type: 'json' };
+import contact from '../src/constants/contact.json' with { type: 'json' };
 import {
   formatPageTitle,
   NOT_FOUND_META,
@@ -35,6 +37,8 @@ function structuredData(siteUrl: string, image: string) {
         image,
         foundingDate: SITE.established,
         founder: founders.map(({ name, role }) => ({ '@type': 'Person', name, jobTitle: role })),
+        sameAs: social.map(({ url }) => url),
+        email: contact.email,
       },
       { '@type': 'WebSite', name: SITE.title, url: `${siteUrl}/` },
     ],

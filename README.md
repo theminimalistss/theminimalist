@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.8.0 · Landing experience + site structure**
+**Design studio · v0.9.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -29,7 +29,7 @@ Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
 
 Every page is reachable from the header (desktop), the menu, and the footer
 sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home, Works,
-and Founders hold clearly marked placeholder content; inquiry forms are not live yet.
+Founders, and Contact hold clearly marked placeholder content; inquiry forms are not live yet.
 
 ## Run locally
 

@@ -22,7 +22,9 @@ spaced visual offsets. The path wraps beyond the clipping region; content is not
 duplicated. A 90-second cycle creates slow exhibition movement.
 
 `useSpiralLoop` updates DOM transforms without React state and measures only when
-resized. It cancels frames while paused, hidden, inspecting, or behind a dialog.
+resized. Pause eases the spiral to rest over `MOTION.motionDuration` before
+cancelling frames, and resume eases back up; inspecting, previews, and view
+switches freeze it immediately. It also stops while hidden or behind a dialog.
 Keyboard-focused work moves to the foreground and holds still. Reduced motion
 selects a normal scrolling gallery and prevents video playback. Compact geometry
 changes radius, depth, and rotation; CSS handles other layout differences.

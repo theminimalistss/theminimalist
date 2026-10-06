@@ -134,3 +134,35 @@ test('the founders page introduces both partners equally', async ({ page }) => {
     await expect(card.getByRole('img', { name: `Portrait of ${name}` })).toBeVisible();
   }
 });
+
+test('contact shows main social channels and reveals the rest under More', async ({ page }) => {
+  await openPage(page, '/contact');
+  const main = page.getByRole('list', { name: 'Main social channels' });
+  for (const [label, url] of [
+    ['Facebook', 'https://www.facebook.com/SimplyDaissy'],
+    ['Instagram', 'https://www.instagram.com/theminimalistdesignstudio_'],
+    ['LinkedIn', 'https://www.linkedin.com/company/the-minimalists-studio'],
+  ] as const) {
+    const link = main.getByRole('link', { name: new RegExp(label) });
+    await expect(link).toHaveAttribute('href', url);
+    await expect(link).toHaveAttribute('target', '_blank');
+  }
+  const more = page.getByRole('button', { name: 'More' });
+  const tiktok = page.getByRole('link', { name: /TikTok/ });
+  await expect(more).toHaveAttribute('aria-expanded', 'false');
+  await expect(tiktok).not.toBeVisible();
+  await more.click();
+  await expect(page.getByRole('button', { name: 'Less' })).toHaveAttribute('aria-expanded', 'true');
+  await expect(tiktok).toBeVisible();
+  await expect(tiktok).toHaveAttribute('href', 'https://www.tiktok.com/@theminimalistdesign');
+  await expect(page.getByRole('link', { name: /Behance/ })).toHaveAttribute(
+    'href',
+    'https://www.behance.net/theminimalistdesigns',
+  );
+  await expect(page.getByRole('link', { name: 'theminimalistss@gmail.com' })).toHaveAttribute(
+    'href',
+    'mailto:theminimalistss@gmail.com',
+  );
+  await expect(page.getByText('7:00 AM – 11:00 AM')).toBeVisible();
+  await expect(page.locator('.contact-details dt')).toHaveText(['Email', 'Hours']);
+});

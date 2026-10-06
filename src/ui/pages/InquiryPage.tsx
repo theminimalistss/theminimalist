@@ -1,3 +1,4 @@
+import contact from '@/constants/contact.json';
 import { INQUIRY_COPY, type InquiryKey } from '@/constants/pages';
 import { INQUIRY_PAGES } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
@@ -19,8 +20,9 @@ export default function InquiryPage({ inquiry }: { inquiry: InquiryKey }) {
       <PageSection eyebrow="What we’ll ask" title="A few details to prepare.">
         <Checklist items={copy.checklist} label={`${copy.title} details`} />
         <Placeholder title="Online form coming soon">
-          This form isn’t accepting submissions yet.{' '}
-          <PageLink to={ROUTES.contact}>See the contact page</PageLink> for other ways to reach the
+          This form isn’t accepting submissions yet. Email{' '}
+          <a href={`mailto:${contact.email}`}>{contact.email}</a> or{' '}
+          <PageLink to={ROUTES.contact}>see the contact page</PageLink> for other ways to reach the
           studio.
         </Placeholder>
       </PageSection>

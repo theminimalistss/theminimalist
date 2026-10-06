@@ -10,7 +10,13 @@ type Props = {
     | 'leaf'
     | 'sun'
     | 'diamond'
-    | 'sprig';
+    | 'sprig'
+    | 'plus'
+    | 'facebook'
+    | 'instagram'
+    | 'linkedin'
+    | 'tiktok'
+    | 'behance';
   className?: string;
 };
 
@@ -35,6 +41,30 @@ const paths = {
     <path d="M12 12c0-1.5 2.5-2.4 3.8-1 2 2.2-.7 5.8-4.4 4.4-5.8-2.2-3.2-9.5 2.6-9.2 7.5.4 9.1 9 3.3 13.3C11.8 23.6 2 19.6 2 12.1 2 5.4 7.4 1.8 12.5 2" />
   ),
   menu: <path d="M3 8h18M9 16h12" />,
+  plus: <path d="M12 5v14M5 12h14" />,
+  facebook: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15 7.5h-1.4A2.6 2.6 0 0 0 11 10.1V21M8.5 13h5.6" />
+    </>
+  ),
+  instagram: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.2" cy="6.8" r="0.5" />
+    </>
+  ),
+  linkedin: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="2" />
+      <path d="M8 10.5V16M8 7.6v.2M11.5 16v-5.5M11.5 13c0-1.6 1-2.6 2.4-2.6s2.1 1 2.1 2.6V16" />
+    </>
+  ),
+  tiktok: <path d="M13.5 4v10.6a3.4 3.4 0 1 1-3.4-3.4M13.5 4c.5 2.5 2.2 4.1 4.8 4.3" />,
+  behance: (
+    <path d="M3.5 6.5h4.6a2.6 2.6 0 0 1 0 5.2H3.5Zm0 5.2h5.1a2.9 2.9 0 0 1 0 5.8H3.5ZM14.5 7.5h4.6M14 14h6.4a3.2 3.2 0 1 0-1 2.4" />
+  ),
   leaf: <path d="M12 21C6.5 16.5 6.5 8 12 3c5.5 5 5.5 13.5 0 18Zm0 0v-9" />,
   sun: (
     <>

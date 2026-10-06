@@ -24,10 +24,23 @@ test('loads local media, moves continuously, and responds to pause', async ({ pa
         ),
     )
     .toBe(true);
+  const footer = page.locator('.hero-footer');
+  const footerItems = () =>
+    footer
+      .locator(':scope > *')
+      .evaluateAll((items) =>
+        items.map((element) => Math.round(element.getBoundingClientRect().left)),
+      );
+  const layoutBefore = await footerItems();
   await page.getByRole('button', { name: 'Pause motion' }).click();
+  const atPause = await item.getAttribute('style');
+  await page.waitForTimeout(120);
+  expect(await item.getAttribute('style')).not.toBe(atPause);
+  await page.waitForTimeout(1_400);
   const frozen = await item.getAttribute('style');
-  await page.waitForTimeout(250);
+  await page.waitForTimeout(300);
   expect(await item.getAttribute('style')).toBe(frozen);
+  expect(await footerItems()).toEqual(layoutBefore);
   expect(
     await page
       .locator('video')

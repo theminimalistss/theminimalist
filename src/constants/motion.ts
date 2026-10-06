@@ -10,6 +10,7 @@ export const MOTION = {
   wheelSoundRange: 360,
   detentSpeed: 3,
   hoverCruise: 0.2,
+  motionDuration: 900,
 } as const;
 
 export const LOADER = {

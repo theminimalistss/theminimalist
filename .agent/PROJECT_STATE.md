@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.8.0
-STATUS: Landing experience complete; site structure in place with temporary pages
-CURRENT TASK: Review 0.8.0 Founders page.
+VERSION: 0.9.0
+STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
+CURRENT TASK: 0.9.0 documented and verified; ready for the next scoped change.
 
 ## Completed
 
@@ -25,20 +25,28 @@ CURRENT TASK: Review 0.8.0 Founders page.
   hover feedback, spiral hover slowdown, cross-browser targets and fallbacks.
 - 0.7.0: Floating “Let’s talk” contact button with a lotus morph on hover.
 - 0.8.0: Real Founders page (Daisy Nuique, Rex Pinili) with matched portraits.
+- 0.9.0: Contact social channels (main + More), email, and hours; smooth hero
+  pause/resume with a layout-stable motion label.
+
+## Latest verification — 2026-10-06
+
+- `npm run check`: passed, including 81 unit tests, production build, version
+  consistency, and local media audit.
+- `npm run test:e2e`: 76 passed, 8 configured skips across desktop Chromium,
+  desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits
 
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
-
 - Concepts and provisional copy need approved replacements before launch.
-- About, Testimonials, Products, Contact, and Inquiries hold placeholder
-  content; contact details are "To be confirmed"; inquiry forms are not live.
+- About, Testimonials, Products, and Inquiries hold placeholder
+  content; inquiry forms are not live (they point to the studio email).
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;
   listen on real speakers/headphones and adjust `SOUNDS`/`AMBIENT` levels.
 - Playwright Firefox cannot launch on macOS 27 locally; Firefox runs in CI.
-- No production domain, actual client work, contact integration, or later pages yet.
+- No production domain, commissioned portfolio content, or inquiry submission backend yet.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
 
 ## Important files
@@ -47,10 +55,13 @@ CURRENT TASK: Review 0.8.0 Founders page.
 `src/hooks/useSpiralLoop.ts`, `src/hooks/useLoaderScene.ts`,
 `src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/hooks/usePointerCue.ts`,
 `src/router/pageModules.ts`, `src/shaders/`,
-`src/constants/brand.ts`,
+`src/constants/brand.ts`, `src/constants/founders.json`,
+`src/constants/contact.json`, `src/constants/social.json`, `src/constants/social.ts`,
+`src/ui/sections/Page/SocialLinks.tsx`, `scripts/socialMeta.ts`,
 `src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`, `src/audio/`,
 `src/constants/sounds.ts`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
-NEXT RECOMMENDED TASK: Supply real page copy/contact details, then build inquiry forms
+NEXT RECOMMENDED TASK: Supply approved content for the remaining provisional pages
+and define inquiry requirements before building forms
 (form → hook → service validation → repository).

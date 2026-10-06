@@ -22,6 +22,8 @@
     "src/router/pageMeta.ts",
     "src/router/pageMeta.json",
     "package.json",
-    "src/constants/founders.json"
+    "src/constants/founders.json",
+    "src/constants/social.json",
+    "src/constants/contact.json"
   ]
 }

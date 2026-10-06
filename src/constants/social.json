@@ -1,0 +1,37 @@
+[
+  {
+    "platform": "facebook",
+    "label": "Facebook",
+    "handle": "SimplyDaissy",
+    "url": "https://www.facebook.com/SimplyDaissy",
+    "primary": true
+  },
+  {
+    "platform": "instagram",
+    "label": "Instagram",
+    "handle": "@theminimalistdesignstudio_",
+    "url": "https://www.instagram.com/theminimalistdesignstudio_",
+    "primary": true
+  },
+  {
+    "platform": "linkedin",
+    "label": "LinkedIn",
+    "handle": "the-minimalists-studio",
+    "url": "https://www.linkedin.com/company/the-minimalists-studio",
+    "primary": true
+  },
+  {
+    "platform": "tiktok",
+    "label": "TikTok",
+    "handle": "@theminimalistdesign",
+    "url": "https://www.tiktok.com/@theminimalistdesign",
+    "primary": false
+  },
+  {
+    "platform": "behance",
+    "label": "Behance",
+    "handle": "theminimalistdesigns",
+    "url": "https://www.behance.net/theminimalistdesigns",
+    "primary": false
+  }
+]

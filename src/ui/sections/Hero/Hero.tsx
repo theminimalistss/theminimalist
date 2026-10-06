@@ -61,7 +61,8 @@ export function Hero() {
             works={works}
             view={view}
             playing={mediaPlaying}
-            paused={!mediaPlaying || inspecting || morphing || preview.transitioning}
+            paused={!mediaPlaying}
+            frozen={inspecting || morphing || preview.transitioning}
             compact={compact}
             onSelect={preview.open}
             onInspect={setInspecting}

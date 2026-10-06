@@ -28,7 +28,10 @@ export function HeroFooter({ paused, onToggle, reducedMotion, gallery, onBrowse 
           aria-label={paused ? 'Play motion' : 'Pause motion'}
         >
           <span className={`motion-dot ${paused ? 'is-paused' : ''}`} />
-          {paused ? 'Motion paused' : 'In motion'}
+          <span className="motion-label">
+            <span data-active={paused ? undefined : ''}>In motion</span>
+            <span data-active={paused ? '' : undefined}>Motion paused</span>
+          </span>
           <Icon name={paused ? 'play' : 'pause'} />
         </button>
       )}

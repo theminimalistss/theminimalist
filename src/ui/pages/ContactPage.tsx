@@ -1,13 +1,9 @@
+import contact from '@/constants/contact.json';
 import { INQUIRY_PAGES } from '@/router/navigation';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
 import { PageSection } from '@/ui/sections/Page/PageSection';
-
-const DETAILS = [
-  { label: 'Email', value: 'To be confirmed' },
-  { label: 'Studio', value: 'To be confirmed' },
-  { label: 'Hours', value: 'To be confirmed' },
-];
+import { SocialLinks } from '@/ui/sections/Page/SocialLinks';
 
 export default function ContactPage() {
   return (
@@ -21,14 +17,23 @@ export default function ContactPage() {
       <PageSection eyebrow="How can we help?" title="Start here.">
         <LinkCards items={INQUIRY_PAGES} label="Ways to get in touch" />
       </PageSection>
+      <PageSection eyebrow="Follow the studio" title="Say hello on social.">
+        <SocialLinks />
+      </PageSection>
       <PageSection eyebrow="The studio" title="Contact details.">
         <dl className="contact-details" data-reveal="stagger">
-          {DETAILS.map((detail) => (
-            <div key={detail.label}>
-              <dt>{detail.label}</dt>
-              <dd>{detail.value}</dd>
-            </div>
-          ))}
+          <div>
+            <dt>Email</dt>
+            <dd>
+              <a className="contact-email" href={`mailto:${contact.email}`}>
+                {contact.email}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>Hours</dt>
+            <dd>{contact.hours}</dd>
+          </div>
         </dl>
       </PageSection>
     </>

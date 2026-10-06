@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
 import { soundEngine } from '@/audio/soundEngine';
 import { MOTION } from '@/constants/motion';
+import { clamp01, easeInOutCubic } from '@/utils/easing';
 import {
   applyWheelImpulse,
   getCruiseVelocity,
@@ -13,16 +14,26 @@ import {
 type Options = {
   count: number;
   paused: boolean;
+  frozen: boolean;
   compact: boolean;
   enabled: boolean;
   keyboard: RefObject<boolean>;
 };
 
-export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Options) {
+export function useSpiralLoop({ count, paused, frozen, compact, enabled, keyboard }: Options) {
   const stageRef = useRef<HTMLOListElement>(null);
   const progress = useRef(0.5);
   const cruise = useRef(getCruiseVelocity(1));
   const velocity = useRef(getCruiseVelocity(1));
+  const pausedRef = useRef(paused);
+  const frozenRef = useRef(frozen);
+  const wakeRef = useRef<() => void>(() => undefined);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+    frozenRef.current = frozen;
+    wakeRef.current();
+  }, [paused, frozen]);
 
   useLayoutEffect(() => {
     const stage = stageRef.current;
@@ -30,6 +41,10 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
     const items = Array.from(stage.querySelectorAll<HTMLElement>('[data-spiral-item]'));
     let frame = 0;
     let lastTime = 0;
+    let motion = pausedRef.current || frozenRef.current ? 0 : 1;
+    let goal = motion;
+    let from = motion;
+    let elapsed = 0;
     let lastSlot = Math.floor(progress.current * count);
     let hovering = false;
     const hover = (event: PointerEvent) => {
@@ -81,7 +96,7 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
     stage.addEventListener('pointerleave', leave);
 
     const steer = (event: WheelEvent) => {
-      if (event.ctrlKey || !event.deltaY) return;
+      if (event.ctrlKey || !event.deltaY || pausedRef.current || frozenRef.current) return;
       const delta = normalizeWheelDelta(event.deltaY, event.deltaMode, window.innerHeight);
       cruise.current = getCruiseVelocity(delta > 0 ? 1 : -1);
       velocity.current = applyWheelImpulse(velocity.current, delta);
@@ -91,25 +106,45 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
     const animate = (time: number) => {
       const delta = lastTime ? Math.min(time - lastTime, MOTION.maxFrameDelta) : 0;
       lastTime = time;
+      const resting = pausedRef.current || frozenRef.current;
+      const nextGoal = resting ? 0 : 1;
+      if (nextGoal !== goal) {
+        goal = nextGoal;
+        from = motion;
+        elapsed = 0;
+      }
+      elapsed += delta;
+      const eased = easeInOutCubic(clamp01(elapsed / MOTION.motionDuration));
+      motion = frozenRef.current ? 0 : from + (goal - from) * eased;
       const target = cruise.current * (hovering ? MOTION.hoverCruise : 1);
       velocity.current = settleVelocity(velocity.current, target, delta);
-      progress.current = wrapProgress(progress.current + velocity.current * delta);
+      progress.current = wrapProgress(progress.current + velocity.current * delta * motion);
       const slot = Math.floor(progress.current * count);
       if (slot !== lastSlot) {
         lastSlot = slot;
-        if (Math.abs(velocity.current) > Math.abs(cruise.current) * MOTION.detentSpeed) {
+        if (Math.abs(velocity.current * motion) > Math.abs(cruise.current) * MOTION.detentSpeed) {
           soundEngine.play('detent');
         }
       }
       draw();
+      if (resting && (frozenRef.current || elapsed >= MOTION.motionDuration)) {
+        motion = 0;
+        frame = 0;
+        lastTime = 0;
+        return;
+      }
       frame = requestAnimationFrame(animate);
     };
-    if (!paused) {
+    const wake = () => {
+      if (frame || (pausedRef.current && motion === 0) || frozenRef.current) return;
       frame = requestAnimationFrame(animate);
-      window.addEventListener('wheel', steer, { passive: true });
-    }
+    };
+    wakeRef.current = wake;
+    wake();
+    window.addEventListener('wheel', steer, { passive: true });
 
     return () => {
+      wakeRef.current = () => undefined;
       cancelAnimationFrame(frame);
       resize.disconnect();
       stage.removeEventListener('focusin', focusWork);
@@ -122,7 +157,7 @@ export function useSpiralLoop({ count, paused, compact, enabled, keyboard }: Opt
         item.style.zIndex = '';
       });
     };
-  }, [count, paused, compact, enabled, keyboard]);
+  }, [count, compact, enabled, keyboard]);
 
   return stageRef;
 }

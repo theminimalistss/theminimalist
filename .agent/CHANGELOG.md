@@ -5,6 +5,52 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.9.0] — 2026-10-06
+
+### Added
+
+- Contact page “Follow the studio” section. Facebook, Instagram, and LinkedIn
+  are main tiles (icon, name, handle); on hover a tile turns deep green and its
+  icon badge morphs from a circle into a tilted ivory square. TikTok and
+  Behance sit behind a “More” control that morphs from a round pill into a
+  square-cornered tray (+ turns to ×) and glides the chips in; hidden links are
+  inert until revealed. Links open in a new tab with a screen-reader notice.
+- Line icons for Facebook, Instagram, LinkedIn, TikTok, Behance, and “plus”.
+- Real contact details: email `theminimalistss@gmail.com` (mailto) and hours
+  7:00 AM – 11:00 AM; the location row is removed. Inquiry placeholders now
+  offer the email directly.
+- Structured data adds `sameAs` (all five profiles) and the studio email.
+
+### Changed
+
+- Hero motion control: both labels share one grid cell, so toggling “In
+  motion” / “Motion paused” crossfades without shifting the footer. Pausing
+  eases the spiral to a stop and resuming eases it back up (900 ms
+  ease-in-out); previews and view switches still freeze it at once.
+- Refreshed `.agent` state, architecture, decisions, handoff instructions, and
+  remaining tasks for the populated Founders and Contact pages. Release versions
+  are aligned at 0.9.0 in the package, lockfile, README, and agent records.
+
+### AI session
+
+Changed: `src/constants/{social,contact}.json`, `src/constants/social.ts`,
+`src/ui/sections/Page/SocialLinks.tsx`, `src/ui/pages/{ContactPage,InquiryPage}.tsx`,
+`src/ui/components/Icon.tsx`, `src/ui/styles/{pages,hero}.css`, `scripts/socialMeta.ts`,
+`src/hooks/useSpiralLoop.ts`, `src/constants/motion.ts`,
+`src/ui/sections/Hero/{Hero,HeroFooter,WorkCollection}.tsx`, tests, docs, and
+`.agent` handoff records.
+
+Reason: The user supplied social links (with Facebook, Instagram, LinkedIn as
+the main channels), an email address, and opening hours, and asked to drop the
+location; they also asked for the motion button not to shift the layout and for
+a smooth stop and start. A services rewording of “Brand · Digital ·
+Experience” was tried and reverted at the user's request. The release handoff
+was refreshed and versions checked before the authorized commit and push.
+
+Tests: Revalidated for release on 2026-10-06: `npm run check` passes (81 unit
+tests); `npm run test:e2e` has 76 passed and 8 configured skips across desktop
+Chromium, desktop WebKit, and mobile WebKit (Firefox runs in CI only).
+
 ## [0.8.0] — 2026-10-06
 
 ### Added

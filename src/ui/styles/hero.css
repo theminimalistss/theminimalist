@@ -188,6 +188,23 @@
   height: 4px;
   border-radius: 50%;
   background: var(--color-brand);
+  transition: background-color var(--duration-reveal) ease;
+}
+.motion-label {
+  display: inline-grid;
+  text-align: left;
+}
+.motion-label > span {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity var(--duration-fast) ease,
+    transform var(--duration-reveal) var(--ease-editorial);
+}
+.motion-label > [data-active] {
+  opacity: 1;
+  transform: none;
 }
 .motion-dot.is-paused {
   background: var(--color-accent);
