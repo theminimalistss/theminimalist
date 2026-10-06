@@ -32,7 +32,7 @@ describe('particle preview placement', () => {
       const slot = getFocusPlacement({ width, height });
       expect(slot).not.toBeNull();
       if (!slot) continue;
-      const sculptureEdge = width / 2 + Math.min(width, height) * 0.18 * 1.8;
+      const sculptureEdge = width / 2 + Math.min(width, height) * 0.18 * 2;
       expect(slot.left).toBeGreaterThan(sculptureEdge);
       expect(slot.left + slot.width).toBeLessThanOrEqual(width - 48);
       expect(slot.top + slot.height + 104).toBeLessThanOrEqual(height - 176);

@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.13.0
+VERSION: 0.13.1
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.13.0 (doodle logo, cross-browser/mobile pass, twelve Works studies).
+CURRENT TASK: Review 0.13.1 (spacious Works orbit with tethers, tablet controls, contact button).
 
 ## Completed
 
@@ -38,6 +38,8 @@ CURRENT TASK: Review 0.13.0 (doodle logo, cross-browser/mobile pass, twelve Work
   card-consistent floating preview; rotation resumes after Reset.
 - 0.13.0: Doodle logo (hover sketch, click pop, scroll sway); cross-browser and
   battery pass; Works collection of twelve alternating studies (Home keeps six).
+- 0.13.1: Points orbit outside the cube with faint dashed tethers; two-row bottom controls
+  below 1,100 px; the contact button clears Reset view.
 
 ## Latest verification — 2026-10-07
 

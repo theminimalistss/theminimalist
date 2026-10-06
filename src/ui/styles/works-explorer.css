@@ -671,6 +671,31 @@ html[data-transition='works-view']::view-transition-new(root) {
   }
 }
 
+@media (max-width: 1099px) {
+  .works-page--spatial .works-toolbar,
+  .tesseract-actions {
+    bottom: 80px;
+  }
+  .focus-stepper {
+    left: var(--page-gutter);
+    right: var(--page-gutter);
+    bottom: 16px;
+    width: auto;
+    max-width: 560px;
+  }
+  .focus-current {
+    flex: 1;
+    min-width: 0;
+  }
+  .focus-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .tesseract-orbit-control {
+    bottom: 140px;
+  }
+}
 @media (max-width: 767px) {
   .works-intro {
     display: block;
@@ -693,9 +718,6 @@ html[data-transition='works-view']::view-transition-new(root) {
     top: calc(var(--header-height) + 128px);
     font-size: 10px;
   }
-  .works-page--spatial .works-toolbar {
-    bottom: 80px;
-  }
   .works-page--spatial .works-toolbar p {
     display: none;
   }
@@ -704,34 +726,17 @@ html[data-transition='works-view']::view-transition-new(root) {
     padding-inline: 12px;
   }
   .tesseract-actions {
-    bottom: 80px;
     gap: 4px;
   }
   .tesseract-reset {
     font-size: 10px;
   }
-  .focus-stepper {
-    left: var(--page-gutter);
-    right: var(--page-gutter);
-    bottom: 16px;
-    width: auto;
-  }
   .focus-current {
-    flex: 1;
-    min-width: 0;
     padding: 0 8px;
     gap: 10px;
   }
-  .focus-title {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
   .work-explorer {
     min-height: 680px;
-  }
-  .tesseract-orbit-control {
-    bottom: 140px;
   }
   .tesseract-node-number {
     font-size: 8px;
@@ -751,12 +756,12 @@ html[data-transition='works-view']::view-transition-new(root) {
 body:has(.works-page--spatial) .contact-fab {
   bottom: 104px;
 }
-body:has(.particle-preview[data-active]:not([data-docked])) .contact-fab {
-  opacity: 0;
-  pointer-events: none;
-}
-@media (max-width: 767px) {
+@media (max-width: 1099px) {
   body:has(.works-page--spatial) .contact-fab {
     bottom: 148px;
   }
+}
+body:has(.particle-preview[data-active]:not([data-docked])) .contact-fab {
+  opacity: 0;
+  pointer-events: none;
 }

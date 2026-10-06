@@ -3,11 +3,24 @@ import { TESSERACT_FRAGMENT, TESSERACT_VERTEX } from '@/shaders/tesseract';
 import { clamp01, easeInOutCubic } from '@/utils/easing';
 import {
   createTesseractGeometry,
+  getSculptureScale,
   getTraceSchedule,
   projectPoint,
   toSolid,
+  type Point3,
+  type Tether,
 } from '@/utils/tesseract';
 import { readColorToken } from '@/utils/webgl';
+
+const TETHER = {
+  start: 0.74,
+  length: 0.22,
+  fade: 0.22,
+  thickness: 1.4,
+  dash: 3,
+  gap: 4,
+  dashes: 24,
+};
 
 export type TesseractScene = {
   /** `reveal` runs 0 → 1 while the edges are traced in, then the faces appear. */
@@ -15,7 +28,10 @@ export type TesseractScene = {
   dispose: () => void;
 };
 
-export function createTesseractScene(canvas: HTMLCanvasElement): TesseractScene | null {
+export function createTesseractScene(
+  canvas: HTMLCanvasElement,
+  tethers: readonly Tether[] = [],
+): TesseractScene | null {
   const gl = canvas.getContext('webgl', {
     alpha: true,
     antialias: false,
@@ -57,7 +73,9 @@ export function createTesseractScene(canvas: HTMLCanvasElement): TesseractScene 
   const solid = geometry.vertices.map(toSolid);
   const strokes = getTraceSchedule(geometry.edges);
   // Six vertices per edge; position + line distance + depth opacity. Reused every frame.
-  const data = new Float32Array((geometry.edges.length + geometry.faces.length) * 6 * 4);
+  const data = new Float32Array(
+    (geometry.edges.length + geometry.faces.length + tethers.length * TETHER.dashes) * 6 * 4,
+  );
   gl.bufferData(gl.ARRAY_BUFFER, data.byteLength, gl.DYNAMIC_DRAW);
   const position = gl.getAttribLocation(program, 'a_position');
   const detail = gl.getAttribLocation(program, 'a_detail');
@@ -90,7 +108,7 @@ export function createTesseractScene(canvas: HTMLCanvasElement): TesseractScene 
         canvas.width = pixelWidth;
         canvas.height = pixelHeight;
       }
-      const scale = Math.min(width, height) * TESSERACT.scale;
+      const scale = getSculptureScale(width, height);
       const points = solid.map((point) => projectPoint(point, yaw, pitch));
       const faces = easeInOutCubic(clamp01((reveal - 0.78) / 0.22));
       let offset = 0;
@@ -103,10 +121,13 @@ export function createTesseractScene(canvas: HTMLCanvasElement): TesseractScene 
           data[offset++] = Math.max(0.25, 0.65 + point.z * 0.2) * faces;
         }
       }
-      for (const { from, to, start: begin, length: span } of strokes) {
-        const start = points[from]!;
-        const target = points[to]!;
-        const drawn = easeInOutCubic(clamp01((reveal - begin) / span));
+      const line = (
+        start: Point3,
+        target: Point3,
+        drawn: number,
+        thickness: number,
+        fade: number,
+      ) => {
         const end = {
           x: start.x + (target.x - start.x) * drawn,
           y: start.y + (target.y - start.y) * drawn,
@@ -115,14 +136,38 @@ export function createTesseractScene(canvas: HTMLCanvasElement): TesseractScene 
         const dx = target.x - start.x;
         const dy = target.y - start.y;
         const length = Math.max(0.001, Math.hypot(dx, dy));
-        const nx = (-dy / length) * 3 * Math.sign(drawn);
-        const ny = (dx / length) * 3 * Math.sign(drawn);
+        const nx = (-dy / length) * thickness * Math.sign(drawn);
+        const ny = (dx / length) * thickness * Math.sign(drawn);
         for (const [which, side] of corners) {
           const point = which ? end : start;
           data[offset++] = ((point.x * scale + nx * side) * 2) / width;
           data[offset++] = ((point.y * scale + ny * side) * 2) / height;
           data[offset++] = side;
-          data[offset++] = Math.max(0.2, Math.min(1, 0.58 + point.z * 0.22));
+          data[offset++] = Math.max(0.2, Math.min(1, 0.58 + point.z * 0.22)) * fade;
+        }
+      };
+      for (const { from, to, start: begin, length: span } of strokes) {
+        const drawn = easeInOutCubic(clamp01((reveal - begin) / span));
+        line(points[from]!, points[to]!, drawn, 3, 1);
+      }
+      const reach = easeInOutCubic(clamp01((reveal - TETHER.start) / TETHER.length));
+      for (const tether of tethers) {
+        const from = projectPoint(tether.from, yaw, pitch);
+        const to = projectPoint(tether.to, yaw, pitch);
+        const pixels = Math.hypot(to.x - from.x, to.y - from.y) * scale;
+        const along = (distance: number) => {
+          const amount = pixels ? Math.min(1, distance / pixels) : 0;
+          return {
+            x: from.x + (to.x - from.x) * amount,
+            y: from.y + (to.y - from.y) * amount,
+            z: from.z + (to.z - from.z) * amount,
+          };
+        };
+        for (let dash = 0; dash < TETHER.dashes; dash++) {
+          const begin = dash * (TETHER.dash + TETHER.gap);
+          const end = Math.min(begin + TETHER.dash, pixels * reach);
+          const visible = end > begin ? 1 : 0;
+          line(along(begin), along(Math.max(begin, end)), visible, TETHER.thickness, TETHER.fade);
         }
       }
       gl.viewport(0, 0, canvas.width, canvas.height);

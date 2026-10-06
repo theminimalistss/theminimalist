@@ -133,16 +133,13 @@ test('hovering a point eases the sculpture to a stop, then it turns again', asyn
   await expect.poll(() => node.getAttribute('style'), { timeout: 4000 }).not.toBe(held);
 });
 
-test('dragging the window across the mobile breakpoint glides the controls', async ({
-  page,
-  isMobile,
-}) => {
+test('dragging the window across a breakpoint glides the controls', async ({ page, isMobile }) => {
   test.skip(isMobile, 'Resizes a desktop window.');
-  await page.setViewportSize({ width: 820, height: 800 });
+  await page.setViewportSize({ width: 1150, height: 800 });
   await openWorks(page);
   const gliding = () =>
     page.locator('.works-toolbar').evaluate((element) => element.getAnimations().length);
-  for (let width = 810; width >= 740; width -= 10) {
+  for (let width = 1140; width >= 1070; width -= 10) {
     await page.setViewportSize({ width, height: 800 });
     await page.waitForTimeout(20);
   }

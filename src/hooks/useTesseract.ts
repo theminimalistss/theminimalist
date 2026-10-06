@@ -7,6 +7,7 @@ import {
   chooseHeading,
   getFrontAngles,
   getNodePositions,
+  getTethers,
   getWorkAnchor,
   pickFront,
   shortestTurn,
@@ -275,7 +276,7 @@ export function useTesseract({
     };
     const initialize = () => {
       scene?.dispose();
-      scene = createTesseractScene(canvas);
+      scene = createTesseractScene(canvas, getTethers(count));
       setStatus(scene ? 'ready' : 'unavailable');
       if (!scene) markTraced();
       resize();

@@ -33,7 +33,7 @@ export function projectPoint(point: Point3, yaw: number, pitch: number): Point3 
 }
 
 const EDGE_MIDPOINTS: readonly Point3[] = (() => {
-  const reach = 1.3 / Math.SQRT2;
+  const reach = TESSERACT.orbit / Math.SQRT2;
   const points: Point3[] = [];
   for (const a of [reach, -reach])
     for (const b of [reach, -reach])
@@ -59,7 +59,26 @@ export function getWorkAnchor(index: number, count: number): Point3 {
   const y = 1 - (2 * (index + 0.5)) / Math.max(1, count);
   const radius = Math.sqrt(1 - y * y);
   const angle = index * Math.PI * (3 - Math.sqrt(5));
-  return { x: Math.cos(angle) * radius * 1.3, y: y * 1.3, z: Math.sin(angle) * radius * 1.3 };
+  const orbit = TESSERACT.orbit;
+  return { x: Math.cos(angle) * radius * orbit, y: y * orbit, z: Math.sin(angle) * radius * orbit };
+}
+
+export type Tether = { from: Point3; to: Point3 };
+
+export function getTethers(count: number): Tether[] {
+  const outer = toSolid({ x: 1, y: 1, z: 1, w: 1 }).x;
+  return Array.from({ length: count }, (_, index) => {
+    const to = getWorkAnchor(index, count);
+    const length = Math.hypot(to.x, to.y, to.z);
+    const surface = outer / Math.max(Math.abs(to.x), Math.abs(to.y), Math.abs(to.z));
+    const from = { x: to.x * surface, y: to.y * surface, z: to.z * surface };
+    return surface * length < length - 0.02 ? [{ from, to }] : [];
+  }).flat();
+}
+
+export function getSculptureScale(width: number, height: number) {
+  const compact = width < 1100 ? TESSERACT.compactScale : 1;
+  return Math.min(width, height) * TESSERACT.scale * compact;
 }
 
 export function getNodePositions(
@@ -69,7 +88,7 @@ export function getNodePositions(
   yaw: number = TESSERACT.yaw,
   pitch: number = TESSERACT.pitch,
 ) {
-  const scale = Math.min(width, height) * TESSERACT.scale;
+  const scale = getSculptureScale(width, height);
   return Array.from({ length: count }, (_, index) => {
     const point = projectPoint(getWorkAnchor(index, count), yaw, pitch);
     return { x: width / 2 + point.x * scale, y: height / 2 - point.y * scale, depth: point.z };

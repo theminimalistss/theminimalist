@@ -200,6 +200,14 @@ navigation), `reveal` runs over `traceDuration`. `getTraceSchedule` staggers the
 outer cube, the edges reaching inward, and the inner cube. Faces fade in last,
 and `data-traced` reveals the points and the first preview.
 
+Points: six studies sit at the face centres. Twelve sit at the cube's edge
+midpoints, pushed out to `TESSERACT.orbit` (1.85), and other counts lie on a
+sphere of that radius. Each point outside the cube has a faint dashed tether
+(`getTethers`) from where its direction meets the outer cube. All of them turn
+with the cube. `getSculptureScale` sizes the drawing, the points, the focus slot,
+and the particle flights alike, and shrinks to 88 % below 1,100 px, where the
+bottom controls use two rows.
+
 Focus: each frame, `pickFront` takes the point nearest the viewer, with a margin so
 the focus does not flicker. When `getFocusPlacement` finds room beside the
 sculpture, the focused study is shown there automatically; otherwise only the

@@ -1,4 +1,4 @@
-import { TESSERACT } from '@/constants/tesseract';
+import { getSculptureScale } from '@/utils/tesseract';
 
 export type PreviewAnchor = { x: number; y: number; width: number; height: number };
 export type PreviewPlacement = { left: number; top: number; width: number; height: number };
@@ -21,15 +21,23 @@ export function getPreviewPlacement(anchor: PreviewAnchor): PreviewPlacement {
   };
 }
 
-const FOCUS_SLOT = { gutter: 48, top: 150, bottom: 176, copy: 104, sculpture: 1.8 };
+const FOCUS_SLOT = {
+  gutter: 48,
+  top: 150,
+  bottom: 176,
+  compactBottom: 212,
+  copy: 104,
+  sculpture: 2,
+};
 
 /**
  * A fixed slot beside the sculpture for the study in focus, or null when the viewport
  * leaves no room for it without covering the sculpture.
  */
 export function getFocusPlacement(view: Pick<PreviewAnchor, 'width' | 'height'>) {
-  const { gutter, top, bottom, copy, sculpture } = FOCUS_SLOT;
-  const radius = Math.min(view.width, view.height) * TESSERACT.scale * sculpture;
+  const { gutter, top, copy, sculpture } = FOCUS_SLOT;
+  const bottom = view.width < 1100 ? FOCUS_SLOT.compactBottom : FOCUS_SLOT.bottom;
+  const radius = getSculptureScale(view.width, view.height) * sculpture;
   const room = view.width / 2 - radius - gutter * 1.5;
   const width = Math.min(280, room, (view.height - top - bottom - copy) / 1.25);
   if (view.width < 1000 || width < 180) return null;

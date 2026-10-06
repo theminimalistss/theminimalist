@@ -5,6 +5,7 @@ import {
   createTesseractGeometry,
   getFrontAngles,
   getNodePositions,
+  getTethers,
   getWorkAnchor,
   pickFront,
   projectPoint,
@@ -78,7 +79,9 @@ describe('tesseract geometry', () => {
       const anchors = Array.from({ length: count }, (_, index) => getWorkAnchor(index, count));
       expect(new Set(anchors.map((point) => JSON.stringify(point))).size).toBe(count);
       for (const anchor of anchors)
-        expect(Math.hypot(anchor.x, anchor.y, anchor.z)).toBeCloseTo(1.3);
+        expect(Math.hypot(anchor.x, anchor.y, anchor.z)).toBeCloseTo(
+          count === 6 ? 1.3 : TESSERACT.orbit,
+        );
     }
   });
 
@@ -140,5 +143,32 @@ describe('tesseract geometry', () => {
       (_, index) => projectPoint(getWorkAnchor(index, 12), TESSERACT.yaw, TESSERACT.pitch).z,
     );
     expect(pickFront(depths, -1, 0)).toBe(0);
+  });
+
+  it('spreads twelve points just outside the cube, each tethered to an edge midpoint', () => {
+    const outer = toSolid({ x: 1, y: 1, z: 1, w: 1 }).x;
+    const tethers = getTethers(12);
+    expect(tethers).toHaveLength(12);
+    tethers.forEach(({ from, to }, index) => {
+      expect(to).toEqual(getWorkAnchor(index, 12));
+      const onEdge = [from.x, from.y, from.z].filter(
+        (value) => Math.abs(Math.abs(value) - outer) < 1e-9,
+      );
+      expect(onEdge).toHaveLength(2);
+      expect(Math.hypot(to.x, to.y, to.z)).toBeGreaterThan(Math.hypot(from.x, from.y, from.z));
+    });
+  });
+
+  it('keeps every point on screen at any rotation', () => {
+    for (const pitch of [-1.1, 0, 0.42, 1.1]) {
+      for (let yaw = 0; yaw < Math.PI * 2; yaw += 0.2) {
+        for (let index = 0; index < 12; index++) {
+          const point = projectPoint(getWorkAnchor(index, 12), yaw, pitch);
+          expect(Math.max(Math.abs(point.x), Math.abs(point.y)) * TESSERACT.scale).toBeLessThan(
+            0.45,
+          );
+        }
+      }
+    }
   });
 });

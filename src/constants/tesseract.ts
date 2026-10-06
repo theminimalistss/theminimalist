@@ -8,6 +8,8 @@ export const TESSERACT = {
   maxBufferSize: 1800,
   cameraDistance: 5,
   scale: 0.18,
+  compactScale: 0.88,
+  orbit: 1.85,
   idleFrame: 1000 / 30,
   /** Pause and resume ease over this many milliseconds. */
   holdDuration: 900,

@@ -5,6 +5,41 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.13.1] — 2026-10-07
+
+### Changed
+
+- The Works points sit outside the cube on a wider orbit (radius 1.85), so twelve
+  studies no longer crowd the inner cube. They still turn with the cube, and a
+  faint dashed tether ties each to its edge midpoint, growing out at the end of
+  the trace.
+  The orbit stays within the cube's own projected corners.
+- Below 1,100 px the bottom controls use two rows: the view toggle and the
+  pause/reset buttons, then a centred stepper (up to 560 px). The sculpture is
+  drawn at 88 % at these widths so its points clear the controls.
+
+### Fixed
+
+- The stepper no longer overlaps the view toggle and the study count on tablets
+  and smaller desktops.
+- The contact button no longer covers “Reset view”; its raised position was
+  being overridden by the general Works rule.
+
+### AI session
+
+Changed: `TESSERACT.orbit`/`compactScale`, `getTethers`, `getSculptureScale`, the
+tesseract scene (tethers, shared line helper), the focus slot, `works-explorer.css`,
+tests, and documentation.
+
+Reason: The user asked for less crowded points (outside the cube, still relative
+to it), with subtler, dashed connecting lines. They then reported the bottom controls
+overlapping on tablet and smaller desktop sizes, and the contact button covering
+Reset view.
+
+Verification: Screenshots at 1440×900, 1024×768, 900×700, and 820×1180, plus a
+2× close-up of the tethers. Unit tests cover the orbit, the tether endpoints,
+on-screen bounds at every rotation, and slot clearance.
+
 ## [0.13.0] — 2026-10-07
 
 ### Added
