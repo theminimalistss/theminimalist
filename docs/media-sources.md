@@ -51,3 +51,12 @@ short fade-out, Opus 48 kb/s and MP3 64 kb/s).
 
 The ambient bed, spiral whoosh, and preview swell are synthesized in the browser
 and contain no third-party audio.
+
+## Founder portraits
+
+`daisy-nuique-*` and `rex-pinili-*` are the founders' own photographs, supplied
+by the studio on 2026-10-06 for use on this site. They are cropped to 4:5
+half-length portraits, resized to 480×600 and 960×1200, and encoded as AVIF and
+WebP with all metadata (EXIF, GPS, color profiles) stripped. Originals are kept
+out of Git in `.cache/founders/`. Do not reuse them outside the studio's
+channels without the founders' consent.

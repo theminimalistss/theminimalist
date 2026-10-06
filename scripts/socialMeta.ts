@@ -1,5 +1,6 @@
 import type { Plugin } from 'vite';
 import packageJson from '../package.json' with { type: 'json' };
+import founders from '../src/constants/founders.json' with { type: 'json' };
 import {
   formatPageTitle,
   NOT_FOUND_META,
@@ -33,6 +34,7 @@ function structuredData(siteUrl: string, image: string) {
         logo: `${siteUrl}/icon-512.png`,
         image,
         foundingDate: SITE.established,
+        founder: founders.map(({ name, role }) => ({ '@type': 'Person', name, jobTitle: role })),
       },
       { '@type': 'WebSite', name: SITE.title, url: `${siteUrl}/` },
     ],

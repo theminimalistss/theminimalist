@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.7.0 · Landing experience + site structure**
+**Design studio · v0.8.0 · Landing experience + site structure**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -28,8 +28,8 @@ Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
 | Contact  | `/contact`, `/inquiries`, `/inquiries/quote`, `/inquiries/appointment`         |
 
 Every page is reachable from the header (desktop), the menu, and the footer
-sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home and
-Works hold clearly marked placeholder content; inquiry forms are not live yet.
+sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home, Works,
+and Founders hold clearly marked placeholder content; inquiry forms are not live yet.
 
 ## Run locally
 
@@ -92,6 +92,7 @@ e2e/                 Browser acceptance tests
 | `npm run media:prepare`                   | Cache sources and regenerate media; needs FFmpeg             |
 | `npm run media:audio`                     | Download (CC0) and optimize interface sounds; needs FFmpeg   |
 | `npm run media:social`                    | Render share images, app icons, and the web manifest         |
+| `npm run media:founders`                  | Crop and encode founder portraits from `.cache/founders/`    |
 | `npm run media:audit`                     | Image, video, and sound budgets and format checks            |
 | `npm run version:check`                   | Synchronized Semantic Version records                        |
 

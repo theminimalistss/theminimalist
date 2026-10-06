@@ -36,3 +36,10 @@ matching fallback per sound.
 
 `npm run media:social` renders `public/social/*.png`, app icons, and the web
 manifest from `src/router/pageMeta.json`.
+
+## Founder portraits
+
+Place the originals in `.cache/founders/<slug>.png` and run
+`npm run media:founders`. Crop boxes (normalized, 4:5) live in
+`scripts/prepare-founders.mjs`; review faces and framing after any change. The
+audit applies the same image budget and 4:5 rule as the collection.

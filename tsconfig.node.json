@@ -21,6 +21,7 @@
     "scripts/**/*.ts",
     "src/router/pageMeta.ts",
     "src/router/pageMeta.json",
-    "package.json"
+    "package.json",
+    "src/constants/founders.json"
   ]
 }

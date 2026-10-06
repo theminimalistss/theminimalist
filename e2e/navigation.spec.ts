@@ -118,3 +118,19 @@ test('a floating button leads to the contact page from anywhere', async ({ page 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Let’s talk/);
   await expect(page.locator('.contact-fab')).toHaveCount(0);
 });
+
+test('the founders page introduces both partners equally', async ({ page }) => {
+  await openPage(page, '/founders');
+  const cards = page.locator('.profile-cards > li');
+  await expect(cards).toHaveCount(2);
+  for (const [name, role] of [
+    ['Daisy Nuique', 'Product / Visual Designer'],
+    ['Rex Pinili', 'Software Engineer'],
+  ]) {
+    const card = cards.filter({ hasText: name });
+    await expect(card.getByRole('heading', { name })).toBeVisible();
+    await expect(card).toContainText('Founding partner');
+    await expect(card).toContainText(role);
+    await expect(card.getByRole('img', { name: `Portrait of ${name}` })).toBeVisible();
+  }
+});

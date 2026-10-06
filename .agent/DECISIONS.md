@@ -190,3 +190,14 @@ and runtime guards; test Chromium, WebKit (desktop and mobile), and Firefox (CI)
 Reason: Visitors arrive from many browsers and in-app web views.
 
 Impact: Avoid APIs newer than these targets without a fallback.
+
+## 2026-10-06 — Founders shown as equal partners
+
+Decision: Both founders carry the title “Founding partner”, identical card
+treatment, and are listed alphabetically by surname. Names and roles live in
+`src/constants/founders.json`, shared by the page and the structured data.
+
+Reason: The studio is a partnership; order and labels must not imply seniority.
+
+Impact: Add future partners to the JSON (and a portrait via
+`npm run media:founders`); keep alphabetical order.

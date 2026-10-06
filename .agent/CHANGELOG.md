@@ -5,6 +5,28 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-10-06
+
+### Added
+
+- Founders page with the real founding partners: Daisy Nuique (Product /
+  Visual Designer) and Rex Pinili (Software Engineer). Both carry the same
+  “Founding partner” title, equal card sizes, and are listed alphabetically by
+  surname, since the studio is a partnership with no hierarchy.
+- Founder portraits cropped to matching 4:5 half-length frames and encoded as
+  480/960 AVIF and WebP with all metadata (including location) removed;
+  reproducible with `npm run media:founders` from `.cache/founders/`.
+- Structured data lists both founders; the Founders share description names
+  them.
+
+### AI session
+
+Changed: `src/constants/founders.{json,ts}`, `src/ui/pages/FoundersPage.tsx`,
+`src/assets/images/founders/`, `scripts/{prepare-founders,audit-media}.mjs`,
+`scripts/socialMeta.ts`, `src/router/pageMeta.json`, styles, tests, docs.
+
+Reason: The user supplied founder photos, names, and roles.
+
 ## [0.7.0] — 2026-10-06
 
 ### Added

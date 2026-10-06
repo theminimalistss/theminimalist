@@ -1,11 +1,10 @@
+import { FOUNDER_TITLE, FOUNDERS } from '@/constants/founders';
 import { ROUTES } from '@/router/paths';
-import { LotusMark } from '@/ui/components/LotusMark';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
 import { PageSection } from '@/ui/sections/Page/PageSection';
-import { Placeholder } from '@/ui/sections/Page/Placeholder';
 
-const PROFILES = ['Founder', 'Co-founder'];
+const PORTRAIT_SIZES = '(max-width: 767px) calc(100vw - 48px), (max-width: 1099px) 30vw, 26vw';
 
 const NEXT = [
   { label: 'About', to: ROUTES.about, description: 'Who we are and how we work.' },
@@ -19,23 +18,35 @@ export default function FoundersPage() {
         eyebrow="Studio — Founders"
         title="The people"
         accent="behind the studio."
-        lead="A small team with a shared belief: good design should feel calm, honest, and a little personal."
+        lead="The Minimalist is a partnership between design and engineering: two founding partners sharing one belief, that good design should feel calm, honest, and a little personal."
       />
-      <PageSection eyebrow="Founders" title="Profiles in progress.">
+      <PageSection eyebrow="Founding partners" title="Design and engineering, side by side.">
         <ul className="profile-cards" data-reveal="stagger">
-          {PROFILES.map((role) => (
-            <li key={role}>
-              <div className="profile-portrait">
-                <LotusMark />
-              </div>
-              <h3>{role}</h3>
-              <p>Portrait and biography coming soon.</p>
+          {FOUNDERS.map((founder) => (
+            <li key={founder.slug}>
+              <picture className="profile-portrait">
+                <source
+                  type="image/avif"
+                  srcSet={`${founder.portrait.avifSmall} 480w, ${founder.portrait.avif} 960w`}
+                  sizes={PORTRAIT_SIZES}
+                />
+                <img
+                  src={founder.portrait.webp}
+                  srcSet={`${founder.portrait.webpSmall} 480w, ${founder.portrait.webp} 960w`}
+                  sizes={PORTRAIT_SIZES}
+                  alt={`Portrait of ${founder.name}`}
+                  width="960"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+              <span className="eyebrow profile-title">{FOUNDER_TITLE}</span>
+              <h3>{founder.name}</h3>
+              <p>{founder.role}</p>
             </li>
           ))}
         </ul>
-        <Placeholder title="Coming soon">
-          Founder portraits, stories, and roles will be published here once they are approved.
-        </Placeholder>
       </PageSection>
       <PageSection eyebrow="Continue" title="Say hello.">
         <LinkCards items={NEXT} label="Next steps" />

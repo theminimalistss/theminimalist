@@ -244,17 +244,25 @@
   list-style: none;
 }
 .profile-portrait {
-  display: grid;
-  place-items: center;
+  display: block;
   aspect-ratio: 4 / 5;
+  overflow: hidden;
   background: var(--color-surface);
 }
-.profile-portrait svg {
-  width: 30%;
-  color: var(--color-accent);
+.profile-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform calc(var(--duration-reveal) * 1.6) var(--ease-editorial);
+}
+.profile-title {
+  display: block;
+  margin-top: 20px;
+  color: var(--color-muted);
 }
 .profile-cards h3 {
-  margin-top: 18px;
+  margin-top: 8px;
   font-size: 20px;
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -355,5 +363,11 @@
   }
   .essence-list li + li {
     border-left: var(--border);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .profile-cards li:hover .profile-portrait img {
+    transform: scale(1.035);
   }
 }

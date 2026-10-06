@@ -3,7 +3,8 @@
 - Finish and record Phase 1 QA.
 - Review direction and replace stock concepts with approved portfolio work.
 - Supply final logo, copy, project metadata, and production domain before launch.
-- Replace placeholder copy on About, Founders, Testimonials, Products, Contact.
+- Replace placeholder copy on About, Testimonials, Products, Contact.
+- Add short founder biographies when the partners supply them.
 - Build inquiry, quote, and appointment forms through a repository/service.
 - Add product data behind a repository once a catalog exists.
 - Check WebGL loader/menu morph frame pacing on real phones and Safari.

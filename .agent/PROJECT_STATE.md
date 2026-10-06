@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.7.0
+VERSION: 0.8.0
 STATUS: Landing experience complete; site structure in place with temporary pages
-CURRENT TASK: Review 0.7.0 floating contact button.
+CURRENT TASK: Review 0.8.0 Founders page.
 
 ## Completed
 
@@ -24,6 +24,7 @@ CURRENT TASK: Review 0.7.0 floating contact button.
 - 0.6.0: Interface sound + generative ambient with a remembered toggle, work
   hover feedback, spiral hover slowdown, cross-browser targets and fallbacks.
 - 0.7.0: Floating “Let’s talk” contact button with a lotus morph on hover.
+- 0.8.0: Real Founders page (Daisy Nuique, Rex Pinili) with matched portraits.
 
 ## Known issues / limits
 
@@ -31,7 +32,7 @@ CURRENT TASK: Review 0.7.0 floating contact button.
   images are relative and canonical URLs and the sitemap are omitted.
 
 - Concepts and provisional copy need approved replacements before launch.
-- About, Founders, Testimonials, Products, Contact, and Inquiries hold placeholder
+- About, Testimonials, Products, Contact, and Inquiries hold placeholder
   content; contact details are "To be confirmed"; inquiry forms are not live.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;

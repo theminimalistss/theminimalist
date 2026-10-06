@@ -5,7 +5,11 @@ import sharp from 'sharp';
 let totalBytes = 0;
 let failed = false;
 const report = [];
-for (const directory of ['src/assets/images/hero', 'src/assets/videos/hero']) {
+for (const directory of [
+  'src/assets/images/hero',
+  'src/assets/images/founders',
+  'src/assets/videos/hero',
+]) {
   for (const filename of (await readdir(directory)).sort()) {
     const path = `${directory}/${filename}`;
     const { size } = await stat(path);
