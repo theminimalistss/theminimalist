@@ -19,7 +19,7 @@ export function FocusStepper({ works, index, onStep, onOpen, showThumbnail }: Pr
   const previous = works[(index - 1 + count) % count];
   const next = works[(index + 1) % count];
   return (
-    <div className="focus-stepper" role="group" aria-label="Study in focus">
+    <div className="focus-stepper" role="group" aria-label="Study in focus" data-glide="">
       <button
         className="focus-step"
         aria-label={`Previous study: ${previous?.title ?? ''}`}

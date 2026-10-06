@@ -203,13 +203,34 @@ video component take over, so settled previews need no particle frames. Failed
 textures or contexts fall back to native media.
 
 Spatial ↔ gallery switches run in a view transition (`useWorksView`). The root
-crossfades while `works-title` and `works-toggle` glide; without the API, the new
-presentation fades in. Both use the ivory canvas.
+crossfades while `works-title` and `works-toggle` glide. Leaving the sculpture, the
+explorer stays mounted (`leaving`), out of flow and inert, while `useTesseract`
+runs the trace backwards. Each point's poster is drawn in a texture slot on the
+fixed `works-morph-layer`, flying from its point to its gallery card. The gallery
+images stay hidden (`data-works-morph`) until the particles land. Returning, the
+images dissolve into the predicted points (`getNodePositions`) as the sculpture
+traces in. Both canvases have view-transition names with no animation, so they
+stay live during the crossfade. Without the API, the new presentation fades in.
 
-Sound: `useSoundScene('works')` crossfades the ambient bed to `AMBIENT_WORKS`.
-While it is active, `soundEngine` answers hover, click, and switch with
-synthesized glass tones, and adds per-point notes (`note`), assembly sparkle
-(`shimmer`), and `grab`/`fling` gestures through a shared short reverb.
+Heart: a dot at the projected centre beats with a ripple. `useHeartbeat` sets
+`--beat-delay` so the CSS beat falls on `HEARTBEAT.period`, the same grid the
+music's `schedulePulse` uses.
+
+Wander: when idle, the cruise follows a heading from `chooseHeading` (yaw rate,
+sometimes reversed, and a pitch drift toward a new tilt), renewed every 9–16 s and
+blended over 2.5 s. Glides end with the cruise resuming, because the loop only
+rests while something holds the sculpture.
+
+Resizing: `useLayoutGlide` watches `[data-glide]` elements. A move larger than the
+resize itself (a breakpoint or reflow) glides from the old box. A docked preview
+keeps its slot until it has fully dispersed.
+
+Sound: `useSoundScene('works')` crossfades the ambient bed to `AMBIENT_WORKS`: a
+warm pad plus `schedulePulse`, which adds a quiet heartbeat and a wandering
+plucked melody on the shared beat grid. While the scene is active, `soundEngine`
+answers hover, click, and switch with synthesized glass tones, and adds per-point
+notes (`note`), assembly sparkle (`shimmer`), and `grab`/`fling` gestures through
+a shared short reverb.
 
 Offscreen or hidden scenes, and scenes behind menus or dialogs, stop scheduling
 frames. Input uses pointer capture with `pan-y`, so touch scrolling remains

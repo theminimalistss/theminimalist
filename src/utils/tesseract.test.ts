@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { TESSERACT } from '@/constants/tesseract';
 import {
+  chooseHeading,
   createTesseractGeometry,
   getFrontAngles,
+  getNodePositions,
   getWorkAnchor,
   pickFront,
   projectPoint,
@@ -101,5 +103,34 @@ describe('tesseract geometry', () => {
     expect(pickFront([0.5, 0.55, -1], 0, 0.12)).toBe(0);
     expect(pickFront([0.5, 0.7, -1], 0, 0.12)).toBe(1);
     expect(pickFront([0.2, 0.1], -1, 0.12)).toBe(0);
+  });
+
+  it('places points on screen exactly as the sculpture projects them', () => {
+    const positions = getNodePositions(6, 1200, 800, 0.3, 0.2);
+    const scale = 800 * TESSERACT.scale;
+    positions.forEach((position, index) => {
+      const point = projectPoint(getWorkAnchor(index, 6), 0.3, 0.2);
+      expect(position.x).toBeCloseTo(600 + point.x * scale);
+      expect(position.y).toBeCloseTo(400 - point.y * scale);
+      expect(position.depth).toBeCloseTo(point.z);
+    });
+  });
+
+  it('wanders: new speeds, occasional reversals, and a drift toward a new tilt', () => {
+    const sequence = (...values: number[]) => {
+      let index = 0;
+      return () => values[index++ % values.length] ?? 0;
+    };
+    const keep = chooseHeading(TESSERACT.rotationSpeed, 0, sequence(0.5, 0.9, 0.5, 1));
+    expect(keep.yaw).toBeGreaterThan(0);
+    expect(keep.duration).toBeGreaterThanOrEqual(TESSERACT.wander.every[0]);
+    expect(keep.duration).toBeLessThanOrEqual(TESSERACT.wander.every[1]);
+    const [low, high] = TESSERACT.wander.speed;
+    expect(Math.abs(keep.yaw)).toBeGreaterThanOrEqual(TESSERACT.rotationSpeed * low);
+    expect(Math.abs(keep.yaw)).toBeLessThanOrEqual(TESSERACT.rotationSpeed * high);
+    expect(keep.pitch * keep.duration).toBeCloseTo(TESSERACT.wander.pitch[1]);
+    const flipped = chooseHeading(TESSERACT.rotationSpeed, 0.4, sequence(0.5, 0.1, 0.5, 0));
+    expect(flipped.yaw).toBeLessThan(0);
+    expect(0.4 + flipped.pitch * flipped.duration).toBeCloseTo(TESSERACT.wander.pitch[0]);
   });
 });

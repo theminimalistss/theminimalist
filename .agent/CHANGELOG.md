@@ -5,6 +5,63 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-10-07
+
+### Added
+
+- A heartbeat at the centre of the Works sculpture: a forest dot beats “lub-dub”
+  once a second with a faint ripple. It starts once the sculpture has been drawn.
+- Spatial → gallery: the sculpture un-draws itself (the trace in reverse) while
+  each point streams particles that land on its gallery image; the real cards then
+  fade in. Gallery → spatial: the images dissolve into particles that fly into the
+  points as the sculpture traces back in.
+- New Works music: a warm pad that changes every four beats, a plucked melody that
+  wanders over it, and a quiet heartbeat at 60 BPM. The music and the visual heart
+  share one clock, so they beat together.
+- The idle rotation wanders: every 9–16 s it takes a new heading (a new speed,
+  sometimes reversed, and a drift toward a new tilt), blended in over 2.5 s.
+- Dragging the window across a breakpoint glides any control or gallery card that
+  would jump; continuous resizing is left alone. When the side slot closes, the
+  docked preview dissolves where it is.
+
+### Changed
+
+- The floating preview (phones and narrow windows) sits on a sand surface panel
+  like the site's cards, keeps clear of the bottom controls, and the contact button
+  steps aside while it is open.
+- The mobile stepper thumbnail is lifted with a hairline edge, soft shadow, and a
+  slight tilt so it stands off the bar.
+
+### Fixed
+
+- Reset, the stepper, and arrow-key glides no longer leave the sculpture stopped;
+  the cruise resumes afterwards.
+
+### AI session
+
+Changed: Works page, stage, explorer, preview, and stepper UI; `useTesseract`,
+`useParticlePreview`, `useWorksView`, `useHeartbeat`, and `useLayoutGlide`; the
+particle scene (texture slots), trace/heading/point utils, the pulse scheduler and
+the Works ambient preset; styles, tests, and handoff documentation. The comments
+added during the session were removed at the user's request.
+
+Reason: The user asked for a heartbeat at the sculpture's centre (a circle, with
+subtle audio beats), particles that carry the works between the sculpture and the
+gallery while the sculpture un-draws, new Works music, a wandering rotation, smooth
+breakpoint resizing, framing consistent with the design language, and a fix for
+rotation stopping after Reset.
+
+Verification: Frame recordings in headless Chromium and WebKit covered the morph in
+both directions, the un-drawing, and drag-resizing across breakpoints (to 600 px
+and back to 1100 px). Phone screenshots covered the preview panel and the
+thumbnail. A 32 s sample confirmed the heading changes, a beat test covers the
+shared clock, and a browser test confirms motion resumes after Reset. Music levels
+still need listening on real speakers.
+
+Tests: `npm run check` passes (100 unit tests); Playwright 103 passed, 11 skipped
+(Firefox in CI; desktop-only checks on touch). The page loader wait in tests is
+20 s because parallel software WebGL can slow first loads.
+
 ## [0.11.0] — 2026-10-07
 
 ### Added

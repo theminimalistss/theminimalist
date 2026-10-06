@@ -1,4 +1,6 @@
 import { useHeroWorks } from '@/hooks/useHeroWorks';
+import { useLayoutGlide } from '@/hooks/useLayoutGlide';
+import type { Work } from '@/types/work';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useSoundScene } from '@/hooks/useSound';
@@ -13,24 +15,32 @@ import { PageLink } from '@/ui/components/PageLink';
 import { WorkExplorer } from '@/ui/sections/Works/WorkExplorer';
 import '@/ui/styles/works-explorer.css';
 
+const NO_WORKS: Work[] = [];
+
 export default function WorksPage() {
   const state = useHeroWorks();
   const reducedMotion = useReducedMotion();
   const pageVisible = usePageVisibility();
   const preview = useWorkPreview();
   const menu = useSiteMenu();
-  const { view, change } = useWorksView(reducedMotion);
+  const works = state.status === 'ready' ? state.works : NO_WORKS;
+  const { view, change, layerRef, leaving, finishLeaving } = useWorksView(reducedMotion, works);
   const gallery = view === 'gallery';
   useSoundScene('works');
-  const works = state.status === 'ready' ? state.works : [];
+  const pageRef = useLayoutGlide<HTMLDivElement>();
   const suspended = !pageVisible || menu.open || !!preview.work || preview.transitioning;
 
   return (
-    <div className={`collection-page works-page works-page--${gallery ? 'gallery' : 'spatial'}`}>
+    <div
+      ref={pageRef}
+      className={`collection-page works-page works-page--${gallery ? 'gallery' : 'spatial'}`}
+    >
       <header className="works-intro">
         <div>
-          <span className="eyebrow">Works / A collection of possibilities</span>
-          <h1>
+          <span className="eyebrow" data-glide="">
+            Works / A collection of possibilities
+          </span>
+          <h1 data-glide="">
             Selected works.
             <em className="serif"> A different perspective.</em>
           </h1>
@@ -45,7 +55,7 @@ export default function WorksPage() {
           </PageLink>
         </div>
       </header>
-      <div className="works-toolbar">
+      <div className="works-toolbar" data-glide="">
         <p>
           Independent concept studies <span>({String(works.length).padStart(2, '0')})</span>
         </p>
@@ -59,23 +69,25 @@ export default function WorksPage() {
         </div>
       </div>
       <CollectionStatus state={state} className="page-section" />
-      {works.length > 0 &&
-        (gallery ? (
-          <WorkCollection
-            works={works}
-            view="gallery"
-            reveal
-            playing={!reducedMotion && !suspended}
-            onSelect={preview.open}
-          />
-        ) : (
-          <WorkExplorer
-            works={works}
-            suspended={suspended}
-            reducedMotion={reducedMotion}
-            onOpen={preview.open}
-          />
-        ))}
+      {works.length > 0 && (!gallery || leaving) && (
+        <WorkExplorer
+          works={works}
+          suspended={suspended}
+          reducedMotion={reducedMotion}
+          onOpen={preview.open}
+          leaving={leaving}
+          onLeft={finishLeaving}
+        />
+      )}
+      {works.length > 0 && gallery && (
+        <WorkCollection
+          works={works}
+          view="gallery"
+          reveal
+          playing={!reducedMotion && !suspended}
+          onSelect={preview.open}
+        />
+      )}
       {gallery && (
         <p className="works-provenance">
           An evolving collection of independent explorations, presented with licensed imagery.
@@ -83,6 +95,7 @@ export default function WorksPage() {
         </p>
       )}
       <WorkDialog work={preview.work} onClose={preview.close} />
+      <canvas ref={layerRef} className="works-morph-layer" aria-hidden="true" />
     </div>
   );
 }

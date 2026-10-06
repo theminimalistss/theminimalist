@@ -4,11 +4,13 @@ import { TESSERACT } from '@/constants/tesseract';
 import { clamp01, easeInOutCubic } from '@/utils/easing';
 import { getFocusPlacement, type PreviewAnchor } from '@/utils/particlePreview';
 import {
+  chooseHeading,
   getFrontAngles,
+  getNodePositions,
   getWorkAnchor,
   pickFront,
-  projectPoint,
   shortestTurn,
+  type Heading,
 } from '@/utils/tesseract';
 import { createTesseractScene, type TesseractScene } from '@/utils/tesseractScene';
 
@@ -20,6 +22,8 @@ type Options = {
   reducedMotion: boolean;
   /** The loader has gone (or the user navigated here): trace the sculpture in. */
   entered: boolean;
+  leaving?: boolean;
+  onLeft?: () => void;
 };
 
 type Glide = {
@@ -37,7 +41,15 @@ const clampFling = (speed: number) =>
   Math.max(-TESSERACT.maxFling, Math.min(TESSERACT.maxFling, speed));
 
 /** Owns GPU resources, input and scheduling; no project data or domain rules. */
-export function useTesseract({ count, holding, suspended, reducedMotion, entered }: Options) {
+export function useTesseract({
+  count,
+  holding,
+  suspended,
+  reducedMotion,
+  entered,
+  leaving = false,
+  onLeft = () => {},
+}: Options) {
   const anchorsRef = useRef<PreviewAnchor[]>([]);
   const viewportRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -47,15 +59,17 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
   const [focus, setFocus] = useState(0);
   const [docked, setDocked] = useState(false);
   const [traced, setTraced] = useState(false);
-  const settings = useRef({ holding, suspended, reducedMotion, paused, entered });
+  const settings = useRef({ holding, suspended, reducedMotion, paused, entered, leaving });
+  const leftRef = useRef(onLeft);
   const wakeRef = useRef(() => {});
   const resetRef = useRef(() => {});
   const steerRef = useRef((index: number) => void index);
 
   useEffect(() => {
-    settings.current = { holding, suspended, reducedMotion, paused, entered };
+    settings.current = { holding, suspended, reducedMotion, paused, entered, leaving };
+    leftRef.current = onLeft;
     wakeRef.current();
-  }, [holding, suspended, reducedMotion, paused, entered]);
+  }, [holding, suspended, reducedMotion, paused, entered, leaving, onLeft]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -79,6 +93,14 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
     let speedElapsed = 0;
     let flingYaw = 0;
     let flingPitch = 0;
+    let heading: Heading = {
+      yaw: TESSERACT.rotationSpeed,
+      pitch: 0,
+      duration: TESSERACT.wander.every[0],
+    };
+    let headingLeft = heading.duration;
+    let cruiseYaw = heading.yaw;
+    let cruisePitch = 0;
     let glide: Glide | null = null;
     let drag: { id: number; x: number; y: number; time: number; vx: number; vy: number } | null =
       null;
@@ -96,18 +118,13 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
     };
     const draw = () => {
       scene?.draw(yaw, pitch, width, height, reveal);
-      const scale = Math.min(width, height) * TESSERACT.scale;
+      const positions = getNodePositions(nodes.length, width, height, yaw, pitch);
       const depths = nodes.map((node, index) => {
-        const point = projectPoint(anchors[index]!, yaw, pitch);
-        node.style.transform = `translate(-50%, -50%) translate(${(point.x * scale).toFixed(2)}px, ${(-point.y * scale).toFixed(2)}px)`;
-        node.style.zIndex = String(Math.round((point.z + 3) * 10));
-        anchorsRef.current[index] = {
-          x: width / 2 + point.x * scale,
-          y: height / 2 - point.y * scale,
-          width,
-          height,
-        };
-        return point.z;
+        const { x, y, depth } = positions[index]!;
+        node.style.transform = `translate(-50%, -50%) translate(${(x - width / 2).toFixed(2)}px, ${(y - height / 2).toFixed(2)}px)`;
+        node.style.zIndex = String(Math.round((depth + 3) * 10));
+        anchorsRef.current[index] = { x, y, width, height };
+        return depth;
       });
       if (!glide) markFront(pickFront(depths, front, TESSERACT.focusMargin), front >= 0);
     };
@@ -149,7 +166,17 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
       speedElapsed += delta;
       const eased = easeInOutCubic(clamp01(speedElapsed / TESSERACT.holdDuration));
       speed = settings.current.reducedMotion ? goal : speedFrom + (speedGoal - speedFrom) * eased;
-      if (reveal < 1) {
+      if (settings.current.leaving) {
+        reveal = settings.current.reducedMotion
+          ? 0
+          : Math.max(0, reveal - delta / TESSERACT.untraceDuration);
+        if (reveal <= 0) {
+          draw();
+          last = 0;
+          leftRef.current();
+          return;
+        }
+      } else if (reveal < 1) {
         reveal = settings.current.reducedMotion
           ? 1
           : Math.min(1, reveal + delta / TESSERACT.traceDuration);
@@ -165,18 +192,20 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
         const decay = Math.exp(-delta / TESSERACT.flingDecay);
         flingYaw = Math.abs(flingYaw * decay) < 1e-6 ? 0 : flingYaw * decay;
         flingPitch = Math.abs(flingPitch * decay) < 1e-6 ? 0 : flingPitch * decay;
-        yaw += (TESSERACT.rotationSpeed * speed + flingYaw) * delta;
-        pitch = clampPitch(pitch + flingPitch * delta);
+        headingLeft -= delta * speed;
+        if (headingLeft <= 0) {
+          heading = chooseHeading(heading.yaw, pitch);
+          headingLeft = heading.duration;
+        }
+        const blend = 1 - Math.exp(-delta / TESSERACT.wander.blend);
+        cruiseYaw += (heading.yaw - cruiseYaw) * blend;
+        cruisePitch += (heading.pitch - cruisePitch) * blend;
+        yaw += (cruiseYaw * speed + flingYaw) * delta;
+        pitch = clampPitch(pitch + (cruisePitch * speed + flingPitch) * delta);
       }
       draw();
       const resting =
-        reveal >= 1 &&
-        speedGoal === 0 &&
-        speed === 0 &&
-        !glide &&
-        !drag &&
-        !flingYaw &&
-        !flingPitch;
+        reveal >= 1 && held() && speed === 0 && !glide && !drag && !flingYaw && !flingPitch;
       if (resting) {
         last = 0;
         return;
@@ -184,7 +213,11 @@ export function useTesseract({ count, holding, suspended, reducedMotion, entered
       frame = requestAnimationFrame(animate);
     };
     const wake = () => {
-      if (disposed || frame || !live()) return;
+      if (disposed || frame) return;
+      if (!live()) {
+        if (settings.current.leaving) leftRef.current();
+        return;
+      }
       last = 0;
       frame = requestAnimationFrame(animate);
     };

@@ -15,7 +15,9 @@ describe('particle preview placement', () => {
           expect(rect.left).toBeGreaterThanOrEqual(24);
           expect(rect.left + rect.width).toBeLessThanOrEqual(width - 24);
           expect(rect.top).toBeGreaterThanOrEqual(0);
-          expect(rect.top + rect.height + 90).toBeLessThanOrEqual(height);
+          expect(rect.top + rect.height + 116 + (width < 768 ? 150 : 96)).toBeLessThanOrEqual(
+            height,
+          );
           expect(rect.height / rect.width).toBe(1.25);
         }
     }

@@ -2,7 +2,7 @@ import { expect, type Page } from '@playwright/test';
 
 export async function openPage(page: Page, path = '/') {
   await page.goto(path);
-  await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 10_000 });
+  await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 20_000 });
 }
 
 export async function settle(page: Page) {

@@ -3,14 +3,19 @@ import { TESSERACT } from '@/constants/tesseract';
 export type PreviewAnchor = { x: number; y: number; width: number; height: number };
 export type PreviewPlacement = { left: number; top: number; width: number; height: number };
 
+const CAPTION = 116;
+const BOTTOM = { narrow: 150, wide: 96 };
+
 export function getPreviewPlacement(anchor: PreviewAnchor): PreviewPlacement {
   const width = Math.min(280, anchor.width - 48, anchor.height * 0.32);
   const height = width * 1.25;
   const left = anchor.x < anchor.width * 0.52 ? anchor.x + 42 : anchor.x - width - 42;
   const safeTop = Math.min(150, anchor.height * 0.2);
+  const bottom = anchor.width < 768 ? BOTTOM.narrow : BOTTOM.wide;
+  const lowest = anchor.height - height - CAPTION - bottom;
   return {
     left: Math.max(24, Math.min(anchor.width - width - 24, left)),
-    top: Math.max(safeTop, Math.min(anchor.height - height - 100, anchor.y - height * 0.5)),
+    top: Math.max(safeTop, Math.min(lowest, anchor.y - height * 0.5)),
     width,
     height,
   };

@@ -14,11 +14,24 @@ test('the full viewport sculpture assembles a preview on hover or tap, then open
 }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    const marks: Record<string, number> = {};
+    (window as unknown as { trace: typeof marks }).trace = marks;
+    new MutationObserver(() => {
+      marks.entered ??= document.querySelector('.app-shell:not([inert])')
+        ? performance.now()
+        : undefined!;
+      marks.traced ??= document.querySelector('.tesseract-viewport[data-traced]')
+        ? performance.now()
+        : undefined!;
+    }).observe(document, { subtree: true, childList: true, attributes: true });
+  });
   await openPage(page, '/works');
-  const viewport = page.locator('.tesseract-viewport');
-  await expect(viewport).not.toHaveAttribute('data-traced', '');
-  await expect(page.locator('[data-work-node]').first()).toHaveCSS('opacity', '0');
-  await expect(viewport).toHaveAttribute('data-traced', '');
+  await expect(page.locator('.tesseract-viewport')).toHaveAttribute('data-traced', '');
+  const trace = await page.evaluate(
+    () => (window as unknown as { trace: Record<string, number> }).trace,
+  );
+  expect((trace.traced ?? 0) - (trace.entered ?? 0)).toBeGreaterThan(1500);
   await expect(page.locator('.tesseract-stage')).toHaveAttribute('data-scene-status', 'ready');
   const dimensions = await page.locator('.work-explorer').boundingBox();
   expect(dimensions?.width).toBe(page.viewportSize()?.width);
@@ -37,9 +50,20 @@ test('the full viewport sculpture assembles a preview on hover or tap, then open
   await page.getByRole('button', { name: 'Close project' }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.keyboard.press('Escape');
+  await expect(page.locator('.tesseract-heart')).toHaveCSS('animation-name', /heartbeat|none/);
+  expect(
+    await page
+      .locator('.tesseract-heart')
+      .evaluate((element) => (element as HTMLElement).style.getPropertyValue('--beat-delay')),
+  ).toMatch(/^-?\d+(\.\d+)?ms$/);
   await page.getByRole('button', { name: 'Gallery', exact: true }).click();
   await expect(page.locator('.work-gallery>li')).toHaveCount(6);
   await expect(page.locator('.tesseract-canvas')).toHaveCount(0);
+  await expect(page.locator('html')).not.toHaveAttribute('data-works-morph', /.*/, {
+    timeout: 5000,
+  });
+  await expect(page.locator('.works-morph-layer')).not.toHaveAttribute('data-active', '');
+  await expect(page.locator('.work-gallery .work-item').first()).toHaveCSS('opacity', '1');
   await page.getByRole('button', { name: 'Spatial', exact: true }).click();
   await expect(page.locator('.tesseract-stage')).toHaveAttribute('data-scene-status', 'ready');
   expect(errors).toEqual([]);
@@ -71,7 +95,14 @@ test('the study nearest the viewer shows itself, and the stepper brings the next
     await expect(preview.getByRole('heading', { level: 2 })).toHaveText(/Still/, {
       timeout: 10000,
     });
-  await page.getByRole('button', { name: /^Open Still, study 2 of 6$/ }).click();
+  const node = page.locator('[data-work-node]').first();
+  const arrived = await node.getAttribute('style');
+  await expect.poll(() => node.getAttribute('style'), { timeout: 5000 }).not.toBe(arrived);
+  await page.getByRole('button', { name: 'Reset view' }).click();
+  await page.waitForTimeout(1600);
+  const reset = await node.getAttribute('style');
+  await expect.poll(() => node.getAttribute('style'), { timeout: 5000 }).not.toBe(reset);
+  await page.getByRole('button', { name: /^Open .+, study \d of 6$/ }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
 });
 
@@ -90,6 +121,23 @@ test('hovering a point eases the sculpture to a stop, then it turns again', asyn
   expect(await node.getAttribute('style')).toBe(held);
   await page.mouse.move(4, 420);
   await expect.poll(() => node.getAttribute('style'), { timeout: 4000 }).not.toBe(held);
+});
+
+test('dragging the window across the mobile breakpoint glides the controls', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Resizes a desktop window.');
+  await page.setViewportSize({ width: 820, height: 800 });
+  await openWorks(page);
+  const gliding = () =>
+    page.locator('.works-toolbar').evaluate((element) => element.getAnimations().length);
+  for (let width = 810; width >= 740; width -= 10) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.waitForTimeout(20);
+  }
+  await expect.poll(gliding).toBeGreaterThan(0);
+  await expect.poll(gliding, { timeout: 3000 }).toBe(0);
 });
 
 test('rotation responds to keyboard and drag, pauses, and resets', async ({ page, isMobile }) => {

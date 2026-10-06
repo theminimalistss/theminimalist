@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { useAppEntered } from '@/hooks/useAppEntered';
+import { useHeartbeat } from '@/hooks/useHeartbeat';
 import { useSound } from '@/hooks/useSound';
 import { useTesseract } from '@/hooks/useTesseract';
 import type { Work } from '@/types/work';
@@ -17,6 +18,8 @@ type Props = {
   onOpen: (work: Work) => void;
   suspended: boolean;
   reducedMotion: boolean;
+  leaving?: boolean;
+  onLeft?: () => void;
 };
 
 export function TesseractStage({
@@ -29,9 +32,12 @@ export function TesseractStage({
   onOpen,
   suspended,
   reducedMotion,
+  leaving = false,
+  onLeft,
 }: Props) {
   const { note } = useSound();
   const entered = useAppEntered();
+  const heartRef = useHeartbeat<HTMLSpanElement>();
   const {
     viewportRef,
     canvasRef,
@@ -51,6 +57,8 @@ export function TesseractStage({
     suspended,
     reducedMotion,
     entered,
+    leaving,
+    ...(onLeft ? { onLeft } : {}),
   });
   const instructions = useId();
   const chosen = active && selected !== null;
@@ -70,6 +78,9 @@ export function TesseractStage({
         <div className="tesseract-orbit-ring" aria-hidden="true" />
         <div className="tesseract-grid" aria-hidden="true" />
         <canvas ref={canvasRef} className="tesseract-canvas" aria-hidden="true" />
+        <span ref={heartRef} className="tesseract-heart" aria-hidden="true">
+          <span className="tesseract-heart-core" />
+        </span>
         {status !== 'ready' && (
           <svg className="tesseract-fallback" viewBox="0 0 300 300" fill="none" aria-hidden="true">
             <path d="M150 30 254 90v120l-104 60-104-60V90Zm0 0v70m104-10-62 36m62 84-62-36m-42 96v-70M46 210l62-36M46 90l62 36m42-26 42 26v48l-42 26-42-26v-48Zm0 0v50m42-24-42 24-42-24m42 24v50" />
@@ -129,7 +140,7 @@ export function TesseractStage({
         )}
       </div>
       <div className="tesseract-tools">
-        <p className="tesseract-hint" id={instructions}>
+        <p className="tesseract-hint" id={instructions} data-glide="">
           {status === 'unavailable' ? (
             'Choose a point to discover a study.'
           ) : (
@@ -154,7 +165,7 @@ export function TesseractStage({
             showThumbnail={!docked}
           />
         )}
-        <div className="tesseract-actions">
+        <div className="tesseract-actions" data-glide="">
           {!reducedMotion && status === 'ready' && (
             <button
               className="icon-button"

@@ -69,6 +69,7 @@ export function WorkCollection({
             key={work.id}
             data-spiral-item={spiral ? '' : undefined}
             data-reveal={reveal && !spiral ? 'item' : undefined}
+            data-glide={spiral ? undefined : ''}
           >
             <WorkItem
               work={work}

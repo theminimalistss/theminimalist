@@ -24,6 +24,14 @@ export const TESSERACT = {
   focusMargin: 0.12,
   /** On arrival the edges are traced in over this many milliseconds… */
   traceDuration: 2600,
+  untraceDuration: 1500,
+  wander: {
+    every: [9_000, 16_000],
+    blend: 2_500,
+    flipChance: 0.35,
+    speed: [0.6, 1.3],
+    pitch: [-0.45, 0.85],
+  },
   /** …and the points appear once this much of the trace is drawn. */
   pointsAt: 0.8,
 } as const;

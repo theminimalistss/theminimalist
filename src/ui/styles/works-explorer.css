@@ -111,6 +111,9 @@
   position: absolute;
   inset: 0;
 }
+.tesseract-canvas {
+  view-transition-name: works-sculpture;
+}
 .tesseract-canvas,
 .particle-canvas {
   position: absolute;
@@ -163,6 +166,78 @@
 }
 .tesseract-orbit-control:focus-visible {
   outline-offset: -12px !important;
+}
+.tesseract-heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  color: var(--color-brand);
+  pointer-events: none;
+  transition:
+    opacity var(--duration-reveal) ease,
+    transform var(--duration-reveal) var(--ease-editorial);
+}
+.tesseract-viewport:not([data-traced]) .tesseract-heart {
+  opacity: 0;
+  transform: scale(0.4);
+}
+.tesseract-heart-core {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-brand);
+}
+.tesseract-heart::before,
+.tesseract-heart::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-brand);
+  border-radius: 50%;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tesseract-heart-core {
+    animation: heartbeat 1000ms var(--beat-delay, 0ms) infinite;
+  }
+  .tesseract-heart::before {
+    animation: heart-ripple 1000ms var(--beat-delay, 0ms) infinite;
+  }
+  .tesseract-heart::after {
+    animation: heart-ripple 1000ms calc(var(--beat-delay, 0ms) + 240ms) infinite;
+  }
+}
+@keyframes heartbeat {
+  0%,
+  34%,
+  100% {
+    transform: scale(1);
+  }
+  8% {
+    transform: scale(1.45);
+  }
+  17% {
+    transform: scale(1.05);
+  }
+  25% {
+    transform: scale(1.25);
+  }
+}
+@keyframes heart-ripple {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+  65%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 .tesseract-nodes {
   position: absolute;
@@ -306,12 +381,14 @@
 .focus-stepper {
   position: absolute;
   z-index: 70;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 22px;
   display: flex;
   align-items: center;
   gap: 4px;
-  transform: translateX(-50%);
+  width: fit-content;
+  margin-inline: auto;
   padding: 4px;
   border: 1px solid var(--color-line);
   background: var(--color-canvas);
@@ -351,9 +428,15 @@
   text-align: left;
 }
 .focus-thumb {
-  width: 32px;
+  width: 34px;
   aspect-ratio: 4 / 5;
   overflow: hidden;
+  outline: 1px solid #1a31221f;
+  outline-offset: -1px;
+  box-shadow:
+    0 1px 2px #14191126,
+    0 8px 16px -8px var(--color-scrim);
+  transform: rotate(-3deg);
   animation: focus-in 420ms var(--ease-editorial) both;
 }
 .focus-count {
@@ -412,7 +495,7 @@
   right: 0;
   top: 0;
   z-index: 2;
-  background: var(--color-canvas);
+  background: var(--color-surface);
   opacity: 0;
 }
 .particle-copy {
@@ -424,8 +507,25 @@
     transform 400ms var(--ease-editorial);
 }
 .particle-preview:not([data-docked]) .particle-copy {
-  padding: 14px;
-  background: var(--color-canvas);
+  padding: 16px;
+}
+.particle-preview:not([data-docked]) .particle-media {
+  box-shadow: none;
+}
+.particle-preview:not([data-docked]) .particle-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 28px 56px -28px var(--color-scrim);
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+.particle-preview[data-active]:is([data-phase='ready'], [data-phase='fallback'])
+  .particle-card::before {
+  opacity: 1;
 }
 .particle-preview[data-active]:is([data-phase='ready'], [data-phase='fallback'])
   :is(.particle-copy, .particle-close) {
@@ -476,8 +576,69 @@
 @keyframes focus-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    translate: 0 4px;
   }
+}
+
+.works-morph-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 380ms ease;
+  view-transition-name: works-particles;
+}
+.works-morph-layer[data-active] {
+  opacity: 1;
+  transition: none;
+}
+.works-page .work-gallery .work-item {
+  transition:
+    box-shadow var(--duration-reveal) var(--ease-editorial),
+    opacity 380ms ease;
+}
+html[data-works-morph='gallery'] .work-gallery .work-item {
+  opacity: 0;
+}
+html[data-works-morph] .work-gallery > [data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+html[data-transition='works-view']::view-transition-old(works-particles),
+html[data-transition='works-view']::view-transition-old(works-sculpture) {
+  display: none;
+}
+html[data-transition='works-view']::view-transition-group(works-particles),
+html[data-transition='works-view']::view-transition-new(works-particles),
+html[data-transition='works-view']::view-transition-group(works-sculpture),
+html[data-transition='works-view']::view-transition-new(works-sculpture) {
+  animation: none;
+}
+.work-explorer[data-leaving] {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  min-height: 0;
+  background: none;
+  pointer-events: none;
+}
+.work-explorer[data-leaving]
+  :is(
+    .tesseract-grid,
+    .tesseract-orbit-ring,
+    .tesseract-orbit-control,
+    .tesseract-nodes,
+    .tesseract-heart,
+    .tesseract-hint,
+    .tesseract-actions,
+    .focus-stepper,
+    .particle-preview
+  ) {
+  visibility: hidden;
 }
 
 /* Spatial ↔ gallery: the page crossfades while the title and view toggle glide. */
@@ -547,7 +708,7 @@ html[data-transition='works-view']::view-transition-new(root) {
     left: var(--page-gutter);
     right: var(--page-gutter);
     bottom: 16px;
-    transform: none;
+    width: auto;
   }
   .focus-current {
     flex: 1;
@@ -583,6 +744,10 @@ html[data-transition='works-view']::view-transition-new(root) {
 }
 body:has(.works-page--spatial) .contact-fab {
   bottom: 104px;
+}
+body:has(.particle-preview[data-active]:not([data-docked])) .contact-fab {
+  opacity: 0;
+  pointer-events: none;
 }
 @media (max-width: 767px) {
   body:has(.works-page--spatial) .contact-fab {

@@ -69,6 +69,7 @@ export function useParticlePreview({
     let loadedSource = '';
     let image: HTMLImageElement | null = null;
     let current = shownRef.current;
+    let docked = desired.current.docked;
     let reported: PreviewPhase | null = null;
     const report = (next: PreviewPhase) => {
       if (next === reported) return;
@@ -103,7 +104,8 @@ export function useParticlePreview({
     const position = () => {
       const anchor = anchorsRef.current?.[current.index];
       if (!anchor) return null;
-      const slot = desired.current.docked ? getFocusPlacement(anchor) : null;
+      if (progress === 0) docked = desired.current.docked;
+      const slot = docked ? getFocusPlacement(anchor) : null;
       const rect = slot ?? getPreviewPlacement(anchor);
       card.style.left = `${rect.left}px`;
       card.style.top = `${rect.top}px`;

@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.11.0
+VERSION: 0.12.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review the refined 0.11.0 Works sculpture (ivory, auto focus, trace-in, sound).
+CURRENT TASK: Review 0.12.0 Works refinements (heartbeat, particle morph, music, wander, resize).
 
 ## Completed
 
@@ -32,12 +32,15 @@ CURRENT TASK: Review the refined 0.11.0 Works sculpture (ivory, auto focus, trac
 - 0.11.0: Works tesseract on ivory: traced entrance, automatic front-study preview,
   focus stepper, eased hover/drag motion, view-transition gallery switch, and a
   Works sound scene; reduced-motion and WebGL fallbacks.
+- 0.12.0: Works heartbeat in time with new 60 BPM music; particle morph with
+  un-drawing between sculpture and gallery; wandering rotation; breakpoint glide;
+  card-consistent floating preview; rotation resumes after Reset.
 
 ## Latest verification — 2026-10-07
 
-- `npm run check`: passed, including 97 unit tests, production build, version
+- `npm run check`: passed, including 100 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 101 passed, 10 configured skips across desktop Chromium,
+- `npm run test:e2e`: 103 passed, 11 configured skips across desktop Chromium,
   desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits

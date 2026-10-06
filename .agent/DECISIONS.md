@@ -264,3 +264,22 @@ particles; native image or video takes over once assembled. The sculpture waits
 for the loader (`useAppEntered`) before tracing in. Pages may switch the sound
 scene with `useSoundScene`; the Works palette is synthesized, so it adds no audio
 files.
+
+## 2026-10-07 — One heartbeat clock; particles carried through view transitions
+
+Decision: Beats fall on multiples of `HEARTBEAT.period` since page load. The music
+schedules on that grid, and the visual heart aligns its CSS animation to it with
+`--beat-delay`. Spatial ↔ gallery particles draw on a fixed overlay canvas. That
+canvas and the sculpture canvas carry their own view-transition names with no
+animation, so they stay live above the crossfade. Breakpoint jumps are detected
+as movement larger than the resize itself and glided (`useLayoutGlide`).
+
+Reason: A shared clock keeps sound and picture together without coupling the audio
+engine to the UI. Live named layers let the particles and the un-drawing play
+through a view transition. Detecting jumps covers every breakpoint without listing
+them.
+
+Impact: Keep beat timing in `HEARTBEAT`; adjust the music in `AMBIENT_WORKS.pulse`.
+Elements that should glide on reflow need `data-glide` and no CSS transform of
+their own. Only floating previews get the surface panel; docked ones caption
+directly on the page, like the gallery.

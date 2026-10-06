@@ -51,6 +51,20 @@ export function getWorkAnchor(index: number, count: number): Point3 {
   return { x: Math.cos(angle) * radius * 1.3, y: y * 1.3, z: Math.sin(angle) * radius * 1.3 };
 }
 
+export function getNodePositions(
+  count: number,
+  width: number,
+  height: number,
+  yaw: number = TESSERACT.yaw,
+  pitch: number = TESSERACT.pitch,
+) {
+  const scale = Math.min(width, height) * TESSERACT.scale;
+  return Array.from({ length: count }, (_, index) => {
+    const point = projectPoint(getWorkAnchor(index, count), yaw, pitch);
+    return { x: width / 2 + point.x * scale, y: height / 2 - point.y * scale, depth: point.z };
+  });
+}
+
 /** The hypercube alone: its outer and inner cube carry translucent faces. */
 export function createTesseractGeometry() {
   const cubeFaces: Face[] = [
@@ -126,4 +140,15 @@ export function getTraceSchedule(edges: readonly Edge[] = TESSERACT_EDGES): Trac
       ...(timing.get(edge) ?? { start: 0, length: 1 }),
     };
   });
+}
+
+export type Heading = { yaw: number; pitch: number; duration: number };
+
+export function chooseHeading(previousYaw: number, pitch: number, random = Math.random): Heading {
+  const { every, flipChance, speed, pitch: tilt } = TESSERACT.wander;
+  const duration = every[0] + random() * (every[1] - every[0]);
+  const direction = (Math.sign(previousYaw) || 1) * (random() < flipChance ? -1 : 1);
+  const yaw = TESSERACT.rotationSpeed * (speed[0] + random() * (speed[1] - speed[0])) * direction;
+  const target = tilt[0] + random() * (tilt[1] - tilt[0]);
+  return { yaw, pitch: (target - pitch) / duration, duration };
 }

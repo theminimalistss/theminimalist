@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.11.0 · Immersive studio portfolio**
+**Design studio · v0.12.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -19,10 +19,12 @@ generative ambient bed (toggle “Sound” in the header). Built for Chrome/Edge
 Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
 
 Works fills the viewport with an interactive WebGL tesseract on the ivory canvas.
-It traces itself in, then shows the study nearest the viewer, assembled from
-particles. Drag (with momentum) or use the arrow keys to rotate. Hover, focus, or
-tap a point to preview it, and step through studies with the focus control. Works
-has its own ambient bed and glass-like sounds. A gallery, a reduced-motion
+It traces itself in, wanders slowly with a heartbeat at its centre, and shows the
+study nearest the viewer, assembled from particles. Drag (with momentum) or use
+the arrow keys to rotate. Hover, focus, or tap a point to preview it, and step
+through studies with the focus control. Switching to the gallery un-draws the
+sculpture as its points stream into the images. Works has its own 60 BPM music,
+in time with the heart, and glass-like sounds. A gallery, a reduced-motion
 presentation, and WebGL fallbacks keep every study accessible.
 
 ## Site map

@@ -50,6 +50,22 @@ export const SWELL = {
   close: [440, 659.25],
 } as const;
 
+export const HEARTBEAT = {
+  period: 1000,
+  dub: 0.24,
+} as const;
+
+export type PulseSpec = {
+  heart: number;
+  pluck: number;
+  pluckDecay: number;
+  noteChance: number;
+  ghostChance: number;
+  echo: number;
+  feedback: number;
+  scale: readonly number[];
+};
+
 export type AmbientPreset = {
   level: number;
   fadeIn: number;
@@ -68,6 +84,7 @@ export type AmbientPreset = {
   waveSeconds: number;
   chords: readonly (readonly number[])[];
   chimes: readonly number[];
+  pulse?: PulseSpec;
 };
 
 export const AMBIENT = {
@@ -93,28 +110,37 @@ export const AMBIENT = {
   chimes: [587.33, 659.25, 739.99, 880],
 } as const satisfies AmbientPreset;
 
-/** A brighter, more spacious bed for the Works sculpture: glassy voicings and air. */
 export const AMBIENT_WORKS = {
   level: 0.05,
-  fadeIn: 6,
-  glide: 6,
-  reverbSeconds: 7,
-  chordSeconds: 28,
-  filter: 1500,
-  filterSweep: 420,
-  chimeLevel: 0.02,
-  chimeEvery: [7, 13],
-  chimeBell: [2.76, 0.32],
-  air: { type: 'highpass', frequency: 2600 },
-  waveLevel: [0.0012, 0.005],
-  waveSeconds: 18,
+  fadeIn: 5,
+  glide: 4,
+  reverbSeconds: 5.5,
+  chordSeconds: 16,
+  filter: 950,
+  filterSweep: 260,
+  chimeLevel: 0.012,
+  chimeEvery: [20, 34],
+  chimeBell: [1, 0],
+  air: { type: 'lowpass', frequency: 520 },
+  waveLevel: [0.001, 0.004],
+  waveSeconds: 16,
   chords: [
-    [220, 329.63, 493.88, 554.37, 659.25],
-    [196, 293.66, 440, 493.88, 587.33],
-    [246.94, 369.99, 440, 554.37, 739.99],
-    [174.61, 261.63, 392, 440, 523.25],
+    [174.61, 261.63, 329.63, 392, 440],
+    [146.83, 220, 261.63, 329.63, 349.23],
+    [116.54, 174.61, 220, 293.66, 329.63],
+    [130.81, 196, 293.66, 329.63, 440],
   ],
-  chimes: [1318.51, 1479.98, 1760, 1975.53, 2217.46],
+  chimes: [1046.5, 1174.66, 1318.51],
+  pulse: {
+    heart: 0.018,
+    pluck: 0.026,
+    pluckDecay: 1.8,
+    noteChance: 0.45,
+    ghostChance: 0.12,
+    echo: 0.5,
+    feedback: 0.32,
+    scale: [523.25, 587.33, 659.25, 783.99, 880, 1046.5],
+  },
 } as const satisfies AmbientPreset;
 
 export const AMBIENTS = { home: AMBIENT, works: AMBIENT_WORKS } as const;

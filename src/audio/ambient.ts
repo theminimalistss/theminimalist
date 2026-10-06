@@ -1,3 +1,4 @@
+import { schedulePulse } from '@/audio/pulse';
 import type { AmbientPreset } from '@/constants/sounds';
 
 export type Ambient = { stop: (fade?: number) => void };
@@ -119,6 +120,9 @@ export function createAmbient(
     createVoice(context, frequency, index === 0 ? 0.08 : 0.1, filter, preset.glide),
   );
   const stopWaves = createWaves(context, noise, reverb, preset);
+  const stopPulse = preset.pulse
+    ? schedulePulse(context, output, reverb, preset.pulse)
+    : () => undefined;
 
   let chord = 0;
   const running = () => context.state === 'running';
@@ -159,6 +163,7 @@ export function createAmbient(
     stop(fade = 1) {
       window.clearInterval(progression);
       window.clearTimeout(chimeTimer);
+      stopPulse();
       const end = context.currentTime;
       output.gain.cancelScheduledValues(end);
       output.gain.setValueAtTime(output.gain.value, end);
