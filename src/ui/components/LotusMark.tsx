@@ -14,7 +14,7 @@ export function LotusMark({ className }: { className?: string }) {
       aria-hidden="true"
     >
       {LOTUS_MARK.paths.map((path) => (
-        <path key={path} d={path} />
+        <path key={path} d={path} pathLength={1} />
       ))}
     </svg>
   );

@@ -7,6 +7,7 @@ import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useScrolledPast } from '@/hooks/useScrolledPast';
 import { SiteMenuContext } from '@/hooks/useSiteMenu';
 import { prefetchPages } from '@/router/pageModules';
+import { ContactFab } from '@/ui/components/ContactFab';
 import { SiteHeader } from '@/ui/components/SiteHeader';
 import { StudioMenu } from '@/ui/components/StudioMenu';
 import { scheduleIdle } from '@/utils/idle';
@@ -40,6 +41,7 @@ export function SiteLayout() {
           <Outlet />
         </div>
       </Suspense>
+      <ContactFab />
       <StudioMenu open={menuOpen} onClose={menu.close} />
     </SiteMenuContext.Provider>
   );

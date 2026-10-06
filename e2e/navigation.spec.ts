@@ -108,3 +108,13 @@ test('content reveals as it scrolls into view', async ({ page }) => {
   await expect(footerNav).toHaveAttribute('data-revealed', '');
   await expect(page.locator('.page-intro')).toHaveAttribute('data-revealed', '');
 });
+
+test('a floating button leads to the contact page from anywhere', async ({ page }) => {
+  await openPage(page, '/about');
+  const fab = page.getByRole('link', { name: /Let’s talk/ });
+  await expect(fab).toBeVisible();
+  await fab.click();
+  await expect(page).toHaveURL(/\/contact$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/Let’s talk/);
+  await expect(page.locator('.contact-fab')).toHaveCount(0);
+});

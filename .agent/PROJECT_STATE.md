@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.6.0
+VERSION: 0.7.0
 STATUS: Landing experience complete; site structure in place with temporary pages
-CURRENT TASK: Review 0.6.0 sound design and cross-browser support.
+CURRENT TASK: Review 0.7.0 floating contact button.
 
 ## Completed
 
@@ -23,6 +23,7 @@ CURRENT TASK: Review 0.6.0 sound design and cross-browser support.
   share HTML/images/icons, campaign-aware intro.
 - 0.6.0: Interface sound + generative ambient with a remembered toggle, work
   hover feedback, spiral hover slowdown, cross-browser targets and fallbacks.
+- 0.7.0: Floating “Let’s talk” contact button with a lotus morph on hover.
 
 ## Known issues / limits
 

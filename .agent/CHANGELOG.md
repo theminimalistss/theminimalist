@@ -5,6 +5,30 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-10-06
+
+### Added
+
+- Floating “Let’s talk” button (lower right, every page except Contact and
+  inquiries) that opens the Contact page. At rest it is a deep-green circle with
+  the lotus and a soft pulse ring; on hover or keyboard focus it morphs into the
+  site’s square-cornered shape, reveals “Let’s talk”, and the lotus redraws
+  itself while its diamond hops. Touch screens show it as a compact labelled
+  pill. It sits above the hero’s bottom rail on the home page.
+
+### AI session
+
+Changed: `src/ui/components/{ContactFab,LotusMark}.tsx`,
+`src/ui/layouts/SiteLayout.tsx`, `src/ui/styles/site.css`,
+`e2e/navigation.spec.ts`.
+
+Reason: The user first asked for a hero CTA, then a more familiar booking
+button, and finally replaced both with a floating contact button with a playful
+hover morph. The earlier variants were removed before release.
+
+Tests: `npm run check` passed (79 unit tests). `npm run test:e2e` passed 70,
+8 skipped on mobile, including the floating button → Contact test.
+
 ## [0.6.0] — 2026-10-06
 
 ### Added
