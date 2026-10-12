@@ -23,6 +23,53 @@ export const images = [
     name: 'linnea',
     url: 'https://images.pexels.com/photos/15923917/pexels-photo-15923917.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
+  {
+    name: 'calm',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/6825478/pexels-photo-6825478.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'vessel',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/8217492/pexels-photo-8217492.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'pale',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/5040767/pexels-photo-5040767.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'frame',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/4910715/pexels-photo-4910715.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'window',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/5872378/pexels-photo-5872378.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'linen',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/8774406/pexels-photo-8774406.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    quality: { avif: 40, webp: 46 },
+  },
+  {
+    name: 'page',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/8947763/pexels-photo-8947763.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'dusk',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/11433094/pexels-photo-11433094.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
+  {
+    name: 'wall',
+    group: 'testimonials',
+    url: 'https://images.pexels.com/photos/3328240/pexels-photo-3328240.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    quality: { avif: 40, webp: 46 },
+  },
 ];
 
 export const videos = [
@@ -54,6 +101,30 @@ export const videos = [
   {
     name: 'haven',
     url: 'https://videos.pexels.com/video-files/4623746/4623746-sd_540_960_24fps.mp4',
+    start: 1,
+  },
+  {
+    name: 'sway',
+    group: 'testimonials',
+    url: 'https://videos.pexels.com/video-files/8516625/8516625-uhd_2160_3840_30fps.mp4',
+    start: 1,
+  },
+  {
+    name: 'leaves',
+    group: 'testimonials',
+    url: 'https://videos.pexels.com/video-files/9350531/9350531-hd_1080_1920_30fps.mp4',
+    start: 1,
+  },
+  {
+    name: 'drape',
+    group: 'testimonials',
+    url: 'https://videos.pexels.com/video-files/7945783/7945783-uhd_1440_2732_30fps.mp4',
+    start: 1,
+  },
+  {
+    name: 'fern',
+    group: 'testimonials',
+    url: 'https://videos.pexels.com/video-files/4238475/4238475-hd_1920_1080_30fps.mp4',
     start: 1,
   },
 ];

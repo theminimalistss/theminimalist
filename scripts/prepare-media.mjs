@@ -4,9 +4,13 @@ import sharp from 'sharp';
 import { images, videos } from './media-manifest.mjs';
 
 const cache = '.cache/media';
-const imageDir = 'src/assets/images/hero';
-const videoDir = 'src/assets/videos/hero';
-for (const directory of [cache, imageDir, videoDir]) await mkdir(directory, { recursive: true });
+const imageDir = (asset) => `src/assets/images/${asset.group ?? 'hero'}`;
+const videoDir = (asset) => `src/assets/videos/${asset.group ?? 'hero'}`;
+await mkdir(cache, { recursive: true });
+for (const asset of [...images, ...videos]) {
+  await mkdir(imageDir(asset), { recursive: true });
+  await mkdir(videoDir(asset), { recursive: true });
+}
 const only = new Set(process.argv.slice(2));
 const selected = (asset) => !only.size || only.has(asset.name);
 
@@ -22,7 +26,7 @@ async function download(url, output) {
   }
 }
 
-async function imageVariants(input, name, quality = {}) {
+async function imageVariants(input, name, quality = {}, directory = imageDir({})) {
   for (const width of [480, 960]) {
     const crop = sharp(input)
       .rotate()
@@ -30,18 +34,18 @@ async function imageVariants(input, name, quality = {}) {
     await crop
       .clone()
       .avif({ quality: quality.avif ?? 55, effort: 5 })
-      .toFile(`${imageDir}/${name}-${width}.avif`);
+      .toFile(`${directory}/${name}-${width}.avif`);
     await crop
       .clone()
       .webp({ quality: quality.webp ?? 78 })
-      .toFile(`${imageDir}/${name}-${width}.webp`);
+      .toFile(`${directory}/${name}-${width}.webp`);
   }
 }
 
 for (const asset of images.filter(selected)) {
   const input = `${cache}/${asset.name}.jpg`;
   await download(asset.url, input);
-  await imageVariants(input, asset.name, asset.quality);
+  await imageVariants(input, asset.name, asset.quality, imageDir(asset));
   console.info(`Prepared image: ${asset.name}`);
 }
 
@@ -84,7 +88,7 @@ for (const asset of videos.filter(selected)) {
       '1700k',
       '-row-mt',
       '1',
-      `${videoDir}/${asset.name}.webm`,
+      `${videoDir(asset)}/${asset.name}.webm`,
     ],
     { stdio: 'inherit' },
   );
@@ -104,7 +108,7 @@ for (const asset of videos.filter(selected)) {
       'slow',
       '-movflags',
       '+faststart',
-      `${videoDir}/${asset.name}.mp4`,
+      `${videoDir(asset)}/${asset.name}.mp4`,
     ],
     { stdio: 'inherit' },
   );
@@ -115,11 +119,11 @@ for (const asset of videos.filter(selected)) {
     '-loglevel',
     'error',
     '-i',
-    `${videoDir}/${asset.name}.mp4`,
+    `${videoDir(asset)}/${asset.name}.mp4`,
     '-frames:v',
     '1',
     poster,
   ]);
-  await imageVariants(poster, `${asset.name}-poster`);
+  await imageVariants(poster, `${asset.name}-poster`, {}, imageDir(asset));
   console.info(`Prepared video and poster: ${asset.name}`);
 }

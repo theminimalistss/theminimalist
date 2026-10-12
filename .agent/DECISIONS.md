@@ -345,3 +345,20 @@ Reason: The equivalent `:has(… :hover)` rule matched but did not restyle in
 WebKit, which would leave the cue invisible and unclickable in Safari.
 
 Impact: New hover targets for the cue belong in the hook's `cueTarget` selector.
+
+## 2026-10-13 — Testimonials as a CSS 3D depth field
+
+Decision: Testimonials are real DOM buttons in a CSS 3D scene. Three depth bands
+(near, mid, far) plus a decorative echo layer fall with WAAPI at band speeds, and
+`toWorld` places each frame so its on-screen spread stays even at any depth. A
+floor grid supplies the vanishing point. Hover and focus ease every animation's
+playback rate to zero. A view transition morphs a frame into the dialog.
+
+Reason: Perspective gives the requested sense of distance while keeping the
+words selectable, accessible, and searchable, with no WebGL texture pipeline. The
+stock media sets mood only. It is labelled in the media sources and never presented as
+client work.
+
+Impact: Content lives in `testimonials.json`, and media is mapped in
+`testimonials.media.ts`. Tune depth and speed in `TESTIMONIAL_RAIN`. Distance
+fades frame surfaces, not text, to keep AA contrast.

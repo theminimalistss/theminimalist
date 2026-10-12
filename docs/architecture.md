@@ -205,6 +205,21 @@ and a deeper shadow on hover. Leave, cancel, scroll, resize, blur, preference
 changes, and cleanup reset the pose; there is no idle frame loop. Touch and reduced
 motion retain the static shadow without spatial movement.
 
+## Testimonials
+
+`testimonials.repository` (JSON content plus a local stock-media map) →
+`testimonials.service` (validation, sentence-aware excerpts) → `useTestimonials`.
+`TestimonialRain` renders every testimonial once as a frame in a CSS 3D scene. A
+`perspective` and a rotated floor grid set the vanishing point. `placeFloats`
+spreads frames through three depth bands, golden-ratio spaced across the width,
+and `placeEchoes` adds a faint far layer. `useTestimonialRain` animates each frame
+top to bottom with WAAPI. `toWorld` converts the screen-space spread into 3D
+positions, so deeper frames are smaller and slower. Hover, focus, the dialog, the
+Pause control, hidden tabs, and offscreen all ease every animation's playback
+rate to zero. The focused frame lifts in Z, the rest dim, and its video plays.
+`useTestimonialDetail` morphs the frame into `TestimonialDialog` with a view
+transition. Reduced motion shows a still grid.
+
 ## Immersive Works
 
 `works.repository` (`getWorks`) → `works.service` → hooks supply validated,

@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.15.0
+VERSION: 0.16.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.15.0 Founders slide, swipe, and hover cues.
+CURRENT TASK: Review 0.16.0 Testimonials depth field.
 
 ## Completed
 
@@ -64,7 +64,7 @@ CURRENT TASK: Review 0.15.0 Founders slide, swipe, and hover cues.
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
 - Concepts and provisional copy need approved replacements before launch.
-- About, Testimonials, Products, and Inquiries hold placeholder
+- About, Products, and Inquiries hold placeholder
   content; inquiry forms are not live (they point to the studio email).
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;

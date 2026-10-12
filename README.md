@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.15.0 · Immersive studio portfolio**
+**Design studio · v0.16.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing

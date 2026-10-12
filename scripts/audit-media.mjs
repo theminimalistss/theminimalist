@@ -9,6 +9,8 @@ for (const directory of [
   'src/assets/images/hero',
   'src/assets/images/founders',
   'src/assets/videos/hero',
+  'src/assets/images/testimonials',
+  'src/assets/videos/testimonials',
 ]) {
   for (const filename of (await readdir(directory)).sort()) {
     const path = `${directory}/${filename}`;

@@ -5,6 +5,46 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.16.0] — 2026-10-13
+
+### Added
+
+- Testimonials page with the 13 supplied client testimonials, word for word
+  (repository → validation service → hook). Ratings appear where the source had
+  them; the average and client count sit in the intro.
+- An immersive field of falling testimonial frames in three depth bands, with a
+  faint far layer behind them and a floor grid receding to a horizon. Perspective
+  makes far frames smaller, slower, and paler, like objects down a railway line.
+  Frames are spaced evenly across each band so they never stack.
+- Each frame carries a licensed Pexels image or video with the business name, a
+  serif monogram, the stars, and an excerpt. Videos play only on the frame in
+  focus or in the open panel.
+- Hovering or focusing a frame eases the whole field to a stop, dims the rest,
+  and lifts that frame forward. Clicking morphs the frame into a reading panel
+  with the media header, the full testimonial, the client, and the rating.
+  Previous/Next (and arrow keys) step through all 13. A Pause control stops the
+  field; reduced motion shows a still grid.
+
+### AI session
+
+Changed: testimonial types, JSON content and media map, repository, service
+(validation and excerpts), `useTestimonials`, `useTestimonialRain`,
+`useTestimonialDetail`, the field utils (`placeFloats`, `placeEchoes`,
+`toWorld`), Testimonials UI and styles, the media manifest and script (asset
+groups), the media audit, share metadata, tests, and docs.
+
+Reason: The user supplied the testimonials and asked for an immersive,
+Matrix-like rain of frames at varied depths, with a hover focus, a click to
+expand, perspective that reads as distance, even spacing, and stock image and
+video media, downloaded and optimized.
+
+Verification: Screenshots of the field at rest, in focus, and opened; a stock
+contact sheet; the media audit within budget (10.4 MiB in both formats). Distant
+frames fade their surface, not their text, so text keeps WCAG AA contrast.
+WebKit can stall a view transition started from a dialog's Escape. The morph now
+skips a transition whose update has not run within 400 ms, so the dialog always
+closes.
+
 ## [0.15.0] — 2026-10-13
 
 ### Changed

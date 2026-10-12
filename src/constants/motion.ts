@@ -56,3 +56,16 @@ export const FOUNDER_SHOWCASE = {
   slideEasing: 'cubic-bezier(0.83, 0, 0.17, 1)',
   swipe: 48,
 } as const;
+
+export const TESTIMONIAL_RAIN = {
+  perspective: 680,
+  horizon: 0.38,
+  bands: [
+    { share: 0.3, z: [60, 160], speed: 30, fade: 1 },
+    { share: 0.38, z: [-420, -300], speed: 20, fade: 0.82 },
+    { share: 0.32, z: [-1050, -880], speed: 13, fade: 0.6 },
+  ],
+  echo: { z: [-2300, -1800], speed: 8, fade: 0.26 },
+  ease: 260,
+  release: 180,
+} as const;
