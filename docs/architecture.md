@@ -173,6 +173,38 @@ spring that rotates the mark about its base and briefly sets the lines wobbling.
 The loop stops at rest, and reduced motion skips all of it. Tuning lives in
 `LOGO_DOODLE`.
 
+## Founders
+
+`FounderShowcase` places a flat portrait in front of a scrolling full name, with
+persistent controls and corresponding profile details. Both founder scenes stay
+mounted, using existing 480/960 px AVIF/WebP sources. Scenes are visible only
+while active or leaving. Inactive details are hidden from assistive technology,
+and their links leave the tab order. Static studio constants retain their existing exception to the
+repository pipeline.
+
+`useFounderShowcase` owns selection with a direction, the seven-second timeout,
+WAAPI marquees, and the slide. On a change, the leaving scene (`data-leaving`)
+and the arriving scene animate across the full stage, right to left for next and
+left to right for previous, with `FOUNDER_SHOWCASE.slideEasing`. Each name track
+loops by moving half its duplicated width. Marquees play unless paused, hidden,
+offscreen, or under reduced motion; portrait hover and profile focus hold only
+the timed swap. A horizontal drag or swipe past `FOUNDER_SHOWCASE.swipe` changes
+founder. While the pointer is over the active portrait, its name, or a cue, the
+hook sets `data-cue` on the stage, which reveals the Previous/Next pills on
+hover-capable devices. `:focus-within` reveals them for keyboards, and touch
+screens always show them. The pill labels' widths are measured on each change
+and transition to fit. Reduced motion skips the slide, the marquees, the pill
+animations, and automatic selection. Cleanup cancels
+animations, timers, and observers. Missing WAAPI support leaves a static name.
+Timing lives in `FOUNDER_SHOWCASE`.
+
+`useFounderDepth` attaches only to the active portrait on fine pointers. It caches
+a stationary hit area's bounds, coalesces movement into one pending RAF, and sets
+translation/rotation variables for the inner portrait. CSS perspective adds lift
+and a deeper shadow on hover. Leave, cancel, scroll, resize, blur, preference
+changes, and cleanup reset the pose; there is no idle frame loop. Touch and reduced
+motion retain the static shadow without spatial movement.
+
 ## Immersive Works
 
 `works.repository` (`getWorks`) → `works.service` → hooks supply validated,

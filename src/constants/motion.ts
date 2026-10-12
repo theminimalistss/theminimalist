@@ -46,3 +46,13 @@ export const LOGO_DOODLE = {
   boil: { scale: 2.6, frames: 3, interval: 110, decay: 0.35, push: 0.012 },
   sway: { stiffness: 90, damping: 7, push: 0.35, limit: 60 },
 } as const;
+
+export const FOUNDER_SHOWCASE = {
+  interval: 7_000,
+  marqueeDuration: 65_000,
+  tilt: 5,
+  travel: 7,
+  slideDuration: 1_300,
+  slideEasing: 'cubic-bezier(0.83, 0, 0.17, 1)',
+  swipe: 48,
+} as const;

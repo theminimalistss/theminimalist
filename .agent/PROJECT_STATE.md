@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.13.1
+VERSION: 0.15.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.13.1 (spacious Works orbit with tethers, tablet controls, contact button).
+CURRENT TASK: Review 0.15.0 Founders slide, swipe, and hover cues.
 
 ## Completed
 
@@ -40,13 +40,24 @@ CURRENT TASK: Review 0.13.1 (spacious Works orbit with tethers, tablet controls,
   battery pass; Works collection of twelve alternating studies (Home keeps six).
 - 0.13.1: Points orbit outside the cube with faint dashed tethers; two-row bottom controls
   below 1,100 px; the contact button clears Reset view.
+- 0.14.0: Founders hero: portraits on a rotating drum that bend in transit and
+  flatten at rest, a scrolling name behind, and no duplicated cards.
 
-## Latest verification — 2026-10-07
+- 0.14.1: Single foreground portrait with a smoothly scrolling full name behind;
+  synchronized founder crossfades, pointer-driven portrait depth, direct selection,
+  and pause control. Responsive
+  local media, reduced-motion presentation, and hidden/offscreen suspension.
 
-- `npm run check`: passed, including 103 unit tests, production build, version
+## Latest verification — 2026-10-12
+
+- `npm run check`: passed, including 105 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 108 passed, 12 configured skips across desktop Chromium,
-  desktop WebKit, and mobile WebKit. Firefox remains a CI check.
+- `npm run test:e2e`: 111 passed, 12 configured skips for the slideshow.
+- After adding pointer depth and clearing the pause control from the contact FAB:
+  `npm run test:e2e -- --grep 'founder|new pages pass'`: 11 passed, 1 touch-only
+  skip across Chromium and desktop/mobile WebKit, including accessibility.
+- Desktop/mobile visuals reviewed; no horizontal overflow at 390 px.
+  Firefox remains a CI check.
 
 ## Known issues / limits
 

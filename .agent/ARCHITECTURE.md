@@ -6,6 +6,9 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Studio details: `src/constants/founders.json`, `contact.json`, and `social.json`
   feed page content and build-time structured data. Social channels use `primary`
   to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
+- Founders: shared studio constants; `useFounderShowcase` owns timed selection,
+  the WAAPI name marquee, and pause/visibility/reduced-motion lifecycle.
+  `useFounderDepth` coalesces pointer input for portrait perspective and lift.
 - Repository: cancellable unknown-data boundary, isolated snapshots.
 - Service: field validation, local media/posters, identity uniqueness, filtering/order.
 - Hooks: data state, preferences, visibility, playback, dialogs.

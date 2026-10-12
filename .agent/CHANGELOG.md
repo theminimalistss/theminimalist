@@ -5,6 +5,114 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-10-13
+
+### Changed
+
+- Founders now swap by sliding right to left: the portrait and its scrolling
+  name leave to the left as the next founder arrives from the right, with an
+  ease-in-out start and stop (1.3 s). Going back slides the other way.
+- Hovering the portrait keeps the depth tilt and holds the automatic swap, but the
+  background name keeps scrolling; only Pause stops it.
+
+### Added
+
+- Manual swap cues. On devices that hover, frosted pills (an arrow plus
+  “Previous / Next” and the founder's name) appear beside the portrait, with a
+  “Drag to swap” hint, only while the pointer is over the portrait or the
+  background name; keyboard focus also reveals them. The Next arrow nudges every
+  few seconds, and pill widths ease to fit each name. On touch screens compact
+  arrows and “Swipe to swap” stay visible.
+- Dragging or swiping the stage changes founder (left for next, right for previous).
+
+### AI session
+
+Changed: `useFounderShowcase` (directional slide, swipe, hover cue, label
+measuring), `FounderShowcase`, `FounderPortrait` (non-draggable image),
+`FOUNDER_SHOWCASE` slide constants, page styles, and navigation tests.
+
+Reason: The user asked for a sliding, stop-and-go swap (later changed to right to
+left), a background name that keeps moving on hover, and a hover-only cue for
+manual swapping, with name-fitting resizing.
+
+Verification: Recordings of the slide in both directions and of the hover state;
+desktop and phone screenshots. The cue reveal uses a stage attribute instead of
+`:has(:hover)`, which did not restyle in WebKit. Tests cover the arrows, the
+next-name label, the slide finishing, the swipe, and reduced motion.
+
+## [0.14.1] — 2026-10-12
+
+### Changed
+
+- A single founder portrait sits in front of an oversized full name scrolling
+  smoothly from right to left. Portrait, name, and profile details crossfade
+  together every seven seconds in the studio's ivory and forest palette.
+- Direct founder buttons and a visible Play/Pause control. Hovering the portrait
+  or focusing the profile link holds playback; hidden tabs and offscreen sections
+  suspend it. Reduced motion disables automatic switching and moving names.
+- Added a soft portrait shadow and mouse-driven perspective tilt, translation,
+  and lift. A stable hit area prevents edge jitter; the portrait settles on leave.
+  Depth is disabled for touch and reduced motion. The pause control clears the
+  floating contact button.
+- Replaced the drum and segmented images with flat responsive local AVIF/WebP
+  portraits. The desktop composition fills the viewport; mobile stacks the intro,
+  portrait scene, details, and controls.
+
+### AI session
+
+Changed: `FounderShowcase`, `FounderPortrait`, `useFounderShowcase`,
+`useFounderDepth`, motion constants, page styles,
+interaction tests, architecture notes, and aligned 0.14.1 version records.
+
+Reason: Follow the user's final direction: foreground portrait, continuously
+scrolling name behind it, and periodic founder swaps, without drum rotation.
+
+Verification: `npm run check` passed (105 unit tests, build, versions, media
+and static checks). Full Playwright run for the slideshow: 111 passed, 12 skips.
+After pointer depth and pause-control clearance: focused Founders and page
+accessibility checks passed (11 passed, 1 touch-only skip). Covered timed swaps,
+marquee pause, keyboard selection, reduced motion, hover tilt, and return to rest.
+Reviewed desktop and mobile visuals, including hover; no overflow at 390 px.
+Firefox remains a CI check.
+
+## [0.14.0] — 2026-10-12
+
+### Changed
+
+- The Founders page opens on a full-screen founders hero. The portrait of the
+  partner in front sits centre stage, with the full name scrolling slowly right to
+  left behind it (“— Daisy Nuique ·”). The intro sits bottom-left, the partner's
+  title, role, and LinkedIn bottom-right, and the controls along the bottom.
+- The two portraits are attached to a large drum behind the screen that turns
+  every 7 s. The outgoing portrait drops away underneath; the next comes from far
+  behind, over the top, and settles into place. Portraits bend with the drum while
+  it turns and flatten once they land. A thin progress line shows the next turn.
+  Pointer movement tilts the portrait slightly.
+- Name buttons switch partners directly. A pause button stops the rotation and the
+  name, and hovering the portrait or focusing LinkedIn holds it. Reduced motion
+  disables automatic rotation, the bend, and the scrolling name.
+- The duplicated founder cards and the separate intro block were removed; the next
+  steps (About, Book an appointment) remain.
+
+### AI session
+
+Changed: `FoundersPage`, new `FounderShowcase` and `useFounderOrbit`,
+`FOUNDER_ORBIT`, `pages.css` (founders hero; unused profile-card styles removed),
+navigation tests, and documentation.
+
+Reason: The user shared a reference with the portrait in front of a scrolling
+name, asked for the two founders to swap on a rotating cylinder (stickers turning
+with it, not billboards, flat at rest), and asked for an immersive, non-redundant
+layout in the site's design language.
+
+Verification: Frame recordings at 1440×900 of an automatic turn and a manual
+switch, plus screenshots at 390, 900, and 1440 px. Browser tests cover both
+partners' role, LinkedIn, and portrait label, the pause and resume, and
+accessibility.
+
+Tests: `npm run check` passes (105 unit tests); Playwright 108 passed, 12 skipped
+(Firefox in CI; desktop-only checks on touch).
+
 ## [0.13.1] — 2026-10-07
 
 ### Changed

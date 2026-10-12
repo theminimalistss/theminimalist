@@ -298,3 +298,50 @@ should scale. The `arc` wordmark is sized for very short titles.
 Impact: Add a study to the list. Set `featured` only for Home. Keep alternation
 and media budgets (`npm run media:audit`). Process new media with
 `node scripts/prepare-media.mjs <names>` so existing loops are not re-encoded.
+
+## 2026-10-12 — Founders on a drum built from CSS strips
+
+Decision: Each portrait is cut into 16 horizontal strips, each showing its slice
+of the image and placed on a large drum with a horizontal axis set back behind the
+screen. A registered `--bend` property moves the strips between a flat plane
+(at rest) and the drum's curve (while turning). Rotation timing lives in
+`useFounderOrbit` (interval, bend window, pointer tilt), and the scrolling name is
+CSS generated content.
+
+Reason: Real curvature without WebGL keeps the page light and accessible, and
+flattening at rest keeps the portraits undistorted. Generated content keeps the
+decorative name out of the accessibility tree and the contrast audit.
+
+Impact: Without `@property` support the bend switches instead of easing. The
+partners' details are DOM content, and the drum has one image label for whoever
+is in front.
+
+## 2026-10-12 — Flat portraits, scrolling names, and timed crossfades
+
+Decision: One founder at a time in front of a right-to-left full-name marquee.
+Crossfade the portrait, name, and corresponding details together every seven
+seconds. Provide direct selection and a visible pause control.
+
+Reason: The user's final reference direction explicitly calls for a foreground
+portrait, moving name behind, and periodic swaps. Flat crossfades avoid the drum's
+face distortion and preserve the existing ivory/forest palette and typography.
+
+Impact: `useFounderShowcase` owns the timer, WAAPI marquee, and playback lifecycle.
+Pause on portrait hover, profile-link focus, hidden tabs, offscreen, and reduced
+motion. Inactive panels are hidden from assistive technology and keyboard order;
+local images use responsive sources. `useFounderDepth` uses a stationary hit area,
+one pending frame per pointer update, and CSS easing for portrait lift/tilt and
+return to rest. Touch and reduced motion skip depth. No new dependency or media
+is needed.
+
+## 2026-10-13 — Founders cue revealed by a stage attribute
+
+Decision: The hover-only swap cue is shown by a `data-cue` attribute that
+`useFounderShowcase` sets while the pointer is over the active portrait, the
+background name, or a cue. `:focus-within` reveals it for keyboard users, and it
+always shows on touch screens.
+
+Reason: The equivalent `:has(… :hover)` rule matched but did not restyle in
+WebKit, which would leave the cue invisible and unclickable in Safari.
+
+Impact: New hover targets for the cue belong in the hook's `cueTarget` selector.
