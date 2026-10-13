@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.21.0
+VERSION: 0.23.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.21.0 shared overview layouts, lotus ornament, and Hostinger build readiness completed; user authorized commit and push to main.
+CURRENT TASK: 0.23.0 released (Services drawing line style and motion, service images, fourteenth testimonial). Deployment remains pending.
 
 ## Completed
 
@@ -59,10 +59,41 @@ CURRENT TASK: 0.21.0 shared overview layouts, lotus ornament, and Hostinger buil
   spring loop. Optional audio/video no longer block entry; WebGL buffers are bounded
   and route prefetch is deferred/sequential. Node 24 and a static Hostinger build
   audit are documented. Browser builds/reports are isolated per test port.
+- 0.22.0: Services pairs its intro with a looping Listen / Shape / Build / Launch
+  process, original technical symbols constructed in WebGL, one description at
+  a time, stage selection and pause controls. The three service links move below
+  with responsive local imagery. Production CSS is HTML-linked in one bundle,
+  avoiding the late route stylesheet failure observed on Hostinger Works.
+- 0.23.0: Services drawing shares the tesseract line style (traced strokes, faint
+  WebGL faces, per-drawing idle motion, sound waves tucked behind the bubbles);
+  clicks keep the cycle running; professional local Unsplash images per service;
+  Branding add-ons item; fourteenth testimonial (Cebu Social Club).
 
-## Latest verification — 2026-10-13
+## Latest verification — 2026-10-14
 
-- `npm run check`: passed, including 123 unit tests, production build, version
+- `npm run check`: passed with 126 unit tests, strict types/lint/format, build,
+  version consistency, and local media audit. `deploy:check` verified 17 routes,
+  the 404 fallback, and 126 asset references. Shared production CSS: 17.35 KB gzip.
+- Services final browser suite: 15 passed across Chromium and desktop/mobile
+  WebKit, including live WebGL, cycling/manual selection, pause/offscreen holding,
+  image navigation, accessibility, reduced motion, missing/lost WebGL, and
+  HTML-linked Works/Services CSS. Works regression: all 28 applicable checks passed
+  (2 configured mobile skips); shared Home/Studio/Testimonials checks: 15 passed.
+- Reviewed Services at 320, 390, 1024, and 1440 px with no horizontal overflow.
+  The label and caption float inside the illustration panel, with their drift
+  paused alongside the cycle. Top stage tabs and the fixed description row are
+  removed. The requested header/footer bars are also removed; the illustration
+  itself provides keyboard/tap navigation and hover/focus holding. The drawing
+  now combines GL strokes with shaded SVG planes, thickness, and soft shadows.
+  Existing staged testimonial/content/media edits were preserved; this task adds
+  no media or runtime dependency.
+- The live Hostinger Works stylesheet failure was reproduced and investigated.
+  The stylesheet refetch restored its rules; production now removes that lazy
+  stylesheet dependency. Local build verified; the hosted site requires redeployment.
+
+## Previous verification — 2026-10-13
+
+- `npm run check`: passed, including 130 unit tests, production build, version
   consistency, and local media audit.
 - Node 24.21.0: `build:hostinger` passed; `deploy:check` verified 17 route pages,
   the 404 fallback, and 126 entry asset references. Local media totals 10.58 MiB.
@@ -94,8 +125,9 @@ CURRENT TASK: 0.21.0 shared overview layouts, lotus ornament, and Hostinger buil
 - “The full intro plays once per session” can fail in WebKit under parallel load
   (reload timing). It predates 0.10.0; consider timing with a single worker.
 - No production domain, commissioned portfolio content, or inquiry submission backend yet.
-- Hostinger live routing/cache/headers and real-device GPU performance require
-  post-deployment verification; no Hostinger deployment was performed.
+- The temporary Hostinger deployment was inspected read-only. The CSS fix must
+  be redeployed; live cache/headers and real-device GPU performance still need
+  post-deployment verification. No hosting publication was performed.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
 
 ## Important files

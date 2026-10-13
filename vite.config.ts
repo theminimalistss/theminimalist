@@ -10,6 +10,8 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), socialMeta(normalizeSiteUrl(env.VITE_SITE_URL))],
     resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
     build: {
+      // Keep route presentation in the HTML-linked stylesheet on static/CDN hosts.
+      cssCodeSplit: false,
       assetsInlineLimit: 0,
       target: ['es2020', 'chrome90', 'edge90', 'firefox90', 'safari15'],
       cssTarget: ['chrome90', 'edge90', 'firefox90', 'safari15'],

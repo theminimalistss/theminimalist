@@ -52,6 +52,16 @@ export const STUDIO_SPRIG = {
   doodleInterval: 120,
 } as const;
 
+export const SERVICE_PROCESS_MOTION = {
+  interval: 5200,
+  trace: 1700,
+  untrace: 650,
+  settle: 900,
+  release: 220,
+  fps: 30,
+  idleFps: 20,
+} as const;
+
 export const LOGO_DOODLE = {
   boil: { scale: 2.6, frames: 3, interval: 110, decay: 0.35, push: 0.012 },
   sway: { stiffness: 90, damping: 7, push: 0.35, limit: 60 },

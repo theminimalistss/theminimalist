@@ -1,0 +1,239 @@
+.services-overview {
+  display: grid;
+  gap: 40px;
+  padding: 48px var(--page-gutter) 64px;
+}
+.services-overview .page-intro {
+  padding: 0;
+}
+.services-overview .page-intro h1 {
+  font-size: clamp(36px, 4.2vw, 68px);
+}
+.services-overview .page-actions {
+  gap: 16px 32px;
+}
+.service-process {
+  min-width: 0;
+}
+.service-process-panel {
+  display: flow-root;
+  position: relative;
+  min-height: clamp(410px, 37vw, 530px);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.service-process-panel:focus-visible {
+  outline: 1px solid var(--color-brand);
+  outline-offset: 4px;
+}
+.service-drawing {
+  position: relative;
+  width: min(100%, 600px);
+  aspect-ratio: 3 / 2;
+  margin: 44px auto 28px;
+  color: var(--color-brand);
+}
+.service-drawing :is(svg, canvas) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.service-drawing canvas {
+  opacity: 0;
+}
+.service-drawing[data-renderer='webgl'] canvas {
+  opacity: 1;
+}
+.service-drawing[data-renderer='webgl'] :is(.service-drawing-fallback, .service-drawing-surfaces) {
+  opacity: 0;
+}
+.service-drawing-guides {
+  opacity: 0.15;
+}
+.service-drawing-shadow {
+  fill: var(--color-brand);
+  opacity: 0.04;
+}
+.service-drawing-face--light {
+  fill: var(--color-brand);
+  opacity: 0.035;
+}
+.service-drawing-face--shade {
+  fill: var(--color-brand);
+  opacity: 0.085;
+}
+.service-drawing-face--clay {
+  fill: var(--color-warm-accent);
+  opacity: 0.14;
+}
+.service-drawing-stroke--detail {
+  opacity: 0.55;
+}
+.service-drawing-stroke--trail {
+  opacity: 0.45;
+  stroke-dasharray: 3 4;
+}
+.service-drawing-anchors {
+  color: var(--color-accent);
+  opacity: 0.65;
+}
+.service-process-annotation {
+  position: absolute;
+  z-index: 1;
+  max-width: 38%;
+}
+.service-process-label {
+  --drawing: min(100%, 600px);
+  top: 12px;
+  right: calc((100% - var(--drawing)) / 2 + var(--drawing) * 0.14);
+  text-align: right;
+  color: var(--color-brand);
+}
+.service-process-label .eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-accent);
+}
+.service-process-label h3 {
+  font-size: clamp(38px, 4.2vw, 62px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.service-process-description {
+  position: relative;
+  max-width: 42ch;
+  margin: 0 auto 8px;
+  text-align: center;
+}
+.service-process-caption-rule {
+  display: block;
+  width: 36px;
+  margin: 0 auto 14px;
+  border-top: 1px solid var(--color-accent);
+}
+.service-process-description p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-muted);
+}
+.service-directory {
+  margin-inline: var(--page-gutter);
+  padding-top: 40px;
+  border-top: var(--border);
+}
+.service-directory .page-directory {
+  margin: 0;
+  padding-bottom: 80px;
+}
+.service-directory .page-directory-heading {
+  margin-bottom: 32px;
+}
+.service-directory .page-directory-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.service-directory .page-directory-item > a {
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.service-directory .page-directory-art {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+.service-directory .page-directory-art :is(picture, img, .service-image-placeholder) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.service-directory .page-directory-caption {
+  text-align: left;
+  padding-right: 48px;
+}
+.service-directory .page-directory-caption > .eyebrow {
+  display: inline;
+}
+.service-directory .page-directory-caption h3 {
+  margin-top: 8px;
+  font-size: clamp(24px, 2.3vw, 34px);
+}
+.service-directory .page-directory-caption p {
+  display: block;
+}
+.service-directory .page-directory-arrow {
+  display: grid;
+}
+@media (min-width: 1100px) {
+  .services-overview {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(64px, 6vw, 110px);
+    padding-block: 72px 88px;
+  }
+}
+@media (max-width: 767px) {
+  .service-process-panel {
+    min-height: 410px;
+  }
+  .service-drawing {
+    margin-top: 68px;
+  }
+  .service-process-annotation {
+    max-width: 53%;
+  }
+  .service-process-label {
+    top: 8px;
+  }
+  .service-process-description {
+    max-width: 88%;
+  }
+  .service-process-description p {
+    font-size: 13px;
+  }
+  .service-directory .page-directory-list {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .service-process-annotation-content {
+    animation: process-copy-in 650ms var(--ease-editorial) both;
+  }
+  .service-process-annotation {
+    animation: process-annotation-float 6s ease-in-out infinite alternate;
+    animation-play-state: paused;
+  }
+  .service-process-description {
+    animation-delay: -3s;
+  }
+  .service-process[data-running] .service-process-annotation {
+    animation-play-state: running;
+  }
+  .service-directory img {
+    transition: transform 800ms var(--ease-editorial);
+  }
+  .service-directory a:is(:hover, :focus-visible) img {
+    transform: scale(1.035);
+  }
+}
+@keyframes process-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes process-annotation-float {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}

@@ -71,6 +71,24 @@ export const images = [
     quality: { avif: 40, webp: 46 },
   },
   {
+    name: 'software',
+    group: 'services',
+    aspect: 4 / 3,
+    url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1600&q=85&fm=jpg',
+  },
+  {
+    name: 'websites',
+    group: 'services',
+    aspect: 4 / 3,
+    url: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=1600&q=85&fm=jpg',
+  },
+  {
+    name: 'branding',
+    group: 'services',
+    aspect: 4 / 3,
+    url: 'https://images.unsplash.com/photo-1716471330463-f475b00f0506?w=1600&q=85&fm=jpg',
+  },
+  {
     name: 'desk',
     group: 'menu',
     position: 'west',
@@ -132,6 +150,12 @@ export const videos = [
     name: 'fern',
     group: 'testimonials',
     url: 'https://videos.pexels.com/video-files/4238475/4238475-hd_1920_1080_30fps.mp4',
+    start: 1,
+  },
+  {
+    name: 'toast',
+    group: 'testimonials',
+    url: 'https://videos.pexels.com/video-files/4625678/4625678-hd_1080_1920_30fps.mp4',
     start: 1,
   },
 ];

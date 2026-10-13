@@ -12,6 +12,14 @@ The `.nvmrc` file pins Node 24 for local parity. This app is a static frontend;
 it needs no persistent Node server, start command, or server entry file. Do not
 use `vite preview` as the production server.
 
+Production CSS is extracted into one hashed file linked directly by every route's
+HTML (`build.cssCodeSplit: false`); JavaScript routes remain lazy. This costs one
+shared stylesheet download and ensures route geometry/styles are ready before
+the page appears. It removes the lazy Works stylesheet dependency that was seen
+downloading without applying on the deployed Hostinger page. After rebuilding,
+redeploy the complete output/source and refresh any stale HTML/CDN cache. Do not
+copy a new JS bundle alongside old HTML or styles.
+
 Connect the GitHub source or upload a ZIP of the source (omit `node_modules`,
 `.cache`, and local `.env` files). Set `VITE_SITE_URL` to the actual HTTPS origin
 in the build environment before deploying. Vite embeds it during the build;

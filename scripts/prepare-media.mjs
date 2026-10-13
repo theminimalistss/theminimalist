@@ -33,11 +33,12 @@ async function imageVariants(
   directory = imageDir({}),
   position = 'attention',
   warm = false,
+  aspect = 0.8,
 ) {
   for (const width of [480, 960]) {
     const crop = sharp(input)
       .rotate()
-      .resize(width, Math.round(width * 1.25), { fit: 'cover', position });
+      .resize(width, Math.round(width / aspect), { fit: 'cover', position });
     if (warm)
       crop.modulate({ saturation: 0.35, brightness: 1.14 }).recomb([
         [1.07, 0.06, 0],
@@ -65,6 +66,7 @@ for (const asset of images.filter(selected)) {
     imageDir(asset),
     asset.position,
     asset.warm,
+    asset.aspect,
   );
   console.info(`Prepared image: ${asset.name}`);
 }

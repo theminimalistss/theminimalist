@@ -176,9 +176,41 @@ The loop stops at rest, and reduced motion skips all of it. Tuning lives in
 
 ## Shared overview layouts
 
+The process label and description float inside the artwork's panel as annotations,
+with native CSS drift paused alongside playback. The current symbol, label, and
+caption change together. The heading/footer bars are removed; clicking/tapping the
+illustration advances a stage, and arrow/Home/End keys offer direct browsing.
+Hover/focus holds the cycle for reading. Matte gradients, shaded facets, thickness,
+and ground shadows use shared SVG faces beneath the GL strokes, assembling with
+native CSS. Reduced motion presents the finished material illustration immediately.
+
+Services uses a dedicated intro/process composition. `ServiceProcess` combines
+the existing `SERVICE_PROCESS` copy with four original line drawings. The cycle
+and focus/pause lifecycle live in `useServiceProcess`; WebGL setup, resize, bounded
+30 fps transition timing, interruption, and context loss live in `useServiceDrawing`.
+`serviceDrawing` tags each stroke as an edge, detail, or dashed trail and
+schedules them edge-first. `serviceScene` draws them with the Works tesseract's
+line shaders (a crisp core with a soft glow), so both share one line style; a
+stage change un-traces the old strokes and traces the new ones. Faces are
+triangulated and drawn in the same pass, so they fade in near the end of the
+trace and move with their strokes. Once a stage is drawn, `partPose` gives each
+drawing its own idle motion (the bubbles converse, the gem tilts while the pencil
+sketches, the top cube lifts, the plane banks), easing in as the stage settles and
+out as it un-traces, while trails flow and details breathe. The loop is capped at
+20 fps and stops offscreen, when hidden, or under reduced motion. The same
+geometry supplies the SVG fallback, so every stage remains available without
+WebGL or automatic motion. The service directory follows below, pairing each
+service with a local stock image (`SERVICE_IMAGES`, prepared at 4:3 by
+`media:prepare` through the manifest's `aspect` option).
+
+For static/CDN deployment, Vite emits a single HTML-linked stylesheet; lazy route
+JavaScript remains split. This removes the Works route's late CSS dependency.
+Source styles still live in their scoped modules. Browser checks inspect the
+generated HTML-linked CSS for Works and Services selectors before JavaScript.
+
 `AboutPage` pairs the existing intro with `StudioPortals` in `PageOverview`,
 followed by `StudioApproach`. `PageDirectory`, `EditorialSection`, and
-`EditorialList` also compose Services, Products, and Contact. Their directory
+`EditorialList` also compose Products and Contact. Their directory
 items reuse navigation constants; Contact retains its shared JSON and social
 disclosure. Longer overview titles use a smaller responsive scale. Desktop uses a directory beside the intro;
 phones/tablets put all three links in a row directly beneath it.

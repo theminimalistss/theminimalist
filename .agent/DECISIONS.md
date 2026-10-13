@@ -1,5 +1,25 @@
 # Architecture decisions
 
+## 2026-10-14 — Services process symbols and HTML-linked production styles
+
+Decision: Use native WebGL point strokes for four original process symbols, with
+shared SVG geometry as the static alternative. Float the current stage name and
+description inside the drawing panel; remove the header/footer bars and make the
+illustration itself the stage control. Hold the loop on hover/focus. Show one process description and
+move image-based service navigation below the intro/process. Extract production
+CSS into one HTML-linked file; retain lazy route JavaScript.
+
+Reason: The user requested Volume's process narrative adapted to The Minimalist,
+with an animated looping construction. The deployed Works stylesheet downloaded
+but had no applied CSS rules until refetched, breaking geometry before the GPU
+scene could be laid out correctly.
+
+Impact: Browser state and timing remain in hooks, pure geometry stays separate,
+and existing local work data supplies responsive service imagery. Transitions use
+2,048 points at 30 fps and stop at rest/hidden/offscreen. No runtime dependency or
+new media. One shared stylesheet adds modest upfront CSS while eliminating the
+late route stylesheet dependency; the CDN/cache root cause remains unconfirmed.
+
 ## 2026-10-13 — Shared overview presentation and static hosting
 
 Decision: Share the Studio overview/directory and forest editorial section with

@@ -20,9 +20,9 @@ const valid = {
 };
 
 describe('testimonials', () => {
-  it('keeps all thirteen client testimonials, word for word, with unique ids', async () => {
+  it('keeps all fourteen client testimonials, word for word, with unique ids', async () => {
     const testimonials = await getTestimonials();
-    expect(testimonials).toHaveLength(13);
+    expect(testimonials).toHaveLength(14);
     expect(testimonials[0]?.paragraphs.at(-1)).toBe(
       'Overall, it was a smooth and pleasant experience working with you guys',
     );
@@ -68,7 +68,7 @@ describe('testimonials', () => {
 
   it('counts every client and averages only the ratings that were given', async () => {
     const summary = summarizeTestimonials(await getTestimonials());
-    expect(summary.count).toBe(13);
+    expect(summary.count).toBe(14);
     expect(summary.average).toBe(5);
     expect(summarizeTestimonials([])).toEqual({ count: 0, average: 0 });
     expect(

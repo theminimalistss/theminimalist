@@ -5,6 +5,112 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.23.0] — 2026-10-14
+
+### Changed
+
+- Branding identity lists a sixth item: add-on applications, from business cards
+  to menus and brochures.
+- The Services process drawing now shares the Works tesseract's line style:
+  crisp lines with a soft glow drawn by the same shaders, three weights (edges,
+  lighter details, and dashed trails like the tesseract's tethers), and faint
+  tinted faces in place of opaque fills. Stages un-trace and re-trace stroke by
+  stroke instead of flying as dots, and the faces fade out and back in with them.
+  The SVG fallback uses the same weights.
+- Once a Services drawing is complete it keeps a motion of its own: the speech
+  bubbles bob in turn, the gem tilts while the pencil sketches and the orbit
+  turns, the top cube lifts off the stack and settles, and the paper plane drifts
+  and banks. Dashed trails flow and small marks breathe. Faces now render in
+  WebGL with their strokes, so they move together.
+- The Listen sound waves pass behind the speech bubbles for depth, in WebGL and
+  in the SVG fallback.
+- Clicking the drawing advances it without pausing the automatic cycle; hovering
+  (until you click) and keyboard focus still hold a stage for reading.
+- The stage label sits at the drawing's top-right, close to it, and the
+  description is centred below the drawing.
+- Choose a service shows its own professional images: code on a MacBook at a
+  bright minimal desk for Software development, a hand sketching website
+  wireframes on a tablet for Website development, and colour swatches with
+  identity sketches for Branding identity (local Unsplash stock, natural colour,
+  4:3), replacing the borrowed Works posters.
+
+### Added
+
+- A fourteenth testimonial, from Giovanni Yu of Cebu Social Club (5/5), word for
+  word, with a local stock video (a hand holding a glass in window light) that
+  keeps the image/video rhythm of the field.
+
+### AI session
+
+Changed: `serviceDrawing` (stroke tones, parts, poses, triangulation,
+occlusion), `serviceScene` (tesseract line shaders, WebGL faces, idle motion),
+`useServiceDrawing`, `ServiceProcess`, `services.css`, `SERVICE_IMAGES` and the
+media manifest `aspect` option, `ServiceDirectory`, Branding copy, testimonial
+data and media, tests, and records.
+
+Reason: The user asked for the tesseract line style in the Services drawing, idle
+motion unique to each drawing, a closer label and lower description, clicks that
+keep the cycle running, depth for the Listen sound waves, professional service
+images, a Branding add-ons item, and a new testimonial.
+
+Verification: `npm run check` passed (130 unit tests, build, version, and media
+audit); `npm run test:e2e`: 160 passed, 14 configured skips across desktop
+Chromium, desktop WebKit, and mobile WebKit. Stages, transitions, idle motion,
+occlusion, fallback, and the service directory were reviewed in screenshots.
+
+## [0.22.0] — 2026-10-14
+
+### Changed
+
+- Services now pairs the existing intro with a looping process on the right:
+  Listen, Shape, Build, and Launch. Original conversation, identity, construction,
+  and launch symbols assemble and morph in WebGL with one animated description.
+- Stage names and descriptions are floating annotations around the illustration,
+  replacing Volume's top tabs and the fixed description row. They drift gently
+  and fade in with each new symbol. The requested heading/navigation/pause bars
+  are removed; the drawing itself accepts tap/click and keyboard stage navigation.
+- Improved illustration depth with matte gradient planes, shaded facets, extruded
+  conversation panels, a raised construction plinth, and soft ground shadows.
+  Faces assemble with native CSS below the existing bounded GL stroke morph.
+- Keyboard/pointer stage selection, hover/focus holding, hidden/offscreen
+  suspension, and a static SVG alternative for reduced motion or unavailable/lost
+  WebGL. Transitions use 2,048 points, a 30 fps cap, and no steady-state RAF.
+- Choose a service moves below the introduction/process, with three larger local
+  AVIF/WebP image links replacing the Build/Create/Shape word tiles.
+- Production CSS is emitted as one HTML-linked file while route JS stays lazy.
+  This avoids the route stylesheet dependency that failed to apply on Hostinger
+  Works. Source styles remain scoped; no new runtime dependency or media.
+
+### AI session
+
+Reference: inspected the local `templates/volume-studio` project and its live
+process section at port 5174. Retained the staged visual narrative, then designed
+new symbols and motion for The Minimalist's palette and typography.
+The user's refinement moves the current label and description into the artwork's
+space, retaining fine wireframe styling without the reference's top label strip.
+
+Changed: Services composition, process UI/hooks, pure stroke sampling/GPU scene,
+GLSL, service image directory, production CSS extraction, interaction/build checks,
+and version/handoff docs. Existing staged testimonial/content/media changes were
+preserved separately.
+
+Deployment finding: the live `/works/` route downloaded its stylesheet successfully,
+but the browser exposed zero CSS rules and an unstyled layout. Refetching the
+stylesheet with a cache-busting URL restored it. Bundling CSS into the HTML-linked
+asset removes that lazy stylesheet dependency. The underlying CDN/cache cause
+was not established; the fix still requires a new deployment.
+
+Verification: `npm run check` passed with 126 unit tests, strict types, lint,
+format, production build, version consistency, and the local media audit.
+`deploy:check` verified 17 routes plus 404 and 126 asset references; the shared
+stylesheet is 17.35 KB gzip. Final Services browser suite: 15 passed across
+Chromium and desktop/mobile WebKit, including actual WebGL, looping, selection,
+pause/offscreen holding, images/navigation, accessibility, reduced motion,
+missing/lost WebGL, and HTML-linked CSS. Works: all 28 applicable regression
+checks passed (2 configured mobile skips). Shared Home/Studio/Testimonials checks:
+15 passed. Reviewed 320/390/1024/1440 px layouts without overflow. The new build
+has not been published to Hostinger; redeployment is required for the live fix.
+
 ## [0.21.0] — 2026-10-13
 
 ### Changed

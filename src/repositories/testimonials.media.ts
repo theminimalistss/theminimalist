@@ -34,6 +34,7 @@ const still = (name: string): TestimonialMedia => ({ type: 'image', image: image
 
 export const TESTIMONIAL_MEDIA: Record<string, TestimonialMedia> = {
   arkcladd: still('frame'),
+  'cebu-social-club': video('toast'),
   'gibby-snaps': video('sway'),
   'good-creamery': still('pale'),
   greenmart: still('vessel'),

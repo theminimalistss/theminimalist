@@ -7,13 +7,25 @@ UI → hooks → services → repositories. Static presentation is the exception
   feed page content and build-time structured data. Social channels use `primary`
   to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
 - Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
-  `EditorialList` share the Studio layout with Services, Products, and Contact.
+  `EditorialList` share the Studio layout with Products and Contact.
   `StudioPortals` uses unique visual artwork; presentational `StudioApproach` follows. Works posters use
   `useHeroWorks` → service → repository;
-  portraits reuse shared founder constants. Shared CSS loads through the composed
-  sections; portrait/poster artwork styles load with About. `useStudioSprig` owns
+  portraits reuse shared founder constants. Source CSS is imported by the composed
+  sections; production styles share the HTML-linked bundle. `useStudioSprig` owns
   visible-only native wind animation and an interaction-only spring/doodle loop
   for the lotus ornament. Motion stops offscreen, hidden, or under reduced motion.
+- Services: `ServiceProcess` → `useServiceProcess` (cycle, selection, pause,
+  focus/visibility) and `useServiceDrawing` (WebGL timing/lifecycle). Pure stroke
+  geometry and trace scheduling live in `serviceDrawing`; `serviceScene` reuses the
+  tesseract line shaders.
+  Steady stages have no RAF; transition drawing is capped at 30 fps. Static SVG
+  uses the same geometry under reduced motion or unavailable/lost WebGL.
+  Native CSS floats the current label/caption within the drawing panel and pauses
+  their drift on hover/focus. The header/footer bars are removed; the illustration
+  itself supports click/tap and arrow-key stage browsing. Shared SVG faces supply
+  matte gradients, shaded facets, thickness, and ground shadows below the GL strokes.
+  `ServiceDirectory` pairs each service with a local stock image from
+  `SERVICE_IMAGES`; it makes no commissioned-work claims.
 - Founders: shared studio constants; `useFounderShowcase` owns timed selection,
   the WAAPI name marquee, and pause/visibility/reduced-motion lifecycle.
   `useFounderDepth` coalesces pointer input for portrait perspective and lift.
@@ -40,6 +52,9 @@ UI → hooks → services → repositories. Static presentation is the exception
   DPR at 1.5 and the long edge at 2048 px (Works has its own 1800 px cap).
 - Hosting: static Vite output in `dist`, Node 24, `build:hostinger`/`deploy:check`;
   per-route HTML and assets are verified without a persistent server.
+  Production CSS is extracted into one HTML-linked stylesheet (`cssCodeSplit: false`);
+  route JavaScript remains lazy. This avoids delayed/unapplied route CSS on the
+  deployed Works page. Source CSS stays scoped in its existing modules.
 - Transitions: data router + `PageLink` (view transitions), keyed route fade,
   `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
 - Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.

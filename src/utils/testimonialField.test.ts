@@ -12,8 +12,8 @@ import {
 
 describe('testimonial field', () => {
   it('spreads frames through three depth bands', () => {
-    const floats = placeFloats(13);
-    expect(floats).toHaveLength(13);
+    const floats = placeFloats(14);
+    expect(floats).toHaveLength(14);
     for (const float of floats) {
       expect(float.x).toBeGreaterThanOrEqual(0.05);
       expect(float.x).toBeLessThanOrEqual(0.95);
@@ -34,7 +34,7 @@ describe('testimonial field', () => {
     const [near, , far] = TESTIMONIAL_RAIN.bands;
     expect(near.fade).toBeGreaterThan(far.fade);
     expect(TESTIMONIAL_RAIN.echo.speed).toBeLessThan(TESTIMONIAL_RAIN.speed);
-    for (const echo of placeEchoes(13)) {
+    for (const echo of placeEchoes(14)) {
       expect(echo.z).toBeLessThan(far.z[0]);
       expect(echo.fade).toBeLessThan(0.4);
     }
@@ -83,7 +83,7 @@ describe('testimonial field', () => {
     ] as const) {
       const frame = width < 768 ? 180 : 250;
       for (let seed = 1; seed <= 60; seed++) {
-        const sizes = placeFloats(13, seed * 7919).map((float) => {
+        const sizes = placeFloats(14, seed * 7919).map((float) => {
           const scale = perspective / (perspective - float.z);
           return { width: frame * scale, height: frame * 1.25 * scale };
         });
@@ -102,8 +102,8 @@ describe('testimonial field', () => {
   });
 
   it('places a new random field on each seed, keeping every depth band filled', () => {
-    const first = placeFloats(13, 101);
-    const second = placeFloats(13, 202);
+    const first = placeFloats(14, 101);
+    const second = placeFloats(14, 202);
     expect(first.map((float) => float.z)).not.toEqual(second.map((float) => float.z));
     for (const floats of [first, second]) {
       for (const band of TESTIMONIAL_RAIN.bands) {

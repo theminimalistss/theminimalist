@@ -28,7 +28,7 @@ test('testimonial frames fall through depth, hold on hover, and open in full', a
   page.on('pageerror', (error) => errors.push(error.message));
   await openPage(page, '/testimonials');
   const list = page.getByRole('list', { name: 'Client testimonials' });
-  await expect(list.getByRole('listitem')).toHaveCount(13);
+  await expect(list.getByRole('listitem')).toHaveCount(14);
   const frame = list.getByRole('button', { name: 'Read Demi Rodrigo, Sevenstreet Bakery' });
   const y = async () => (await frame.boundingBox())?.y ?? 0;
   const before = await y();
@@ -134,7 +134,7 @@ test('video frames play while they are on screen', async ({ page }) => {
       { timeout: 4_000 },
     )
     .toBe(true);
-  expect(await page.locator('.testimonial-space video').count()).toBe(4);
+  expect(await page.locator('.testimonial-space video').count()).toBe(5);
 });
 
 test('testimonials can pause and are accessible', async ({ page }) => {
@@ -158,12 +158,12 @@ test('switching to the gallery flies every frame into a grid, and back again', a
     );
   await page.getByRole('button', { name: 'Gallery', exact: true }).click();
   await expect(hero).toHaveAttribute('data-still', '');
-  expect(await flying()).toBe(13);
+  expect(await flying()).toBe(14);
   await expect.poll(flying, { timeout: 4_000 }).toBe(0);
   const tops = await frames.evaluateAll((elements) =>
     elements.map((element) => Math.round(element.getBoundingClientRect().top)),
   );
-  expect(new Set(tops).size).toBeLessThan(13);
+  expect(new Set(tops).size).toBeLessThan(14);
   await expect
     .poll(() =>
       page
@@ -199,7 +199,7 @@ test('switching to the gallery flies every frame into a grid, and back again', a
         .locator('.testimonial-space [data-float]')
         .evaluateAll((floats) => floats.filter((float) => float.getAnimations().length).length),
     )
-    .toBe(13);
+    .toBe(14);
 });
 
 test('reduced motion lays testimonials out as a still grid', async ({ page }) => {

@@ -44,6 +44,7 @@ export const SERVICE_COPY = {
       'Packaging, labels, and hang tags',
       'Social and print templates',
       'Brand files ready for every use',
+      'Add-on applications, from business cards to menus and brochures',
     ],
     works: 'Identity concepts such as Forma and Terra sit in the Works collection.',
   },

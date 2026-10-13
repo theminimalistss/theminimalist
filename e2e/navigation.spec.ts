@@ -129,7 +129,6 @@ test('the studio sprig waves, responds to the pointer, and respects reduced moti
 test('overview directories are visible and navigate to each destination', async ({ page }) => {
   test.slow();
   for (const [path, name] of [
-    ['/services', 'Services'],
     ['/products', 'Product categories'],
     ['/contact', 'Ways to get in touch'],
   ] as const) {

@@ -2,6 +2,7 @@ import { useId, type ReactNode } from 'react';
 import type { RoutePath } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
 import { PageLink } from '@/ui/components/PageLink';
+import '@/ui/styles/overview.css';
 
 export type DirectoryItem = {
   to: RoutePath;
