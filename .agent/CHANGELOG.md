@@ -5,6 +5,42 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.18.1] — 2026-10-13
+
+### Changed
+
+- Architecture: side effects and rules moved out of UI components.
+  - `usePrefetchPages` owns the idle page prefetch (was in `SiteLayout`).
+  - `useMenuReturnFocus` owns focus after menu navigation (was in `StudioMenu`).
+  - `useTestimonialReader` owns the open, close, and step logic for the reading
+    panel (was in `TestimonialsPage`).
+  - `summarizeTestimonials` in the service owns the client count and average
+    rating, which the page used to compute itself.
+- Performance:
+  - The testimonial field is memoised, so its layout is computed once and its 26
+    frames no longer re-render on hover or open.
+  - The video visibility check is skipped while the field is offscreen.
+  - The Works morph posters are decoded at idle time instead of on arrival.
+- Cleanup: removed the unused `initials` helper (left over from the old frame
+  design), the placeholder quote-card styles, and the per-band speeds, now one
+  `TESTIMONIAL_RAIN.speed`. The test-only spacing measure now lives in its test.
+
+### AI session
+
+Changed: new `usePrefetchPages`, `useMenuReturnFocus`, and
+`useTestimonialReader` hooks; `summarizeTestimonials`; `SiteLayout`,
+`StudioMenu`, `TestimonialsPage`, and `TestimonialRain`; `useTestimonialRain`
+and `useWorksView`; `TESTIMONIAL_RAIN`; `testimonialField`; `pages.css`; tests.
+
+Reason: The user asked for a whole-project review for architecture and
+optimization, with no added comments.
+
+Verification: Layer import scan (no UI, service, or repository boundary
+violations), a scan for side effects in UI, unused-export and unused-CSS scans,
+and a bundle check (the 104 kB shared chunk is React and the router, preloaded
+as intended). `npm run check` passes (120 unit tests); Playwright 130 passed,
+14 skipped.
+
 ## [0.18.0] — 2026-10-13
 
 ### Added

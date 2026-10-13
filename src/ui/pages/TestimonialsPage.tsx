@@ -1,8 +1,8 @@
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useTestimonialRain } from '@/hooks/useTestimonialRain';
 import { useTestimonials } from '@/hooks/useTestimonials';
-import { useWorkPreview } from '@/hooks/useWorkPreview';
 import type { Testimonial } from '@/types/testimonial';
+import { useTestimonialReader } from '@/hooks/useTestimonialReader';
 import { ROUTES } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
@@ -17,26 +17,20 @@ const NEXT = [
   { label: 'Request a quote', to: ROUTES.quote, description: 'Start a project with us.' },
 ] as const;
 
+const NO_TESTIMONIALS: Testimonial[] = [];
+
 export default function TestimonialsPage() {
   const state = useTestimonials();
   const reducedMotion = useReducedMotion();
-  const testimonials = state.status === 'ready' ? state.testimonials : [];
-  const preview = useWorkPreview<Testimonial>();
-  const current = preview.work;
-  const position = current ? testimonials.findIndex((item) => item.id === current.id) : 0;
-  const step = (direction: 1 | -1) => {
-    const next = testimonials[(position + direction + testimonials.length) % testimonials.length];
-    if (next) preview.show(next);
-  };
+  const testimonials = state.status === 'ready' ? state.testimonials : NO_TESTIMONIALS;
+  const summary = state.status === 'ready' ? state.summary : null;
+  const reader = useTestimonialReader(testimonials);
+  const current = reader.current;
   const rain = useTestimonialRain({
     enabled: !reducedMotion && testimonials.length > 0,
-    held: current !== null || preview.transitioning,
+    held: reader.reading,
     layout: String(testimonials.length),
   });
-  const rated = testimonials.filter((item) => item.rating);
-  const average = rated.length
-    ? rated.reduce((sum, item) => sum + (item.rating ?? 0), 0) / rated.length
-    : 0;
 
   return (
     <>
@@ -56,15 +50,15 @@ export default function TestimonialsPage() {
             What working with the studio feels like, in our clients’ own words. Hover a frame to
             bring it close; open it to read it in full.
           </p>
-          {testimonials.length > 0 && (
+          {summary && summary.count > 0 && (
             <dl className="testimonials-stats">
               <div>
                 <dt>Clients</dt>
-                <dd>{testimonials.length}</dd>
+                <dd>{summary.count}</dd>
               </div>
               <div>
                 <dt>Average rating</dt>
-                <dd>{average.toFixed(1)}/5</dd>
+                <dd>{summary.average.toFixed(1)}/5</dd>
               </div>
             </dl>
           )}
@@ -81,19 +75,16 @@ export default function TestimonialsPage() {
             testimonials={testimonials}
             stageRef={rain.stageRef}
             playing={!reducedMotion}
-            onOpen={(index, element) => {
-              const testimonial = testimonials[index];
-              if (testimonial) preview.open(testimonial, element);
-            }}
+            onOpen={reader.open}
           />
         )}
       </section>
       <TestimonialDialog
         testimonial={current}
-        position={position}
+        position={reader.position}
         total={testimonials.length}
-        onClose={preview.close}
-        onStep={step}
+        onClose={reader.close}
+        onStep={reader.step}
       />
       <PageSection eyebrow="Continue" title="See the work.">
         <LinkCards items={NEXT} label="Next steps" />

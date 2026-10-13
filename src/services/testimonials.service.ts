@@ -100,3 +100,9 @@ export async function getTestimonials(
     throw new TestimonialValidationError('Testimonial ids must be unique.');
   return testimonials;
 }
+
+export function summarizeTestimonials(testimonials: readonly Testimonial[]) {
+  const rated = testimonials.flatMap((item) => (item.rating ? [item.rating] : []));
+  const average = rated.length ? rated.reduce((sum, rating) => sum + rating, 0) / rated.length : 0;
+  return { count: testimonials.length, average };
+}

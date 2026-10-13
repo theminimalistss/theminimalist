@@ -1,16 +1,15 @@
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useInteractionSounds } from '@/hooks/useInteractionSounds';
+import { usePrefetchPages } from '@/hooks/usePrefetchPages';
 import { useRouteFocus } from '@/hooks/useRouteFocus';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import { useScrolledPast } from '@/hooks/useScrolledPast';
 import { SiteMenuContext } from '@/hooks/useSiteMenu';
-import { prefetchPages } from '@/router/pageModules';
 import { ContactFab } from '@/ui/components/ContactFab';
 import { SiteHeader } from '@/ui/components/SiteHeader';
 import { StudioMenu } from '@/ui/components/StudioMenu';
-import { scheduleIdle } from '@/utils/idle';
 
 export function SiteLayout() {
   const { pathname } = useLocation();
@@ -24,7 +23,7 @@ export function SiteLayout() {
   useDocumentMeta(pathname);
   useInteractionSounds(pathname, menuOpen);
   useScrollReveal();
-  useEffect(() => scheduleIdle(prefetchPages, 4_000), []);
+  usePrefetchPages();
 
   return (
     <SiteMenuContext.Provider value={menu}>

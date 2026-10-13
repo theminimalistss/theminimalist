@@ -5,6 +5,7 @@ import type { Work } from '@/types/work';
 import { clamp01, easeInOutCubic } from '@/utils/easing';
 import type { PreviewPlacement } from '@/utils/particlePreview';
 import { createParticleScene } from '@/utils/particleScene';
+import { scheduleIdle } from '@/utils/idle';
 import { getNodePositions } from '@/utils/tesseract';
 
 export type WorksView = 'spatial' | 'gallery';
@@ -62,15 +63,19 @@ export function useWorksView(reducedMotion: boolean, works: readonly Work[]) {
   const posters = useRef(new Map<string, HTMLImageElement>());
   const cancelRef = useRef(() => {});
 
-  useEffect(() => {
-    for (const work of works) {
-      if (posters.current.has(work.id)) continue;
-      const image = new Image();
-      image.decoding = 'async';
-      image.src = posterOf(work);
-      posters.current.set(work.id, image);
-    }
-  }, [works]);
+  useEffect(
+    () =>
+      scheduleIdle(() => {
+        for (const work of works) {
+          if (posters.current.has(work.id)) continue;
+          const image = new Image();
+          image.decoding = 'async';
+          image.src = posterOf(work);
+          posters.current.set(work.id, image);
+        }
+      }),
+    [works],
+  );
 
   useEffect(() => () => cancelRef.current(), []);
 

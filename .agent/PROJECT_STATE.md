@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.18.0
+VERSION: 0.18.1
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.17.0 Testimonials redesign and 0.18.0 Services section.
+CURRENT TASK: Review 0.18.1 architecture and performance pass.
 
 ## Completed
 

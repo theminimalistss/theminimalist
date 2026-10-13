@@ -19,14 +19,14 @@ function seeded(seed: number) {
   };
 }
 
-type Band = { z: readonly [number, number]; speed: number; fade: number };
+type Band = { z: readonly [number, number]; fade: number; speed?: number };
 
 function placeBand(count: number, band: Band, random: () => number, start: number, shift: number) {
   return Array.from({ length: count }, (_, index) => ({
     x: 0.05 + 0.9 * ((shift + index * GOLDEN) % 1),
     z: band.z[0] + random() * (band.z[1] - band.z[0]),
     fade: band.fade,
-    speed: band.speed,
+    speed: band.speed ?? TESTIMONIAL_RAIN.speed,
     offset: (index + 0.15 * random()) / count,
     tone: (start + index) % 5,
   }));
@@ -142,28 +142,4 @@ export function spreadFrames(sizes: readonly Size[], width: number, loop: number
     spots[frame.index] = best;
   }
   return spots;
-}
-
-export function minimumSeparation(spots: readonly Spot[], sizes: readonly Size[], loop: number) {
-  let least = Infinity;
-  spots.forEach((a, i) =>
-    spots.slice(i + 1).forEach((b, offset) => {
-      const j = i + 1 + offset;
-      least = Math.min(least, separation({ ...a, ...sizes[i]! }, { ...b, ...sizes[j]! }, loop));
-    }),
-  );
-  return least;
-}
-
-export function initials(name: string) {
-  const words = name
-    .replace(/[^\p{L}\p{N}\s&]/gu, ' ')
-    .split(/\s+/u)
-    .filter(Boolean);
-  const meaningful = words.filter((word) => !/^(the|and|&)$/iu.test(word));
-  const source = meaningful.length ? meaningful : words;
-  return source
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase() ?? '')
-    .join('');
 }

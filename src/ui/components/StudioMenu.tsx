@@ -1,12 +1,11 @@
-import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router';
 import { HOVER_POINTER_QUERY, MENU_PREVIEWS } from '@/constants/menu';
 import { useDialog } from '@/hooks/useDialog';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useMenuMorph } from '@/hooks/useMenuMorph';
+import { useMenuReturnFocus } from '@/hooks/useMenuReturnFocus';
 import { usePointerCue } from '@/hooks/usePointerCue';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { focusMainContent } from '@/hooks/useRouteFocus';
 import { isNavGroupActive, PRIMARY_NAVIGATION } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
@@ -25,20 +24,14 @@ export function StudioMenu({ open, onClose }: Props) {
   const { pathname } = useLocation();
   const { phase, rendered, canvasRef, originRef, settle } = useMenuMorph(open, reducedMotion);
   const ref = useDialog(rendered);
-  const navigated = useRef(false);
+  const markNavigated = useMenuReturnFocus(rendered);
   const { areaRef, cueRef, cue } = usePointerCue<HTMLElement>(
     finePointer && rendered,
     !reducedMotion,
   );
 
-  useEffect(() => {
-    if (rendered || !navigated.current) return;
-    navigated.current = false;
-    focusMainContent();
-  }, [rendered]);
-
   const navigate = () => {
-    navigated.current = true;
+    markNavigated();
     onClose();
   };
 

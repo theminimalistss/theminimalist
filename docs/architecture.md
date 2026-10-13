@@ -208,7 +208,8 @@ motion retain the static shadow without spatial movement.
 ## Testimonials
 
 `testimonials.repository` (JSON content plus a local stock-media map) →
-`testimonials.service` (validation, sentence-aware excerpts) → `useTestimonials`.
+`testimonials.service` (validation, sentence-aware excerpts, `summarizeTestimonials`) →
+`useTestimonials`; `useTestimonialReader` owns the open, close, and step logic for the reading panel.
 `TestimonialRain` renders every testimonial once as a portrait frame in a
 full-screen CSS 3D scene. A `perspective` and a rotated floor grid set the
 vanishing point. `placeFloats` gives each frame a depth band (size and haze), and

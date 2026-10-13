@@ -235,13 +235,6 @@
   color: var(--color-muted);
 }
 
-.quote-cards {
-  display: grid;
-  gap: 24px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 .profile-link {
   display: inline-flex;
   align-items: center;
@@ -272,32 +265,6 @@
 }
 .profile-link:is(:hover, :focus-visible) .profile-link-arrow {
   transform: translate(3px, -3px);
-}
-.quote-cards li {
-  display: grid;
-  gap: 18px;
-  padding: 28px;
-  background: var(--color-surface);
-}
-.quote-mark {
-  font-family: var(--font-serif);
-  font-size: 64px;
-  line-height: 0.6;
-  color: var(--color-accent);
-}
-.quote-line {
-  display: block;
-  height: 10px;
-  background: var(--color-line);
-}
-.quote-line:nth-child(3) {
-  width: 80%;
-}
-.quote-line:nth-child(4) {
-  width: 55%;
-}
-.quote-cards p {
-  font-size: 12px;
 }
 
 .contact-details {
@@ -361,9 +328,6 @@
   .service-list {
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
-  }
-  .quote-cards {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

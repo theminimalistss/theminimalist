@@ -64,7 +64,7 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
         const centerX = toWorld(screenX, vanishX, size.z);
         const from = toWorld(-margin, vanishY, size.z);
         const to = toWorld(height + margin, vanishY, size.z);
-        const speed = Number(float.dataset.speed) || TESTIMONIAL_RAIN.bands[0].speed;
+        const speed = Number(float.dataset.speed) || TESTIMONIAL_RAIN.speed;
         const duration = ((height + margin * 2) / speed) * 1000;
         const left = centerX - size.w / 2;
         const z = size.z;
@@ -197,6 +197,7 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
       for (const video of videos) {
         const box = video.getBoundingClientRect();
         const shown =
+          inView &&
           !document.hidden &&
           box.bottom > area.top &&
           box.top < area.bottom &&

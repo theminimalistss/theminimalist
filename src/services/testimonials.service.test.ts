@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   getTestimonials,
   normalizeTestimonial,
+  summarizeTestimonials,
   TestimonialValidationError,
   toExcerpt,
 } from '@/services/testimonials.service';
@@ -63,5 +64,18 @@ describe('testimonials', () => {
     await expect(getTestimonials({ getTestimonials: async () => ({}) })).rejects.toThrow(
       TestimonialValidationError,
     );
+  });
+
+  it('counts every client and averages only the ratings that were given', async () => {
+    const summary = summarizeTestimonials(await getTestimonials());
+    expect(summary.count).toBe(13);
+    expect(summary.average).toBe(5);
+    expect(summarizeTestimonials([])).toEqual({ count: 0, average: 0 });
+    expect(
+      summarizeTestimonials([
+        { ...normalizeTestimonial(valid), rating: 4 },
+        { ...normalizeTestimonial({ ...valid, id: 'b', rating: undefined }) },
+      ]),
+    ).toEqual({ count: 2, average: 4 });
   });
 });

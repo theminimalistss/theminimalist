@@ -2,13 +2,34 @@ import { describe, expect, it } from 'vitest';
 import { TESTIMONIAL_RAIN } from '@/constants/motion';
 import {
   focusPose,
-  initials,
-  minimumSeparation,
   placeEchoes,
   placeFloats,
   spreadFrames,
   toWorld,
 } from '@/utils/testimonialField';
+
+function minimumSeparation(
+  spots: readonly { x: number; y: number }[],
+  sizes: readonly { width: number; height: number }[],
+  loop: number,
+) {
+  let least = Infinity;
+  spots.forEach((a, i) =>
+    spots.slice(i + 1).forEach((b, offset) => {
+      const j = i + 1 + offset;
+      const dx = Math.abs(a.x - b.x);
+      const raw = Math.abs(a.y - b.y) % loop;
+      const dy = Math.min(raw, loop - raw);
+      const sa = sizes[i]!;
+      const sb = sizes[j]!;
+      least = Math.min(
+        least,
+        Math.max(dx / ((sa.width + sb.width) / 2), dy / ((sa.height + sb.height) / 2)),
+      );
+    }),
+  );
+  return least;
+}
 
 describe('testimonial field', () => {
   it('spreads frames through three depth bands', () => {
@@ -33,7 +54,7 @@ describe('testimonial field', () => {
   it('makes nearer bands brighter, and keeps the slower echoes far and faint', () => {
     const [near, , far] = TESTIMONIAL_RAIN.bands;
     expect(near.fade).toBeGreaterThan(far.fade);
-    expect(TESTIMONIAL_RAIN.echo.speed).toBeLessThan(near.speed);
+    expect(TESTIMONIAL_RAIN.echo.speed).toBeLessThan(TESTIMONIAL_RAIN.speed);
     for (const echo of placeEchoes(13)) {
       expect(echo.z).toBeLessThan(far.z[0]);
       expect(echo.fade).toBeLessThan(0.4);
@@ -45,13 +66,6 @@ describe('testimonial field', () => {
     const world = toWorld(900, 600, z);
     const scale = TESTIMONIAL_RAIN.perspective / (TESTIMONIAL_RAIN.perspective - z);
     expect(600 + (world - 600) * scale).toBeCloseTo(900);
-  });
-
-  it('builds a monogram from the business name', () => {
-    expect(initials('Good Creamery')).toBe('GC');
-    expect(initials('Hey, Lulu! Pastries')).toBe('HL');
-    expect(initials('The Compound Court')).toBe('CC');
-    expect(initials('Arkcladd')).toBe('A');
   });
 
   it('brings a focused frame forward, toward the centre, and fully on screen', () => {

@@ -1,4 +1,4 @@
-import type { CSSProperties, RefObject } from 'react';
+import { memo, useMemo, type CSSProperties, type RefObject } from 'react';
 import { TESTIMONIAL_RAIN } from '@/constants/motion';
 import type { Testimonial } from '@/types/testimonial';
 import { placeEchoes, placeFloats, type FloatPlacement } from '@/utils/testimonialField';
@@ -22,9 +22,14 @@ function floatProps(float: FloatPlacement | undefined) {
   };
 }
 
-export function TestimonialRain({ testimonials, stageRef, playing, onOpen }: Props) {
-  const floats = placeFloats(testimonials.length);
-  const echoes = placeEchoes(testimonials.length);
+export const TestimonialRain = memo(function TestimonialRain({
+  testimonials,
+  stageRef,
+  playing,
+  onOpen,
+}: Props) {
+  const floats = useMemo(() => placeFloats(testimonials.length), [testimonials.length]);
+  const echoes = useMemo(() => placeEchoes(testimonials.length), [testimonials.length]);
   return (
     <div
       ref={stageRef}
@@ -67,4 +72,4 @@ export function TestimonialRain({ testimonials, stageRef, playing, onOpen }: Pro
       </ul>
     </div>
   );
-}
+});

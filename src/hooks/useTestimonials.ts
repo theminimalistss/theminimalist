@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { getTestimonials } from '@/services/testimonials.service';
+import { getTestimonials, summarizeTestimonials } from '@/services/testimonials.service';
 import type { Testimonial } from '@/types/testimonial';
 
 type State =
   | { status: 'loading' }
-  | { status: 'ready'; testimonials: Testimonial[] }
+  | {
+      status: 'ready';
+      testimonials: Testimonial[];
+      summary: ReturnType<typeof summarizeTestimonials>;
+    }
   | { status: 'error'; message: string };
 
 export function useTestimonials() {
@@ -13,7 +17,8 @@ export function useTestimonials() {
     const controller = new AbortController();
     void getTestimonials(undefined, controller.signal).then(
       (testimonials) => {
-        if (!controller.signal.aborted) setState({ status: 'ready', testimonials });
+        if (!controller.signal.aborted)
+          setState({ status: 'ready', testimonials, summary: summarizeTestimonials(testimonials) });
       },
       () => {
         if (!controller.signal.aborted)
