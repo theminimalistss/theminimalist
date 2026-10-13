@@ -1,8 +1,55 @@
 # Deployment
 
 Set `VITE_SITE_URL` (for example `https://www.example.com`), then run
-`npm ci && npm run build` and publish `dist/` on a static host. The build assumes
+`npm ci && npm run build:hostinger` and publish `dist/` on a static host. The build assumes
 a domain-root deployment.
+
+## Hostinger Web Apps
+
+Use Hostinger's **Vite frontend** preset with **Node.js 24**, installation command
+`npm ci`, build command `npm run build:hostinger`, and output directory **`dist`**.
+The `.nvmrc` file pins Node 24 for local parity. This app is a static frontend;
+it needs no persistent Node server, start command, or server entry file. Do not
+use `vite preview` as the production server.
+
+Connect the GitHub source or upload a ZIP of the source (omit `node_modules`,
+`.cache`, and local `.env` files). Set `VITE_SITE_URL` to the actual HTTPS origin
+in the build environment before deploying. Vite embeds it during the build;
+changing it requires a rebuild. No domain is assumed in the repository.
+
+Hostinger manages its frontend routing and `.htaccess` on every deployment.
+Keep that configuration managed by the platform. Configure caching and headers
+through supported host/CDN settings, and repeat the checks below after redeploying.
+See [Hostinger's Web Apps deployment guide](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/).
+
+`deploy:check` verifies that each known route has HTML and that its referenced
+entry scripts, styles, icons, and images exist in the production output. It also
+rejects public source maps and environment files. Without `VITE_SITE_URL` it
+prints a reminder; development builds can still be checked.
+
+After a deployment, verify:
+
+- Open and refresh `/about`, `/services/software`, `/products/templates`, and
+  `/inquiries/quote` directly; check their titles and previews. Unknown routes
+  should show the app's 404, while missing media must return 404 rather than HTML.
+- Confirm scripts and styles have correct MIME types, fonts/media load over HTTPS,
+  and videos support byte-range requests. The app uses local optimized media.
+- Check Works, Testimonials view switching, Founders depth, the flower hover/tap,
+  menu, and loader on desktop Chrome and real iOS Safari. Repeat with reduced
+  motion, a hidden tab, slow networking, and WebGL disabled.
+- Check HTML revalidation and immutable caching for hashed `/assets/` files;
+  public icons, manifests, and route HTML must update after a new release.
+
+The flower's idle motion uses native browser animations and pauses offscreen or
+when the tab is hidden. Its pointer response runs only during interaction and
+settling. Loader/menu buffers are capped at 1.5× DPR and a 2048 px edge; the Works
+sculpture has its own 1800 px cap. Optional sound/video buffering does not gate
+the loader. Route prefetch waits until entry, runs sequentially, and skips reported
+data-saving/2G connections. These behaviours are client-side and need no special
+Hostinger process or animation service.
+
+Local production-preview tests verify browser behaviour and generated output;
+they cannot verify a Hostinger account's live routing, cache, or headers.
 
 Routing: serve existing files first. Every page has `dist/<route>/index.html` and
 `dist/<route>.html`, so clean URLs (`/about`) return HTML with that page's share

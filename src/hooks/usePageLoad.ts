@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { soundEngine } from '@/audio/soundEngine';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 
 type Options = { minimum: number; maximum: number };
 
-function settled(target: EventTarget, events: string[]) {
+function settled(target: EventTarget, events: string[], cleanup: (() => void)[]) {
   return new Promise<void>((resolve) => {
-    const done = () => resolve();
+    const cancel = () => events.forEach((event) => target.removeEventListener(event, done));
+    const done = () => {
+      cancel();
+      resolve();
+    };
+    cleanup.push(cancel);
     for (const event of events) target.addEventListener(event, done, { once: true });
   });
 }
@@ -22,16 +26,13 @@ function inView(element: Element) {
   );
 }
 
-function visibleMedia() {
+function visibleMedia(cleanup: (() => void)[]) {
   const main = document.getElementById(MAIN_CONTENT_ID);
   if (!main) return [];
   const images = Array.from(main.querySelectorAll('img'))
     .filter((image) => !image.complete && inView(image))
-    .map((image) => settled(image, ['load', 'error']));
-  const videos = Array.from(main.querySelectorAll('video'))
-    .filter((video) => !video.paused && video.readyState < 3 && inView(video))
-    .map((video) => settled(video, ['canplay', 'error']));
-  return [...images, ...videos];
+    .map((image) => settled(image, ['load', 'error'], cleanup));
+  return images;
 }
 
 export function usePageLoad({ minimum, maximum }: Options) {
@@ -43,6 +44,7 @@ export function usePageLoad({ minimum, maximum }: Options) {
     let total = 0;
     let completed = 0;
     const timers: number[] = [];
+    const cleanup: (() => void)[] = [];
     const wait = (duration: number) =>
       new Promise<void>((resolve) => timers.push(window.setTimeout(resolve, duration)));
     const track = (tasks: Promise<unknown>[]) => {
@@ -58,13 +60,14 @@ export function usePageLoad({ minimum, maximum }: Options) {
     };
 
     const loaded =
-      document.readyState === 'complete' ? Promise.resolve() : settled(window, ['load']);
+      document.readyState !== 'loading'
+        ? Promise.resolve()
+        : settled(document, ['DOMContentLoaded'], cleanup);
     const fonts = document.fonts?.ready ?? Promise.resolve();
-    const sounds = soundEngine.isEnabled() ? soundEngine.prefetch() : [];
-    const essentials = track([loaded, fonts, ...sounds]);
+    const essentials = track([loaded, fonts]);
     const media = loaded
       .then(() => new Promise((resolve) => requestAnimationFrame(resolve)))
-      .then(() => track(visibleMedia()));
+      .then(() => (active ? track(visibleMedia(cleanup)) : []));
 
     void Promise.race([Promise.all([essentials, media, wait(minimum)]), wait(maximum)]).then(() => {
       if (!active) return;
@@ -75,6 +78,7 @@ export function usePageLoad({ minimum, maximum }: Options) {
     return () => {
       active = false;
       timers.forEach((timer) => window.clearTimeout(timer));
+      cleanup.forEach((cancel) => cancel());
     };
   }, [minimum, maximum]);
 

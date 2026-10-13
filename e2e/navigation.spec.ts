@@ -31,6 +31,138 @@ test('the footer sitemap reaches every page', async ({ page }) => {
   }
 });
 
+test('the studio overview leads to Founders, Testimonials, and Works', async ({ page }) => {
+  await openPage(page, '/about');
+  const intro = page.locator('.page-intro');
+  await expect(intro.getByRole('heading', { level: 1 })).toHaveText(
+    'The Minimalist Design Studio.',
+  );
+  await expect(intro.locator('.page-lead')).toHaveText(
+    'We shape identities and digital experiences with clarity, character, and care. Less, but with feeling. Our full studio story is being written; here is where we begin.',
+  );
+  const destinations = page.getByRole('navigation', { name: 'Studio destinations' });
+  await expect(destinations.getByRole('link')).toHaveCount(3);
+  for (const link of await destinations.getByRole('link').all()) {
+    await expect(link).toBeInViewport({ ratio: 1 });
+  }
+  await revealAll(page);
+  await destinations.scrollIntoViewIfNeeded();
+  await expect(destinations.locator('.studio-founder')).toHaveCount(2);
+  await expect(destinations.locator('.studio-study')).toHaveCount(2);
+  await expect(
+    destinations.getByRole('link', { name: 'Works', exact: true }),
+  ).toHaveAccessibleDescription('Independent concept studies from the studio.');
+  await expect
+    .poll(() =>
+      destinations
+        .locator('img')
+        .evaluateAll((images) =>
+          images.every((image) => (image as HTMLImageElement).naturalWidth > 0),
+        ),
+    )
+    .toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+    await page.evaluate(() => innerWidth),
+  );
+  for (const [label, path, heading] of [
+    ['Founders', '/founders', /Two founders/],
+    ['Testimonials', '/testimonials', /Kind words/],
+    ['Works', '/works', /Selected works/],
+  ] as const) {
+    const link = destinations.getByRole('link', { name: label, exact: true });
+    await expect(link).toHaveAttribute('href', path);
+    await link.click();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
+    await page.goBack();
+    await expect(page).toHaveURL(/\/about$/);
+  }
+});
+
+test('the studio sprig waves, responds to the pointer, and respects reduced motion', async ({
+  page,
+  isMobile,
+}) => {
+  await openPage(page, '/about');
+  const sprig = page.locator('.studio-manifesto-mark');
+  const stem = sprig.locator('[data-sprig-stem]');
+  await sprig.scrollIntoViewIfNeeded();
+  await expect(sprig).toHaveAttribute('data-waving', '');
+  const initial = await stem.evaluate((element) => getComputedStyle(element).transform);
+  await expect
+    .poll(() => stem.evaluate((element) => getComputedStyle(element).transform))
+    .not.toBe(initial);
+  if (!isMobile) {
+    await sprig.hover({ position: { x: 40, y: 60 } });
+    await expect(sprig).toHaveAttribute('data-doodling', '');
+    await expect
+      .poll(() => sprig.locator('svg').evaluate((element) => element.style.filter))
+      .toContain('url(');
+    await page.mouse.move(0, 0);
+    await expect(sprig).not.toHaveAttribute('data-doodling', '');
+    await expect
+      .poll(() => sprig.locator('svg').evaluate((element) => element.style.filter))
+      .toBe('');
+  } else {
+    await sprig.tap();
+    await expect(sprig).toHaveAttribute('data-doodling', '');
+    await expect
+      .poll(() => sprig.locator('svg').evaluate((element) => element.style.filter))
+      .toContain('url(');
+    await expect
+      .poll(() => sprig.locator('svg').evaluate((element) => element.style.filter))
+      .toBe('');
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(sprig).not.toHaveAttribute('data-waving', '');
+  expect(
+    await stem.evaluate((element) =>
+      element.getAnimations().every((animation) => animation.playState === 'paused'),
+    ),
+  ).toBe(true);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await sprig.scrollIntoViewIfNeeded();
+  await expect(sprig).not.toHaveAttribute('data-waving', '');
+  await expect(stem).toHaveCSS('transform', 'none');
+  await expect(sprig.locator('svg')).toHaveCSS('filter', 'none');
+});
+
+test('overview directories are visible and navigate to each destination', async ({ page }) => {
+  test.slow();
+  for (const [path, name] of [
+    ['/services', 'Services'],
+    ['/products', 'Product categories'],
+    ['/contact', 'Ways to get in touch'],
+  ] as const) {
+    await openPage(page, path);
+    const directory = page
+      .locator('.page-directory')
+      .getByRole('navigation', { name, exact: true });
+    const links = directory.getByRole('link');
+    await expect(links).toHaveCount(3);
+    for (let index = 0; index < 3; index += 1) {
+      const link = links.nth(index);
+      await expect(link).toBeInViewport({ ratio: 1 });
+      const destination = await link.getAttribute('href');
+      await link.focus();
+      await page.keyboard.press('Enter');
+      await expect(page).toHaveURL(new RegExp(`${destination}$`));
+      await expect(page.locator('#main-content')).toBeFocused();
+      await page.goBack();
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+  }
+});
+
+test('optional audio and video downloads do not block the opening screen', async ({ page }) => {
+  await page.route(/\.(?:mp3|mp4|webm)(?:\?|$)/u, () => {});
+  await page.goto('/?utm_source=deployment-check', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 6_000 });
+  await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeVisible();
+});
+
 test('the menu navigates, closes, and moves focus to the new page', async ({ page }) => {
   await openPage(page, '/');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();

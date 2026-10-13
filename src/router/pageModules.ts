@@ -12,6 +12,13 @@ export const PAGE_MODULES = {
   notFound: () => import('@/ui/pages/NotFoundPage'),
 } as const;
 
-export function prefetchPages() {
-  for (const load of Object.values(PAGE_MODULES)) void load();
+export async function prefetchPages(shouldContinue: () => boolean = () => true) {
+  for (const load of Object.values(PAGE_MODULES)) {
+    if (!shouldContinue()) return;
+    try {
+      await load();
+    } catch {
+      return;
+    }
+  }
 }

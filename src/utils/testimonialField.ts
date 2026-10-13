@@ -32,6 +32,10 @@ function placeBand(count: number, band: Band, random: () => number, start: numbe
   }));
 }
 
+export function randomSeed() {
+  return 1 + Math.floor(Math.random() * 2147483646);
+}
+
 export function placeFloats(count: number, seed = 7): FloatPlacement[] {
   const random = seeded(seed);
   const { bands } = TESTIMONIAL_RAIN;
@@ -39,14 +43,20 @@ export function placeFloats(count: number, seed = 7): FloatPlacement[] {
   sizes[sizes.length - 1] = count - sizes.slice(0, -1).reduce((sum, size) => sum + size, 0);
   const placed = bands.flatMap((band, index) => {
     const before = sizes.slice(0, index).reduce((sum, size) => sum + size, 0);
-    return placeBand(sizes[index] ?? 0, band, random, before, index * 0.31);
+    return placeBand(sizes[index] ?? 0, band, random, before, (index * 0.31 + random()) % 1);
   });
-  return Array.from({ length: count }, (_, index) => placed[(index * 5) % count] ?? placed[0]!);
+  const order = placed.map((_, index) => index);
+  for (let index = order.length - 1; index > 0; index--) {
+    const other = Math.floor(random() * (index + 1));
+    [order[index], order[other]] = [order[other]!, order[index]!];
+  }
+  return order.map((slot) => placed[slot]!);
 }
 
 export function placeEchoes(count: number, seed = 19): FloatPlacement[] {
   const { echo } = TESTIMONIAL_RAIN;
-  return placeBand(count, echo, seeded(seed), 2, 0.17);
+  const random = seeded(seed);
+  return placeBand(count, echo, random, 2, random());
 }
 
 export function toWorld(screen: number, vanishing: number, z: number) {
@@ -69,32 +79,60 @@ export type FocusInput = {
 const clampTo = (value: number, low: number, high: number) =>
   low > high ? (low + high) / 2 : Math.min(high, Math.max(low, value));
 
+function focusGoal(frame: Box, area: Box, ratio: number, topSafe: number) {
+  const { focus } = TESTIMONIAL_RAIN;
+  const room = Math.min(
+    area.width - focus.margin * 2,
+    (area.height - topSafe - focus.margin * 2) / ratio,
+  );
+  const width = Math.min(room, clampTo(frame.width * 1.25, focus.width[0], focus.width[1]));
+  const height = width * ratio;
+  const start = { x: frame.left + frame.width / 2, y: frame.top + frame.height / 2 };
+  const middle = { x: area.left + area.width / 2, y: area.top + (area.height + topSafe) / 2 };
+  const goal = {
+    x: clampTo(
+      start.x + (middle.x - start.x) * focus.pull,
+      area.left + focus.margin + width / 2,
+      area.left + area.width - focus.margin - width / 2,
+    ),
+    y: clampTo(
+      start.y + (middle.y - start.y) * focus.pull,
+      area.top + topSafe + focus.margin + height / 2,
+      area.top + area.height - focus.margin - height / 2,
+    ),
+  };
+  return { start, goal, width, height };
+}
+
+export function flatFocusPose({
+  frame,
+  view,
+  topSafe,
+}: {
+  frame: Box;
+  view: Box;
+  topSafe: number;
+}) {
+  const { start, goal, width, height } = focusGoal(
+    frame,
+    view,
+    frame.height / frame.width,
+    topSafe,
+  );
+  return {
+    x: goal.x - start.x,
+    y: goal.y - start.y,
+    scale: width / frame.width,
+    screen: { ...goal, width, height },
+  };
+}
+
 export function focusPose({ frame, stage, size, z, topSafe }: FocusInput) {
   const { perspective, horizon, focus } = TESTIMONIAL_RAIN;
   const vanish = { x: stage.left + stage.width / 2, y: stage.top + stage.height * horizon };
   const current = perspective / (perspective - z);
   const lifted = perspective / (perspective - focus.z);
-  const ratio = size.height / size.width;
-  const room = Math.min(
-    stage.width - focus.margin * 2,
-    (stage.height - topSafe - focus.margin * 2) / ratio,
-  );
-  const width = Math.min(room, clampTo(frame.width * 1.25, focus.width[0], focus.width[1]));
-  const height = width * ratio;
-  const start = { x: frame.left + frame.width / 2, y: frame.top + frame.height / 2 };
-  const middle = { x: stage.left + stage.width / 2, y: stage.top + (stage.height + topSafe) / 2 };
-  const goal = {
-    x: clampTo(
-      start.x + (middle.x - start.x) * focus.pull,
-      stage.left + focus.margin + width / 2,
-      stage.left + stage.width - focus.margin - width / 2,
-    ),
-    y: clampTo(
-      start.y + (middle.y - start.y) * focus.pull,
-      stage.top + topSafe + focus.margin + height / 2,
-      stage.top + stage.height - focus.margin - height / 2,
-    ),
-  };
+  const { start, goal, width, height } = focusGoal(frame, stage, size.height / size.width, topSafe);
   return {
     x: (goal.x - vanish.x) / lifted - (start.x - vanish.x) / current,
     y: (goal.y - vanish.y) / lifted - (start.y - vanish.y) / current,
@@ -114,8 +152,7 @@ function separation(a: Spot & Size, b: Spot & Size, loop: number) {
   return Math.max(dx / ((a.width + b.width) / 2), dy / ((a.height + b.height) / 2));
 }
 
-export function spreadFrames(sizes: readonly Size[], width: number, loop: number, seed = 11) {
-  const random = seeded(seed);
+function spreadOnce(sizes: readonly Size[], width: number, loop: number, random: () => number) {
   const order = sizes
     .map((size, index) => ({ ...size, index }))
     .sort((a, b) => b.width * b.height - a.width * a.height);
@@ -142,4 +179,32 @@ export function spreadFrames(sizes: readonly Size[], width: number, loop: number
     spots[frame.index] = best;
   }
   return spots;
+}
+
+export function spreadScore(spots: readonly Spot[], sizes: readonly Size[], loop: number) {
+  let least = Infinity;
+  spots.forEach((a, i) => {
+    for (let j = i + 1; j < spots.length; j++) {
+      least = Math.min(
+        least,
+        separation({ ...a, ...sizes[i]! }, { ...spots[j]!, ...sizes[j]! }, loop),
+      );
+    }
+  });
+  return least;
+}
+
+export function spreadFrames(sizes: readonly Size[], width: number, loop: number, seed = 11) {
+  const random = seeded(seed);
+  let best: Spot[] = [];
+  let bestScore = -1;
+  for (let attempt = 0; attempt < TESTIMONIAL_RAIN.layouts; attempt++) {
+    const spots = spreadOnce(sizes, width, loop, random);
+    const score = spreadScore(spots, sizes, loop);
+    if (score > bestScore) {
+      bestScore = score;
+      best = spots;
+    }
+  }
+  return best;
 }

@@ -15,7 +15,8 @@ void main() {
 }
 `;
 
-const MAX_PIXEL_RATIO = 2;
+const MAX_PIXEL_RATIO = 1.5;
+const MAX_CANVAS_EDGE = 2048;
 
 function compile(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type);
@@ -43,7 +44,12 @@ export function createFullscreenScene(
   const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER);
   const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentSource);
   const program = gl.createProgram();
-  if (!vertex || !fragment || !program) return null;
+  if (!vertex || !fragment || !program) {
+    if (vertex) gl.deleteShader(vertex);
+    if (fragment) gl.deleteShader(fragment);
+    if (program) gl.deleteProgram(program);
+    return null;
+  }
   gl.attachShader(program, vertex);
   gl.attachShader(program, fragment);
   gl.linkProgram(program);
@@ -90,7 +96,7 @@ export function getPixelRatio() {
 }
 
 export function fitCanvas(canvas: HTMLCanvasElement, width: number, height: number) {
-  const ratio = getPixelRatio();
+  const ratio = Math.min(getPixelRatio(), MAX_CANVAS_EDGE / Math.max(1, width, height));
   const pixelWidth = Math.max(1, Math.round(width * ratio));
   const pixelHeight = Math.max(1, Math.round(height * ratio));
   if (canvas.width === pixelWidth && canvas.height === pixelHeight) return false;

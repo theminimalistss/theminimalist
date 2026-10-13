@@ -17,7 +17,7 @@ export const LOADER = {
   minimumDuration: { full: 1_800, brief: 650 },
   bloomDuration: { full: 1_500, brief: 450 },
   reducedDuration: 400,
-  maximumDuration: 12_000,
+  maximumDuration: 8_000,
   fontTimeout: 500,
   exitDuration: 1_100,
   shineDuration: 900,
@@ -41,6 +41,16 @@ export const COLLECTION_MORPH = {
 } as const;
 
 export const COMPACT_QUERY = '(max-width: 767px)';
+
+export const STUDIO_SPRIG = {
+  period: 7.2,
+  fps: 30,
+  stiffness: 75,
+  damping: 11,
+  tilt: 9,
+  doodleScale: 0.65,
+  doodleInterval: 120,
+} as const;
 
 export const LOGO_DOODLE = {
   boil: { scale: 2.6, frames: 3, interval: 110, decay: 0.35, push: 0.012 },
@@ -67,10 +77,20 @@ export const TESTIMONIAL_RAIN = {
   ],
   speed: 22,
   candidates: 80,
+  layouts: 8,
+  relayout: 0.2,
+  glide: 900,
+  entrance: { duration: 1_400, stagger: 45 },
   videoCheck: 500,
   echo: { z: [-2300, -1800], speed: 8, fade: 0.26 },
   ease: 260,
   release: 180,
   edge: 16,
   focus: { z: 220, pull: 0.45, width: [340, 420], margin: 24 },
+} as const;
+
+export const TESTIMONIAL_VIEW = {
+  duration: 1_050,
+  stagger: 30,
+  easing: 'cubic-bezier(0.65, 0, 0.2, 1)',
 } as const;

@@ -1,35 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { TESTIMONIAL_RAIN } from '@/constants/motion';
 import {
+  flatFocusPose,
   focusPose,
   placeEchoes,
   placeFloats,
   spreadFrames,
+  spreadScore,
   toWorld,
 } from '@/utils/testimonialField';
-
-function minimumSeparation(
-  spots: readonly { x: number; y: number }[],
-  sizes: readonly { width: number; height: number }[],
-  loop: number,
-) {
-  let least = Infinity;
-  spots.forEach((a, i) =>
-    spots.slice(i + 1).forEach((b, offset) => {
-      const j = i + 1 + offset;
-      const dx = Math.abs(a.x - b.x);
-      const raw = Math.abs(a.y - b.y) % loop;
-      const dy = Math.min(raw, loop - raw);
-      const sa = sizes[i]!;
-      const sb = sizes[j]!;
-      least = Math.min(
-        least,
-        Math.max(dx / ((sa.width + sb.width) / 2), dy / ((sa.height + sb.height) / 2)),
-      );
-    }),
-  );
-  return least;
-}
 
 describe('testimonial field', () => {
   it('spreads frames through three depth bands', () => {
@@ -94,17 +73,62 @@ describe('testimonial field', () => {
     }
   });
 
-  it('spaces every frame across the whole screen and loop without bunching', () => {
+  it('spaces every frame across the whole screen and loop without bunching, for any seed', () => {
     const { perspective } = TESTIMONIAL_RAIN;
-    const sizes = placeFloats(13).map((float) => {
-      const scale = perspective / (perspective - float.z);
-      return { width: 250 * scale, height: 312 * scale };
-    });
-    const loop = 900 + 2 * Math.max(...sizes.map((size) => size.height));
-    const spots = spreadFrames(sizes, 1440, loop);
-    expect(minimumSeparation(spots, sizes, loop)).toBeGreaterThan(0.9);
-    const xs = spots.map((spot) => spot.x);
-    expect(Math.min(...xs)).toBeLessThan(360);
-    expect(Math.max(...xs)).toBeGreaterThan(1080);
+    const layouts = new Set<string>();
+    for (const [width, height] of [
+      [1440, 900],
+      [1024, 768],
+      [390, 844],
+    ] as const) {
+      const frame = width < 768 ? 180 : 250;
+      for (let seed = 1; seed <= 60; seed++) {
+        const sizes = placeFloats(13, seed * 7919).map((float) => {
+          const scale = perspective / (perspective - float.z);
+          return { width: frame * scale, height: frame * 1.25 * scale };
+        });
+        const loop = height + 2 * Math.max(...sizes.map((size) => size.height));
+        const spots = spreadFrames(sizes, width, loop, seed * 104729);
+        expect(spreadScore(spots, sizes, loop)).toBeGreaterThan(width < 768 ? 0.6 : 0.9);
+        const xs = spots.map((spot) => spot.x);
+        if (width >= 768) {
+          expect(Math.min(...xs)).toBeLessThan(width / 4);
+          expect(Math.max(...xs)).toBeGreaterThan((width * 3) / 4);
+        }
+        layouts.add(spots.map((spot) => Math.round(spot.x)).join());
+      }
+    }
+    expect(layouts.size).toBe(180);
+  });
+
+  it('places a new random field on each seed, keeping every depth band filled', () => {
+    const first = placeFloats(13, 101);
+    const second = placeFloats(13, 202);
+    expect(first.map((float) => float.z)).not.toEqual(second.map((float) => float.z));
+    for (const floats of [first, second]) {
+      for (const band of TESTIMONIAL_RAIN.bands) {
+        expect(floats.filter((float) => float.fade === band.fade).length).toBeGreaterThan(2);
+      }
+    }
+  });
+
+  it('expands a gallery frame toward the centre and keeps it on screen', () => {
+    const view = { left: 0, top: 0, width: 1440, height: 900 };
+    for (const [left, top] of [
+      [52, 420],
+      [1140, 760],
+      [600, 120],
+    ] as const) {
+      const frame = { left, top, width: 248, height: 310 };
+      const pose = flatFocusPose({ frame, view, topSafe: 96 });
+      const { screen } = pose;
+      expect(pose.scale).toBeGreaterThan(1);
+      expect(frame.left + frame.width / 2 + pose.x).toBeCloseTo(screen.x);
+      expect(screen.x - screen.width / 2).toBeGreaterThanOrEqual(24);
+      expect(screen.x + screen.width / 2).toBeLessThanOrEqual(1440 - 24);
+      expect(screen.y - screen.height / 2).toBeGreaterThanOrEqual(96 + 24);
+      expect(screen.y + screen.height / 2).toBeLessThanOrEqual(900 - 24);
+      expect(Math.abs(screen.x - 720)).toBeLessThan(Math.abs(left + frame.width / 2 - 720) + 1);
+    }
   });
 });

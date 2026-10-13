@@ -1,0 +1,118 @@
+.studio-founder-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+}
+.studio-founder picture {
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  box-shadow: 0 12px 24px -16px var(--color-scrim);
+}
+.studio-founder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.studio-words {
+  position: relative;
+  width: 100%;
+  padding: 12px;
+}
+.studio-words > .serif {
+  display: block;
+  font-size: 28px;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+.studio-studies {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.studio-study {
+  position: absolute;
+  top: 14%;
+  left: 10%;
+  width: 44%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  transform: rotate(-7deg);
+  box-shadow: 0 16px 32px -16px var(--color-scrim);
+}
+.studio-study + .studio-study {
+  top: 23%;
+  left: 46%;
+  transform: rotate(7deg);
+}
+.studio-study-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 2px;
+  padding: 4px;
+  color: var(--color-text);
+  background: var(--color-canvas);
+}
+.studio-study-caption .serif {
+  font-size: 10px;
+  line-height: 1;
+}
+.studio-studies-fallback {
+  display: block;
+  padding: 12px;
+  font-size: 24px;
+  line-height: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .studio-founder img,
+  .studio-study {
+    transition: transform var(--duration-reveal) var(--ease-editorial);
+  }
+  .page-directory-item > a:is(:hover, :focus-visible) .studio-founder img {
+    transform: scale(1.035);
+  }
+  .page-directory-item > a:is(:hover, :focus-visible) .studio-study {
+    transform: translateY(-6px) rotate(-4deg);
+  }
+  .page-directory-item > a:is(:hover, :focus-visible) .studio-study + .studio-study {
+    transform: translateY(-6px) rotate(4deg);
+  }
+}
+@media (min-width: 768px) {
+  .studio-founder-pair {
+    max-width: 200px;
+    padding: 12px;
+  }
+  .studio-words > .serif {
+    font-size: 40px;
+  }
+  .studio-study {
+    width: 70px;
+    left: calc(50% - 65px);
+  }
+  .studio-study + .studio-study {
+    left: calc(50% - 8px);
+  }
+}
+@media (min-width: 1100px) {
+  .studio-founder-pair {
+    padding: 12px;
+    gap: 6px;
+  }
+  .studio-words {
+    padding: 16px;
+  }
+  .studio-words > .serif {
+    font-size: 36px;
+  }
+  .studio-study {
+    width: 52px;
+    left: 12px;
+  }
+  .studio-study + .studio-study {
+    left: 55px;
+  }
+}

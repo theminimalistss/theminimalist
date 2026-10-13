@@ -1,5 +1,21 @@
 # Architecture decisions
 
+## 2026-10-13 — Shared overview presentation and static hosting
+
+Decision: Share the Studio overview/directory and forest editorial section with
+Services, Products, and Contact. Use native browser wind animation for the lotus;
+only interaction and settling use a bounded RAF loop. Deploy Vite static output
+with Hostinger's frontend preset and Node 24.
+
+Reason: The user requested consistent overview layouts and reliable deployed
+effects. Static presentation needs no new data layer or Node runtime. Optional
+media must not keep the studio behind the loader.
+
+Impact: Existing route destinations and contact data remain authoritative. No new
+runtime dependency/media. WebGL buffers are capped, prefetch follows entry, and
+build output has a route/asset audit. Live Hostinger routing/cache still require
+verification after deployment. Browser test builds/reports use per-port isolation.
+
 ## 2026-10-06 — Native spatial animation
 
 Decision: One RAF loop, normalized math, CSS transforms, ResizeObserver.

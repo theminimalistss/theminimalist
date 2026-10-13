@@ -195,29 +195,12 @@
   padding-top: 4px;
 }
 
-.essence-list,
 .service-list {
   display: grid;
   gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-}
-.essence-list li {
-  display: grid;
-  justify-items: center;
-  gap: 16px;
-  padding: 28px 12px;
-  text-align: center;
-  font-family: var(--font-serif);
-  font-size: 20px;
-  line-height: 1.25;
-  border-bottom: var(--border);
-}
-.essence-list svg {
-  width: 30px;
-  height: 30px;
-  color: var(--color-brand);
 }
 .service-list li {
   padding: 24px 0;
@@ -322,24 +305,9 @@
   .link-cards {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
-  .essence-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .service-list {
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
-  }
-}
-
-@media (min-width: 1100px) {
-  .essence-list {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .essence-list li {
-    border-bottom: 0;
-  }
-  .essence-list li + li {
-    border-left: var(--border);
   }
 }
 

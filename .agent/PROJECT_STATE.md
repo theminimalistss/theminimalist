@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.18.1
+VERSION: 0.21.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.18.1 architecture and performance pass.
+CURRENT TASK: 0.21.0 shared overview layouts, lotus ornament, and Hostinger build readiness completed; user authorized commit and push to main.
 
 ## Completed
 
@@ -47,13 +47,38 @@ CURRENT TASK: Review 0.18.1 architecture and performance pass.
   synchronized founder crossfades, pointer-driven portrait depth, direct selection,
   and pause control. Responsive
   local media, reduced-motion presentation, and hidden/offscreen suspension.
+- 0.19.0: Testimonials Spatial and Gallery views; frames and the intro glide
+  between the falling field and a scrollable grid; gallery hover focus and video
+  playback; a fresh, evenly spaced field on each visit.
+- 0.20.0: Studio overview with a forest ethos panel, editorial point of view, numbered principles,
+  and visual portals to Founders, Testimonials, and Works in the opening screen.
+  The SVG sprig has wind, hover doodling, and tap response with motion safeguards.
+- 0.21.0: Services, Products, and Contact reuse the Studio overview/directory and
+  forest editorial section, with existing destinations and shared contact data.
+  The ornament is a layered lotus with native wind animation and an interaction-only
+  spring loop. Optional audio/video no longer block entry; WebGL buffers are bounded
+  and route prefetch is deferred/sequential. Node 24 and a static Hostinger build
+  audit are documented. Browser builds/reports are isolated per test port.
 
 ## Latest verification — 2026-10-13
 
-- `npm run check`: passed, including 120 unit tests, production build, version
+- `npm run check`: passed, including 123 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 130 passed, 14 configured skips across desktop Chromium,
-  desktop WebKit, and mobile WebKit. Firefox remains a CI check.
+- Node 24.21.0: `build:hostinger` passed; `deploy:check` verified 17 route pages,
+  the 404 fallback, and 126 entry asset references. Local media totals 10.58 MiB.
+- Full isolated production browser run: 144 passed, 14 skipped, one far-frame
+  Testimonials failure. Corrected that test's covered/moving frame selection;
+  focused follow-up found and fixed Safari click interception and mobile tap
+  highlight cleanup. The interception fix is limited to Spatial view.
+- Final overview/flower/startup checks: 12 passed across Chromium and
+  desktop/mobile WebKit. Final Testimonials regression: 16 passed, 2 skipped
+  (mobile hover and no unobscured far frame in one random desktop arrangement).
+  Gallery transitions, accessibility, video playback, and reduced motion pass.
+  The far-frame click also passed in Chromium and WebKit in the focused fix run.
+  A final WebKit repeat verified three more far-frame clicks without failures/skips.
+- Reviewed four overview pages at 320, 390, 768, and 1440 px; all destinations
+  are visible in the opening layout, no horizontal overflow, and the lotus clears
+  the statement/footer. Firefox remains a CI check.
 
 ## Known issues / limits
 
@@ -69,6 +94,8 @@ CURRENT TASK: Review 0.18.1 architecture and performance pass.
 - “The full intro plays once per session” can fail in WebKit under parallel load
   (reload timing). It predates 0.10.0; consider timing with a single worker.
 - No production domain, commissioned portfolio content, or inquiry submission backend yet.
+- Hostinger live routing/cache/headers and real-device GPU performance require
+  post-deployment verification; no Hostinger deployment was performed.
 - TypeScript stays at 6.0.3 pending parser support for 7.x.
 
 ## Important files

@@ -108,16 +108,17 @@ centered so square crops keep it), app icons, and the web manifest.
 
 ## Loader and menu morph
 
-`usePageReady` waits for the window load event, fonts, and a minimum intro (with
-a maximum cap). `PageLoader` keeps the app shell `inert` until then.
+`usePageLoad` waits for DOM readiness, fonts, visible images, and a minimum intro
+(with an 8 s readiness cap). `PageLoader` keeps the app shell `inert` until then.
 `useLoaderScene` paints the lotus mark and “EST. 2020” into a texture
 (`lotusArtwork.ts`) and renders `src/shaders/loader.ts`: a bloom from the
 flower's base, a shimmer while waiting, then an organic opening onto the hero. A
 boot splash in `index.html` matches the loader before JavaScript runs.
 
-`usePageLoad` tracks the window load, fonts, every sound file (when sound is
-on), and the images and playing videos on screen, reports progress to the
-loader's indicator, and resolves after the minimum intro (12 s cap).
+Optional sound downloads and video buffering do not gate entry. Sound retains
+its existing idle prefetch; video can start from its local poster. Finite loader
+motion uses wall-clock time so slow frames do not prolong it. Fullscreen loader
+and menu buffers are capped at 1.5× DPR and a 2048 px edge.
 
 `useIntro` asks `visit.service` whether this session has already seen the intro
 (`visit.repository` wraps `sessionStorage` and tolerates blocked storage); the
@@ -173,6 +174,44 @@ spring that rotates the mark about its base and briefly sets the lines wobbling.
 The loop stops at rest, and reduced motion skips all of it. Tuning lives in
 `LOGO_DOODLE`.
 
+## Shared overview layouts
+
+`AboutPage` pairs the existing intro with `StudioPortals` in `PageOverview`,
+followed by `StudioApproach`. `PageDirectory`, `EditorialSection`, and
+`EditorialList` also compose Services, Products, and Contact. Their directory
+items reuse navigation constants; Contact retains its shared JSON and social
+disclosure. Longer overview titles use a smaller responsive scale. Desktop uses a directory beside the intro;
+phones/tablets put all three links in a row directly beneath it.
+The overview keeps presentation copy in the UI, with no new domain rules.
+Founder previews reuse shared constants; Works artwork follows the existing
+`useHeroWorks` → service → repository pipeline and uses `WorkImage` for lazy,
+responsive AVIF/WebP posters. The current collection is described as concept
+studies in the destination link's description.
+Loading/error states retain typographic artwork and the working destination link.
+Testimonials artwork is typography, with no invented quotes or ratings.
+
+Portals are native `PageLink` anchors with heading/description associations,
+matching hover/focus emphasis, and the existing scroll reveal. Shared layout CSS
+loads through the composed sections; `studio.css` holds the About artwork only.
+Directory artwork uses native vectors/type or responsive local posters; it needs
+no animation loop or playback.
+
+The decorative `StudioSprig` is a lotus with five petals, a curved stem, two leaves,
+and subtle veins in native SVG groups. `useStudioSprig` owns native WAAPI wind,
+spring response, pointer input, and a small SVG displacement filter active during
+doodling. Wind pauses offscreen; the 30 fps spring loop only runs for interaction
+and settling. Before entry, while hidden, or under reduced motion, all motion
+stops. There are no per-frame React updates; cleanup cancels frames/native
+animations and resets poses. No idle displacement filter runs.
+`STUDIO_SPRIG` holds the tuning. No extra media or dependency is introduced.
+
+The Hostinger build uses Node 24 in `.nvmrc` and CI, and emits static output in
+`dist`. `scripts/audit-build.mjs` verifies generated route HTML, entry assets,
+and absence of public source maps/environment files. See `deployment.md` for
+frontend build settings and checks that require the deployed domain. Playwright
+uses a per-port build/report directory (`E2E_PORT`) so its production snapshot
+is not affected by a separate build or browser run.
+
 ## Founders
 
 `FounderShowcase` places a flat portrait in front of a scrolling full name, with
@@ -211,20 +250,40 @@ motion retain the static shadow without spatial movement.
 `testimonials.service` (validation, sentence-aware excerpts, `summarizeTestimonials`) →
 `useTestimonials`; `useTestimonialReader` owns the open, close, and step logic for the reading panel.
 `TestimonialRain` renders every testimonial once as a portrait frame in a
-full-screen CSS 3D scene. A `perspective` and a rotated floor grid set the
+full-screen CSS 3D scene, with the faint echoes and the floor in a separate
+scenery layer that keeps its place and fades out when the gallery takes over. A `perspective` and a rotated floor grid set the
 vanishing point. `placeFloats` gives each frame a depth band (size and haze), and
-`placeEchoes` adds a slower, faint far layer. `useTestimonialRain` moves the main
+`placeEchoes` adds a slower, faint far layer; both, and `spreadFrames`, take a
+seed chosen once per visit, so the field differs each time, and `spreadFrames`
+keeps the best of several passes. `useTestimonialRain` moves the main
 frames at one shared screen speed over a common loop, so `spreadFrames`
 (best-candidate spacing over the full width and the wrapping loop) keeps them
 apart. `toWorld` converts screen positions into 3D. Only frames take pointer
 events; the scene layers pass them through, so frames at every depth are
-interactive. Hover or focus eases playback to zero, and `focusPose` lifts the
-frame in front of everything, toward the centre and fully on screen. Videos play
+interactive. Hover or keyboard focus (bound by the shared `frameFocus`) eases
+playback to zero, and `focusPose` lifts the frame in front of everything, toward
+the centre and fully on screen; in the gallery, `useTestimonialGalleryFocus`
+applies the flat `flatFocusPose` the same way. During spatial focus, dimmed frames stop
+receiving pointer events, so Safari's depth stacking cannot intercept a click
+on the selected frame. Leaving focus restores normal pointer discovery.
+While a testimonial is open its
+frame is hidden, so the morph is the only moving copy. The entrance and the
+resize glide animate `translate`, so they compose with the focus `transform`;
+view-switch flights are tagged and briefly ignore hover, so nothing snaps when
+they end. Videos play
 while they are on screen, checked on a short interval because WebKit misreports
 intersection for 3D-transformed elements. Opening uses the shared `useWorkPreview`
 morph into a `.work-dialog` panel, like Home and Works. `TestimonialBackdrop`
-draws subtle drifting words from the testimonials. Reduced motion shows a still
-grid.
+draws subtle drifting words from the testimonials. `useTestimonialView` switches
+between the spatial field and a scrollable gallery grid: it measures every frame
+and the intro, applies the new layout, then animates each piece from its old box
+to its new one (a staggered FLIP), so frames settle into the grid and rise back
+into the field. The intro's border and background live on a separate surface
+layer that animates its size while the text glides, so the card resizes without
+stretching its type. The field's animations stop in the gallery and rebuild on
+return; in the gallery an IntersectionObserver plays videos while they are on
+screen.
+Reduced motion shows the gallery only.
 
 ## Immersive Works
 

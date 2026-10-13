@@ -6,6 +6,14 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Studio details: `src/constants/founders.json`, `contact.json`, and `social.json`
   feed page content and build-time structured data. Social channels use `primary`
   to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
+- Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
+  `EditorialList` share the Studio layout with Services, Products, and Contact.
+  `StudioPortals` uses unique visual artwork; presentational `StudioApproach` follows. Works posters use
+  `useHeroWorks` → service → repository;
+  portraits reuse shared founder constants. Shared CSS loads through the composed
+  sections; portrait/poster artwork styles load with About. `useStudioSprig` owns
+  visible-only native wind animation and an interaction-only spring/doodle loop
+  for the lotus ornament. Motion stops offscreen, hidden, or under reduced motion.
 - Founders: shared studio constants; `useFounderShowcase` owns timed selection,
   the WAAPI name marquee, and pause/visibility/reduced-motion lifecycle.
   `useFounderDepth` coalesces pointer input for portrait perspective and lift.
@@ -25,7 +33,13 @@ UI → hooks → services → repositories. Static presentation is the exception
   Menu GL is prepared when idle; full intro once per session (visit service).
 - Menu hover: beige panel + 4:5 preview + `usePointerCue` eyebrow tag (fine pointers),
   styled with the site's radius, colour, and timing tokens.
-- Pages: `src/router/pageModules.ts` lazy-loads and idle-prefetches page chunks.
+- Pages: `src/router/pageModules.ts` lazy-loads and sequentially idle-prefetches page
+  chunks after entry, skipping reported data-saving/2G connections.
+- Startup: readiness waits for DOM/fonts/visible images; optional audio/video does
+  not gate entry. Finite loader motion uses wall-clock time. Fullscreen WebGL caps
+  DPR at 1.5 and the long edge at 2048 px (Works has its own 1800 px cap).
+- Hosting: static Vite output in `dist`, Node 24, `build:hostinger`/`deploy:check`;
+  per-route HTML and assets are verified without a persistent server.
 - Transitions: data router + `PageLink` (view transitions), keyed route fade,
   `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
 - Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.

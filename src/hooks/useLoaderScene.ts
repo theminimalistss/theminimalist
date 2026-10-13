@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { COMPACT_QUERY, LOADER, MOTION } from '@/constants/motion';
+import { COMPACT_QUERY, LOADER } from '@/constants/motion';
 import { LOADER_SHADER } from '@/shaders/loader';
 import { clamp01 } from '@/utils/easing';
 import { LOTUS_FONT, paintLotusArtwork, type LotusArtwork } from '@/utils/lotusArtwork';
@@ -108,12 +108,9 @@ export function useLoaderScene({ ready, animated, bloomDuration, onExited }: Opt
       return exit >= 1;
     };
 
-    let lastTime = 0;
-    let clock = 0;
+    const started = performance.now();
     const tick = (time: number) => {
-      clock += lastTime ? Math.min(time - lastTime, MOTION.maxFrameDelta) : 0;
-      lastTime = time;
-      if (render(clock)) {
+      if (render(time - started)) {
         finished = true;
         exitedRef.current();
         return;

@@ -6,18 +6,27 @@ import { TestimonialMediaView } from './TestimonialMediaView';
 type Props = {
   testimonial: Testimonial | null;
   position: number;
+  direction: 1 | -1 | 0;
   total: number;
   onClose: () => void;
   onStep: (direction: 1 | -1) => void;
 };
 
-export function TestimonialDialog({ testimonial, position, total, onClose, onStep }: Props) {
+export function TestimonialDialog({
+  testimonial,
+  position,
+  direction,
+  total,
+  onClose,
+  onStep,
+}: Props) {
   const ref = useDialog(testimonial !== null);
   return (
     <dialog
       ref={ref}
       className="work-dialog testimonial-dialog"
       aria-labelledby="testimonial-dialog-client"
+      data-step={direction > 0 ? 'next' : direction < 0 ? 'previous' : undefined}
       onCancel={(event) => {
         event.preventDefault();
         onClose();

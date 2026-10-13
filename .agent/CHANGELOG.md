@@ -5,6 +5,178 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.21.0] — 2026-10-13
+
+### Changed
+
+- Services, Products, and Contact share Studio's opening directory and forest
+  editorial layout, with the existing routes, content hierarchy, and palette.
+- Replaced the simple sprig with a layered lotus, curved stem, and veined leaves.
+  Native wind animation pauses offscreen; hover/tap gives a springy doodle response.
+- Entry no longer waits for optional audio/video. The loader uses wall-clock
+  timing; fullscreen WebGL caps its buffer; sequential prefetch follows entry
+  and skips reported data-saving/2G connections.
+- Added Node 24 configuration, `build:hostinger`, a generated-route/asset audit,
+  and Hostinger static frontend deployment instructions.
+- Browser tests build and report in per-port directories to avoid shared artifacts.
+
+### Fixed
+
+- A dimmed testimonial no longer intercepts clicks on the focused frame in Safari.
+- Touch release keeps the flower's doodle highlight until its tap response settles.
+
+### AI session
+
+Changed: shared overview/editorial sections, three overview pages, native lotus
+artwork/motion, loader and prefetch lifecycles, WebGL budgets, deployment output
+audit, browser checks, and version/handoff documentation.
+The far-frame browser check waits for entrance/pause settling and selects an
+unobscured frame instead of sampling a covered or moving bounding box.
+
+Reason: Continue the user's flower/Hostinger work and apply the Studio layout
+consistently to Services, Products, and Contact without new runtime dependencies.
+
+Verification: `npm run check` passed (123 unit tests, strict types, lint, format,
+production build, version consistency, and media audit). `build:hostinger` passed
+under Node 24.21.0; the output audit verified 17 routes plus 404 and 126 entry
+asset references. Reviewed desktop/tablet/phone layouts down to 320 px with no
+overflow or flower/text overlap.
+
+The isolated full browser suite produced 144 passes, 14 skips, and one far-frame
+test failure. Its frame selection was corrected; follow-up checks also found and
+fixed Safari click interception and touch-highlight cleanup. Final overview,
+flower, and startup checks passed all 12 cases across Chromium and desktop/mobile
+WebKit. Final Testimonials regression passed 16 with 2 skips (mobile hover and an
+arrangement with no unobscured far frame); the far-frame click passed on both
+desktop browsers in the focused fix run. Local checks do not constitute a live
+Hostinger deployment. A final WebKit far-frame repeat passed all three runs.
+User authorized updating the records/version, then committing
+and pushing the accumulated changes to `main`; no hosting publication requested.
+
+## [0.20.0] — 2026-10-13
+
+### Changed
+
+- Studio destinations appear in the opening screen: a compact visual directory
+  beside the intro on desktop, and one row of three visual links below it on
+  phones/tablets. The heading, font pairing, and intro copy retain their treatment.
+- Refined the lower overview with a forest-green studio ethos panel, an editorial
+  point of view, a two-column Clarity/Warmth/Character/Care layout, and a Services link.
+- Three visual portals lead to Founders, Testimonials, and Works. The founder
+  preview uses both real portraits at equal size; Testimonials uses typographic
+  artwork; Works previews local posters and describes them as concept studies.
+- Responsive layouts, subtle matching hover/focus emphasis, and existing scroll
+  reveal and route transitions. Portal media is lazy-loaded and responsive;
+  video previews use posters without playback.
+- The ethos panel's sprig sways gently in the wind and reacts to mouse movement
+  with a springy bend, leaf flutter, and a lightly redrawn stroke. Clicking or
+  tapping nudges it. Motion pauses offscreen/when hidden and respects reduced motion.
+
+### AI session
+
+Changed: `AboutPage`, `StudioApproach`, `StudioPortals`, route-specific
+`studio.css`, `StudioSprig`/`useStudioSprig`, unused essence styles, navigation
+checks, and version/handoff records.
+
+Reason: The user approved the Studio opening and requested a stronger layout for
+the remaining overview, making it a portal to Founders, Testimonials, and Works.
+The user then requested immediate visibility, so all three destinations moved
+into the first screen, ahead of the studio narrative.
+The point-of-view section was then tightened around a typographic ethos panel
+and numbered principles in response to the user's layout review.
+
+Verification: `npm run check` passed (122 unit tests, production build, formatting,
+lint, type checking, version consistency, and local media audit). Isolated Studio
+browser checks passed: 9 across Chromium and desktop/mobile WebKit, covering
+first-screen visibility and navigation, wind/hover motion, offscreen suspension,
+reduced motion, and accessibility. Reviewed desktop/tablet/phone layouts, including
+320 px, with no horizontal overflow, plus the hover frame.
+
+The full suite was attempted (118 passed, 14 skipped, 18 failed), but concurrent
+browser runs shared reports/server files and caused trace-file collisions and
+timeouts. That run is inconclusive; Studio checks were repeated with isolated
+outputs and one worker against the development server.
+
+## [0.19.0] — 2026-10-13
+
+### Added
+
+- Testimonials Spatial and Gallery views, like Works.
+  - Gallery lays all 13 frames out in a scrollable grid (two columns on phones),
+    with the intro as a full-width bar above it; every frame still opens the
+    reading panel.
+  - Switching flies each frame from where it is to its new place, in a short
+    stagger, in both directions; the floor, echoes, and backdrop fade back in on
+    return to Spatial.
+  - The intro card resizes smoothly between its corner and full-width forms while
+    each title, stat, and control glides into place from the first frame; the
+    re-wrapped paragraph and the stats rule fade instead of snapping.
+  - Hovering a gallery frame expands it toward the centre and dims the rest, like
+    the spatial field.
+  - Video frames play in the gallery while on screen and pause when scrolled away.
+  - Pause shows only in Spatial; reduced motion keeps the gallery alone.
+- The spatial field is laid out afresh on every visit (new positions, depths, and
+  depth bands), still evenly spaced: the best of several spacing passes is kept.
+- Motion polish:
+  - Frames rise in from depth as the page appears.
+  - The far frames, floor, backdrop words, and glow fade out in place when
+    switching to the gallery instead of vanishing; the Pause control fades out
+    and back in.
+  - Frames that sat under the header's fade start faint and brighten as they
+    fly into the gallery.
+  - Switching back from a scrolled gallery flies each frame from where it was
+    on screen.
+  - A frame's depth haze eases on hover and on view switches (a registered
+    `--fade`) instead of snapping.
+  - Resizing keeps the field's arrangement and glides frames to their new places.
+  - Previous and Next slide the reading panel's text in from the matching side
+    and fade the new image in.
+
+### Fixed
+
+- Opening a testimonial now hides its frame while the panel is open, so the morph
+  no longer shows the frame shrinking back underneath.
+- On touch, a closed testimonial no longer stays expanded; only keyboard focus
+  expands a frame.
+- A hovered frame no longer drops and re-grabs focus when it lifts out from under
+  a still pointer.
+- Hovering a frame mid-switch no longer snaps it to its focus pose when the flight
+  ends; frames hovered during the entrance or a resize glide focus at once.
+- Far echo frames lift above the main field when hovered.
+
+### AI session
+
+Changed: new `useTestimonialView`, `useTestimonialGalleryFocus`, and the shared
+`frameFocus` binding (moved out of `useTestimonialRain`); `TESTIMONIAL_VIEW`
+timing and `TESTIMONIAL_RAIN.layouts`; `randomSeed`, `flatFocusPose`, and
+`spreadScore` in `testimonialField`; `useTestimonialRain` (layout effect, seeded
+layout, shared phase across rebuilds); `useTestimonialReader` (lifted frame);
+`TestimonialsPage` (intro surface layer, persistent Pause); `TestimonialRain`
+(separate scenery layer for echoes and floor); `TestimonialDialog` (step
+direction); `testimonials.css`; tests; docs.
+
+Reason: The user asked for a Spatial/Gallery switch on Testimonials, with frames
+moving smoothly into place each way, an animated intro resize, playing videos
+in the gallery, the spatial hover in the gallery, a random but uncrowded field on
+each visit, fixes for the intro snap, the gallery open morph, and frames
+staying expanded on phones, then a polish pass for snaps and missing motion.
+
+Verification: lint, typecheck, 122 unit tests (spacing above 0.9 across 120
+seeded tablet and desktop layouts), build, version, and media audit pass; the
+format check flags only in-progress Studio files outside this work.
+`npm run test:e2e`: 131 passed, 14 configured skips; the Home loader and Works
+sculpture tests failed under parallel load and passed when rerun alone. Frame by
+frame, the intro pieces start from their old places with no snap; no frame
+overlap in 24 samples across 12 reloads in Chromium and WebKit; hover held in 16
+of 16 runs; every gallery frame opens with a view transition; phone close
+leaves no frame expanded. Polish pass: layers fade out and back in (opacity
+sampled mid-switch), no horizontal overflow, the first frame stays where it was
+seen when leaving a scrolled gallery, haze eases (0.86 at 200 ms), resize glides
+13 frames and restores the same arrangement, hovered echoes sit on top, and step
+animations run both ways; Testimonials browser tests pass on every project, and
+the full suite gave 137 passed, 15 skips, and one load-timing failure (footer
+sitemap, WebKit) that passed alone.
+
 ## [0.18.1] — 2026-10-13
 
 ### Changed

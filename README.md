@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.18.1 · Immersive studio portfolio**
+**Design studio · v0.21.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -45,7 +45,7 @@ Founders, and Contact hold clearly marked placeholder content; inquiry forms are
 
 ## Run locally
 
-Requires Node.js 22.12+ and npm. Node 22 is specified in `.nvmrc`.
+Requires Node.js 22.12+ and npm. Node 24 is specified in `.nvmrc` for Hostinger parity.
 
 ```bash
 npm ci
@@ -94,6 +94,8 @@ e2e/                 Browser acceptance tests
 | ----------------------------------------- | ------------------------------------------------------------ |
 | `npm run dev`                             | Local development server                                     |
 | `npm run build`                           | Strict types and production bundle                           |
+| `npm run build:hostinger`                 | Production build and deployment output audit                 |
+| `npm run deploy:check`                    | Verify built route HTML and local asset references           |
 | `npm run preview`                         | Serve the production bundle                                  |
 | `npm run check`                           | Format, lint, types, tests, build, version, and media checks |
 | `npm run lint` / `npm run typecheck`      | Lint/architecture and strict type checks                     |

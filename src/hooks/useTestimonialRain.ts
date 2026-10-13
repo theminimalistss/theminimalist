@@ -1,14 +1,42 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { TESTIMONIAL_RAIN } from '@/constants/motion';
+import { useAppEntered } from '@/hooks/useAppEntered';
+import { bindFrameFocus, headerSafe } from '@/hooks/frameFocus';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
-import { focusPose, spreadFrames, toWorld } from '@/utils/testimonialField';
+import { focusPose, randomSeed, spreadFrames, toWorld, type Size } from '@/utils/testimonialField';
 
 type Options = { enabled: boolean; held: boolean; layout: string };
+
+type Arrangement = { width: number; spots: { x: number; y: number }[] };
+
+const GLIDE = 'testimonial-glide';
+
+const frameOf = (float: HTMLElement) => float.querySelector<HTMLElement>('[data-frame]');
+
+function glide(frames: (HTMLElement | null)[], before: (DOMRect | undefined)[]) {
+  frames.forEach((frame, index) => {
+    const from = before[index];
+    if (!frame || !from || !frame.animate) return;
+    const to = frame.getBoundingClientRect();
+    const scale = to.width / (frame.offsetWidth || to.width) || 1;
+    const x = (from.left - to.left) / scale;
+    const y = (from.top - to.top) / scale;
+    if (Math.hypot(x, y) < 1) return;
+    frame.animate([{ translate: `${x}px ${y}px` }, { translate: '0 0' }], {
+      duration: TESTIMONIAL_RAIN.glide,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      id: GLIDE,
+    });
+  });
+}
 
 export function useTestimonialRain({ enabled, held, layout }: Options) {
   const stageRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
+  const [seed] = useState(randomSeed);
   const visible = usePageVisibility();
+  const entered = useAppEntered();
+  const arrived = useRef(false);
   const settings = useRef({ paused, held, visible });
   const wakeRef = useRef(() => {});
 
@@ -17,23 +45,47 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
     wakeRef.current();
   }, [paused, held, visible]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage || !enabled) return;
-    const floats = Array.from(stage.querySelectorAll<HTMLElement>('[data-float]'));
+    const scope = stage.parentElement ?? stage;
+    const floats = Array.from(scope.querySelectorAll<HTMLElement>('[data-float]'));
+    const frames = floats.map(frameOf);
     let animations: Animation[] = [];
     let rate = 1;
     let frame = 0;
     let last = 0;
     let focused: HTMLElement | null = null;
     let inView = true;
-    let releaseTimer = 0;
+    const phases: number[] = [];
+    const main = floats.filter((float) => !float.closest('.testimonial-echoes'));
+    const lead = main[0] ? floats.indexOf(main[0]) : -1;
+    let arrangement: Arrangement | null = null;
+    let size = { width: 0, height: 0 };
+
+    const place = (sizes: Size[], width: number, loop: number) => {
+      if (!arrangement || Math.abs(width / arrangement.width - 1) > TESTIMONIAL_RAIN.relayout) {
+        const spots = spreadFrames(sizes, width, loop, seed);
+        arrangement = {
+          width,
+          spots: spots.map((spot) => ({ x: spot.x / width, y: spot.y / loop })),
+        };
+      }
+      return arrangement.spots.map((spot, index) => {
+        const half = (sizes[index]?.width ?? 0) / 2 + TESTIMONIAL_RAIN.edge;
+        const x =
+          half >= width - half ? width / 2 : Math.min(width - half, Math.max(half, spot.x * width));
+        return { x, y: spot.y * loop };
+      });
+    };
 
     const build = () => {
+      size = { width: stage.clientWidth, height: stage.clientHeight };
       const progress = animations.map((animation) => {
         const duration = Number(animation.effect?.getTiming().duration) || 1;
         return ((Number(animation.currentTime) || 0) % duration) / duration;
       });
+      const shift = (progress[lead] ?? 0) - (phases[lead] ?? 0);
       animations.forEach((animation) => animation.cancel());
       const width = stage.clientWidth;
       const height = stage.clientHeight;
@@ -46,11 +98,10 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
         const h = float.offsetHeight || 312;
         return { z, w, h, width: w * scale, height: h * scale };
       };
-      const main = floats.filter((float) => !float.closest('.testimonial-echoes'));
       const mainSizes = main.map(measure);
       const reach = Math.max(0, ...mainSizes.map((size) => size.height)) / 2 + 24;
       const loop = height + reach * 2;
-      const spots = spreadFrames(mainSizes, width, loop);
+      const spots = place(mainSizes, width, loop);
       animations = floats.flatMap((float, index) => {
         if (!float.animate) return [];
         const size = measure(float);
@@ -77,7 +128,8 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
           { duration, iterations: Infinity, easing: 'linear' },
         );
         const phase = spot ? spot.y / loop : Number(float.dataset.offset) % 1;
-        const start = progress[index] ?? phase;
+        const start = spot ? (((phase + shift) % 1) + 1) % 1 : (progress[index] ?? phase);
+        phases[index] = phase;
         animation.currentTime = start * duration;
         animation.playbackRate = rate;
         return [animation];
@@ -112,79 +164,39 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
     };
     wakeRef.current = wake;
 
-    const topSafe = () =>
-      parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) ||
-      96;
-    const pose = (frameElement: HTMLElement) => {
-      const float = frameElement.closest<HTMLElement>('[data-float]');
-      if (!float) return;
-      const box = float.getBoundingClientRect();
-      const area = stage.getBoundingClientRect();
-      const result = focusPose({
-        frame: box,
-        stage: area,
-        size: { width: float.offsetWidth, height: float.offsetHeight },
-        z: Number(float.dataset.z) || 0,
-        topSafe: Math.max(0, topSafe() - area.top),
-      });
-      frameElement.style.setProperty(
-        '--focus',
-        `translate3d(${result.x.toFixed(1)}px, ${result.y.toFixed(1)}px, ${result.z.toFixed(1)}px) scale(${result.scale.toFixed(4)})`,
-      );
-    };
-    const setFocus = (next: HTMLElement | null) => {
-      window.clearTimeout(releaseTimer);
-      if (next === focused) return;
-      focused?.style.removeProperty('--focus');
-      focused?.removeAttribute('data-focused');
-      focused = next;
-      if (next) pose(next);
-      next?.setAttribute('data-focused', '');
-      const video = next?.querySelector('video');
-      if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        video.muted = true;
-        void video.play().catch(() => undefined);
-      }
-      stage.toggleAttribute('data-focus', !!next);
-      stage.parentElement?.toggleAttribute('data-focus', !!next);
-      wake();
-    };
-    const frameOf = (target: EventTarget | null) =>
-      target instanceof Element ? target.closest<HTMLElement>('[data-frame]') : null;
-    const inside = (element: HTMLElement, event: PointerEvent) => {
-      const box = element.getBoundingClientRect();
-      return (
-        event.clientX >= box.left &&
-        event.clientX <= box.right &&
-        event.clientY >= box.top &&
-        event.clientY <= box.bottom
-      );
-    };
-    const over = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') return;
-      const next = frameOf(event.target);
-      const home = focused?.closest<HTMLElement>('[data-float]');
-      const held = focused && (inside(focused, event) || (home && inside(home, event)));
-      if (focused && next !== focused && held) {
-        window.clearTimeout(releaseTimer);
-        return;
-      }
-      if (next) setFocus(next);
-      else if (focused) {
-        window.clearTimeout(releaseTimer);
-        releaseTimer = window.setTimeout(() => setFocus(null), TESTIMONIAL_RAIN.release);
-      }
-    };
-    const leave = () => {
-      releaseTimer = window.setTimeout(() => setFocus(null), TESTIMONIAL_RAIN.release);
-    };
-    const focusIn = (event: FocusEvent) => setFocus(frameOf(event.target));
-    const focusOut = (event: FocusEvent) => {
-      if (!frameOf(event.relatedTarget)) setFocus(null);
-    };
+    const focus = bindFrameFocus(stage, {
+      area: scope,
+      pose: (frameElement) => {
+        const float = frameElement.closest<HTMLElement>('[data-float]');
+        if (!float) return null;
+        const area = stage.getBoundingClientRect();
+        const result = focusPose({
+          frame: float.getBoundingClientRect(),
+          stage: area,
+          size: { width: float.offsetWidth, height: float.offsetHeight },
+          z: Number(float.dataset.z) || 0,
+          topSafe: Math.max(0, headerSafe() - area.top),
+        });
+        return `translate3d(${result.x.toFixed(1)}px, ${result.y.toFixed(1)}px, ${result.z.toFixed(1)}px) scale(${result.scale.toFixed(4)})`;
+      },
+      onChange: (next) => {
+        focused = next;
+        wake();
+      },
+    });
 
     build();
-    const resize = new ResizeObserver(() => build());
+    const resize = new ResizeObserver(() => {
+      if (stage.clientWidth === size.width && stage.clientHeight === size.height) return;
+      const before = frames.map((frame) => frame?.getBoundingClientRect());
+      frames.forEach((frame) =>
+        frame?.getAnimations().forEach((animation) => {
+          if (animation.id === GLIDE) animation.cancel();
+        }),
+      );
+      build();
+      glide(frames, before);
+    });
     resize.observe(stage);
     const observer = new IntersectionObserver(([entry]) => {
       inView = !!entry?.isIntersecting;
@@ -213,31 +225,42 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
       ? window.setInterval(playVisible, TESTIMONIAL_RAIN.videoCheck)
       : 0;
     playVisible();
-    stage.addEventListener('pointerover', over);
-    stage.addEventListener('pointerleave', leave);
-    stage.addEventListener('focusin', focusIn);
-    stage.addEventListener('focusout', focusOut);
     wake();
     return () => {
       cancelAnimationFrame(frame);
-      window.clearTimeout(releaseTimer);
+      focus.unbind();
       resize.disconnect();
       observer.disconnect();
       window.clearInterval(playback);
       videos.forEach((video) => video.pause());
-      stage.removeEventListener('pointerover', over);
-      stage.removeEventListener('pointerleave', leave);
-      stage.removeEventListener('focusin', focusIn);
-      stage.removeEventListener('focusout', focusOut);
-      focused?.style.removeProperty('--focus');
-      focused?.removeAttribute('data-focused');
-      stage.removeAttribute('data-focus');
-      stage.parentElement?.removeAttribute('data-focus');
       animations.forEach((animation) => animation.cancel());
       wakeRef.current = () => {};
     };
-  }, [enabled, layout]);
+  }, [enabled, layout, seed]);
+
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage || !enabled || !entered || arrived.current) return;
+    arrived.current = true;
+    const scope = stage.parentElement ?? stage;
+    Array.from(scope.querySelectorAll<HTMLElement>('[data-float]'))
+      .sort((a, b) => Number(a.dataset.z) - Number(b.dataset.z))
+      .forEach((float, index) => {
+        frameOf(float)?.animate?.(
+          [
+            { opacity: 0, translate: '0 -48px -240px' },
+            { opacity: 1, translate: '0 0 0' },
+          ],
+          {
+            duration: TESTIMONIAL_RAIN.entrance.duration,
+            delay: index * TESTIMONIAL_RAIN.entrance.stagger,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'backwards',
+          },
+        );
+      });
+  }, [enabled, entered]);
 
   const togglePause = useCallback(() => setPaused((value) => !value), []);
-  return { stageRef, paused, togglePause };
+  return { stageRef, paused, togglePause, seed };
 }
