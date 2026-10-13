@@ -209,16 +209,21 @@ motion retain the static shadow without spatial movement.
 
 `testimonials.repository` (JSON content plus a local stock-media map) →
 `testimonials.service` (validation, sentence-aware excerpts) → `useTestimonials`.
-`TestimonialRain` renders every testimonial once as a frame in a CSS 3D scene. A
-`perspective` and a rotated floor grid set the vanishing point. `placeFloats`
-spreads frames through three depth bands, golden-ratio spaced across the width,
-and `placeEchoes` adds a faint far layer. `useTestimonialRain` animates each frame
-top to bottom with WAAPI. `toWorld` converts the screen-space spread into 3D
-positions, so deeper frames are smaller and slower. Hover, focus, the dialog, the
-Pause control, hidden tabs, and offscreen all ease every animation's playback
-rate to zero. The focused frame lifts in Z, the rest dim, and its video plays.
-`useTestimonialDetail` morphs the frame into `TestimonialDialog` with a view
-transition. Reduced motion shows a still grid.
+`TestimonialRain` renders every testimonial once as a portrait frame in a
+full-screen CSS 3D scene. A `perspective` and a rotated floor grid set the
+vanishing point. `placeFloats` gives each frame a depth band (size and haze), and
+`placeEchoes` adds a slower, faint far layer. `useTestimonialRain` moves the main
+frames at one shared screen speed over a common loop, so `spreadFrames`
+(best-candidate spacing over the full width and the wrapping loop) keeps them
+apart. `toWorld` converts screen positions into 3D. Only frames take pointer
+events; the scene layers pass them through, so frames at every depth are
+interactive. Hover or focus eases playback to zero, and `focusPose` lifts the
+frame in front of everything, toward the centre and fully on screen. Videos play
+while they are on screen, checked on a short interval because WebKit misreports
+intersection for 3D-transformed elements. Opening uses the shared `useWorkPreview`
+morph into a `.work-dialog` panel, like Home and Works. `TestimonialBackdrop`
+draws subtle drifting words from the testimonials. Reduced motion shows a still
+grid.
 
 ## Immersive Works
 

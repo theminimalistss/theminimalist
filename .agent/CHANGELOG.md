@@ -5,6 +5,86 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.18.0] — 2026-10-13
+
+### Added
+
+- Services section in the header, menu, footer, and sitemap. The overview
+  (`/services`) links to Software development (`/services/software`), Website
+  development (`/services/websites`), and Branding identity
+  (`/services/branding`). Each service page has breadcrumbs and tabs, a lead,
+  quote and appointment calls to action, what's included, the shared four-step
+  process (Listen, Shape, Build, Launch), and links to Works and Testimonials.
+- Share metadata and images for the four new pages. The Testimonials share
+  image is regenerated to match its current headline.
+- The Services menu preview is a licensed Pexels flat lay (laptop, journals, and
+  stationery) for software, websites, and branding at a glance. It is graded warm
+  and low in saturation to match the other menu photos. The media script gains a
+  per-image crop `position` and an optional `warm` grade.
+
+### AI session
+
+Changed: routes, navigation (`SERVICE_PAGES`), router and page modules,
+`ServicesPage`, `ServicePage`, `SERVICE_COPY` and `SERVICE_PROCESS`, the footer,
+the menu preview, page metadata and share images, tests, and docs.
+
+Reason: The user noted the site was missing Services, covering software
+development, website development, and branding identity.
+
+Verification: Screenshots of a service page, the menu, and the header at 900 px.
+Browser tests cover footer navigation to every service and accessibility on the
+overview and Branding pages.
+
+## [0.17.0] — 2026-10-13
+
+### Changed
+
+- Testimonial frames are redesigned as editorial portrait cards in the language
+  of the Home work cards. Stock media fills each card under a soft scrim, with the
+  business and stars on top, a warm serif quotation mark and the excerpt in
+  Inter Tight, and the client's name in serif italic with the number and “Read ↗”
+  along the bottom. Video frames play while they are on screen.
+- The field fills the whole screen and runs under the header, fading out beneath
+  it. The intro sits as a frosted card in the bottom-left corner.
+- Frames share one falling speed and are spread with best-candidate spacing
+  across the full width and the whole loop, so they keep their own space instead
+  of drifting into clumps. Depth still reads through size, haze, the floor grid,
+  and a slower far layer.
+- Hover now pulls a frame forward toward the centre, fully on screen and in front
+  of everything. Other frames dim and the intro steps back; focus holds while the
+  pointer stays on the frame or its original spot.
+- Opening a testimonial uses the same morph and panel layout as the Home and Works
+  previews (shared `useWorkPreview`). The reading panel hides its scrollbar and
+  fades its text at the edges.
+- A subtle backdrop gives the page personality: words from the testimonials
+  (“smooth”, “patient”, “classy”, “100/10”…) drift faintly behind the frames,
+  beside a large warm quotation mark and a soft glow.
+
+### Fixed
+
+- Far frames can be hovered and clicked. A transparent full-size layer at the
+  front of the 3D scene was catching every pointer event.
+- `useWorkPreview` falls back when WebKit stalls a view transition, so previews
+  always open and close on every page.
+
+### AI session
+
+Changed: testimonial frame, media view, rain, dialog, backdrop, page, and
+styles; `useTestimonialRain` (shared loop, `spreadFrames`, `focusPose`,
+on-screen video playback); `useWorkPreview` (generic type, source element,
+`show`, stall fallback); `TESTIMONIAL_RAIN`; tests; and docs.
+`useTestimonialDetail` was removed.
+
+Reason: The user found the frames dry and the focus off-centre, saw empty space
+and clumping, wanted the Home expand effect, the far frames interactive, no
+scrollbar, more personality in the background (kept subtle), and videos that play
+as they fall.
+
+Verification: Screenshots at rest, in focus, mid-morph, and open, and a 9 s
+sample confirming stable spacing. A Chromium and WebKit probe confirmed every
+on-screen video plays. Unit tests cover the spacing and the focus pose; browser
+tests cover far-frame clicks, on-screen focus bounds, and video playback.
+
 ## [0.16.0] — 2026-10-13
 
 ### Added

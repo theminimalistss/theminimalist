@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.16.0 · Immersive studio portfolio**
+**Design studio · v0.18.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -34,6 +34,7 @@ presentation, and WebGL fallbacks keep every study accessible.
 | -------- | ------------------------------------------------------------------------------ |
 | Home     | `/` — the collection in motion (spiral ↔ gallery)                              |
 | Works    | `/works`                                                                       |
+| Services | `/services`, `/services/software`, `/services/websites`, `/services/branding`  |
 | Studio   | `/about`, `/founders`, `/testimonials`                                         |
 | Products | `/products`, `/products/software`, `/products/templates`, `/products/hardware` |
 | Contact  | `/contact`, `/inquiries`, `/inquiries/quote`, `/inquiries/appointment`         |

@@ -16,7 +16,7 @@ export function TestimonialDialog({ testimonial, position, total, onClose, onSte
   return (
     <dialog
       ref={ref}
-      className="testimonial-dialog"
+      className="work-dialog testimonial-dialog"
       aria-labelledby="testimonial-dialog-client"
       onCancel={(event) => {
         event.preventDefault();
@@ -31,24 +31,37 @@ export function TestimonialDialog({ testimonial, position, total, onClose, onSte
       }}
     >
       {testimonial && (
-        <article className="testimonial-dialog-panel" tabIndex={-1}>
+        <div className="work-dialog-inner" tabIndex={-1}>
           <button
-            className="icon-button testimonial-dialog-close"
+            className="icon-button dialog-close"
             aria-label="Close testimonial"
             data-sound="off"
             onClick={onClose}
           >
             <Icon name="close" />
           </button>
-          <div className="testimonial-dialog-visual" aria-hidden="true" key={`m-${testimonial.id}`}>
-            <TestimonialMediaView media={testimonial.media} echo={false} autoPlay />
-            <span className="testimonial-dialog-brand">{testimonial.business}</span>
+          <div className="work-dialog-image testimonial-dialog-media" data-work-part="media">
+            <TestimonialMediaView
+              key={testimonial.id}
+              media={testimonial.media}
+              autoPlay
+              sizes="(max-width: 767px) 100vw, 440px"
+            />
           </div>
-          <div className="testimonial-dialog-body" key={testimonial.id}>
+          <div className="work-dialog-copy testimonial-dialog-copy" key={testimonial.id}>
             <span className="eyebrow">
-              {String(position + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} — Client
-              words
+              <span data-work-part="category">{testimonial.business}</span> ·{' '}
+              {String(position + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
             </span>
+            <h2 id="testimonial-dialog-client">
+              <span className="work-dialog-title" data-work-part="title">
+                {testimonial.client}
+              </span>
+              <span className="serif work-dialog-tagline">
+                {testimonial.role ? `${testimonial.role}, ` : ''}
+                {testimonial.business}
+              </span>
+            </h2>
             {testimonial.headline && (
               <p className="testimonial-dialog-headline">{testimonial.headline}</p>
             )}
@@ -57,32 +70,22 @@ export function TestimonialDialog({ testimonial, position, total, onClose, onSte
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </blockquote>
-            <footer className="testimonial-dialog-client">
-              <span className="testimonial-dialog-mark" aria-hidden="true" />
-              <span>
-                <strong id="testimonial-dialog-client">{testimonial.client}</strong>
-                <span>
-                  {testimonial.role ? `${testimonial.role}, ` : ''}
-                  {testimonial.business}
-                </span>
-              </span>
-              {testimonial.rating && (
-                <span className="testimonial-dialog-rating">
-                  <span aria-hidden="true">{'★'.repeat(Math.round(testimonial.rating))}</span>
-                  <span className="sr-only">Rated</span> {testimonial.rating.toFixed(1)}/5
-                </span>
-              )}
-            </footer>
+            {testimonial.rating && (
+              <p className="testimonial-dialog-rating">
+                <span aria-hidden="true">{'★'.repeat(Math.round(testimonial.rating))}</span>{' '}
+                <span className="sr-only">Rated</span> {testimonial.rating.toFixed(1)}/5
+              </p>
+            )}
+            <nav className="testimonial-dialog-steps" aria-label="More testimonials">
+              <button onClick={() => onStep(-1)} aria-label="Previous testimonial">
+                <span aria-hidden="true">←</span> Previous
+              </button>
+              <button onClick={() => onStep(1)} aria-label="Next testimonial">
+                Next <span aria-hidden="true">→</span>
+              </button>
+            </nav>
           </div>
-          <nav className="testimonial-dialog-steps" aria-label="More testimonials">
-            <button onClick={() => onStep(-1)} aria-label="Previous testimonial">
-              <span aria-hidden="true">←</span> Previous
-            </button>
-            <button onClick={() => onStep(1)} aria-label="Next testimonial">
-              Next <span aria-hidden="true">→</span>
-            </button>
-          </nav>
-        </article>
+        </div>
       )}
     </dialog>
   );

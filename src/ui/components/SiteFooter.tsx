@@ -1,9 +1,10 @@
-import { INQUIRY_PAGES, PRODUCT_PAGES, STUDIO_PAGES } from '@/router/navigation';
+import { INQUIRY_PAGES, PRODUCT_PAGES, SERVICE_PAGES, STUDIO_PAGES } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
 import { LotusMark } from '@/ui/components/LotusMark';
 import { PageLink } from '@/ui/components/PageLink';
 
 const COLUMNS = [
+  { title: 'Services', links: [{ label: 'All services', to: ROUTES.services }, ...SERVICE_PAGES] },
   { title: 'Studio', links: STUDIO_PAGES },
   {
     title: 'Work',

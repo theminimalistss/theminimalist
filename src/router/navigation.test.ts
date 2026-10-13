@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { isNavGroupActive, PRIMARY_NAVIGATION } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
 
-const [works, studio, products, contact] = PRIMARY_NAVIGATION;
+const [works, services, studio, products, contact] = PRIMARY_NAVIGATION;
 
 describe('site navigation', () => {
   it('reaches every route except home from the primary groups', () => {
@@ -14,6 +14,7 @@ describe('site navigation', () => {
   });
 
   it('marks a group active for its own pages and their descendants only', () => {
+    expect(services && isNavGroupActive(services, ROUTES.branding)).toBe(true);
     expect(studio && isNavGroupActive(studio, ROUTES.founders)).toBe(true);
     expect(products && isNavGroupActive(products, ROUTES.hardware)).toBe(true);
     expect(contact && isNavGroupActive(contact, ROUTES.quote)).toBe(true);

@@ -6,6 +6,7 @@ import type { Work } from '@/types/work';
 type Part = [element: HTMLElement, name: string];
 
 const TEXT_PARTS = ['title', 'tagline', 'category'];
+const STALL = 400;
 
 function collectParts(root: HTMLElement | null, media: HTMLElement | null): Part[] {
   if (!root) return [];
@@ -18,11 +19,15 @@ function collectParts(root: HTMLElement | null, media: HTMLElement | null): Part
   return parts;
 }
 
-function cardParts(id: string) {
-  const card = document.querySelector<HTMLElement>(`[data-work-id="${CSS.escape(id)}"]`);
+function cardParts(id: string, source: HTMLElement | null) {
+  const card = source?.isConnected
+    ? source
+    : document.querySelector<HTMLElement>(`[data-work-id="${CSS.escape(id)}"]:not([data-echo])`);
   return collectParts(
     card,
-    card?.querySelector(':scope > .work-image, :scope > .work-video') ?? null,
+    card?.querySelector(
+      ':scope > .work-image, :scope > .work-video, :scope > [data-work-part="media"]',
+    ) ?? null,
   );
 }
 
@@ -38,18 +43,19 @@ function nameParts(parts: Part[], named: boolean) {
   }
 }
 
-export function useWorkPreview() {
-  const [work, setWork] = useState<Work | null>(null);
+export function useWorkPreview<T extends { id: string } = Work>() {
+  const [work, setWork] = useState<T | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  const current = useRef<Work | null>(null);
+  const current = useRef<T | null>(null);
+  const source = useRef<HTMLElement | null>(null);
   const active = useRef<ViewTransition | null>(null);
-  const queued = useRef<{ next: Work | null } | null>(null);
+  const queued = useRef<{ next: T | null } | null>(null);
 
   useEffect(() => {
     current.current = work;
   });
 
-  const morph = useCallback(function run(next: Work | null) {
+  const morph = useCallback(function run(next: T | null) {
     if (active.current) {
       queued.current = { next };
       active.current.skipTransition();
@@ -63,22 +69,35 @@ export function useWorkPreview() {
       return;
     }
     const opening = next !== null;
-    const from = opening ? cardParts(id) : dialogParts();
+    const from = opening ? cardParts(id, source.current) : dialogParts();
     let to: Part[] = [];
+    let updated = false;
     const root = document.documentElement;
     setTransitioning(true);
     root.dataset.transition = 'work';
     nameParts(from, true);
 
-    const transition = document.startViewTransition(() => {
+    const update = () => {
+      if (updated) return;
+      updated = true;
       nameParts(from, false);
       flushSync(() => setWork(next));
-      to = opening ? dialogParts() : cardParts(id);
+      to = opening ? dialogParts() : cardParts(id, source.current);
       nameParts(to, true);
       if (opening) document.querySelector<HTMLElement>('.work-dialog-inner')?.focus();
-    });
+    };
+    const transition = document.startViewTransition(update);
+    transition.ready.catch(() => undefined);
+    transition.updateCallbackDone.catch(() => undefined);
+    const stall = window.setTimeout(() => {
+      if (updated) return;
+      update();
+      transition.skipTransition();
+    }, STALL);
     active.current = transition;
     void transition.finished.finally(() => {
+      window.clearTimeout(stall);
+      if (!updated) update();
       nameParts(from, false);
       nameParts(to, false);
       delete root.dataset.transition;
@@ -90,8 +109,18 @@ export function useWorkPreview() {
     });
   }, []);
 
-  const open = useCallback((next: Work) => morph(next), [morph]);
+  const open = useCallback(
+    (next: T, from?: HTMLElement) => {
+      source.current = from ?? null;
+      morph(next);
+    },
+    [morph],
+  );
   const close = useCallback(() => morph(null), [morph]);
+  const show = useCallback((next: T) => {
+    source.current = null;
+    setWork(next);
+  }, []);
 
-  return { work, transitioning, open, close };
+  return { work, transitioning, open, close, show };
 }

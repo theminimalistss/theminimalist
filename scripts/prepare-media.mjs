@@ -26,11 +26,24 @@ async function download(url, output) {
   }
 }
 
-async function imageVariants(input, name, quality = {}, directory = imageDir({})) {
+async function imageVariants(
+  input,
+  name,
+  quality = {},
+  directory = imageDir({}),
+  position = 'attention',
+  warm = false,
+) {
   for (const width of [480, 960]) {
     const crop = sharp(input)
       .rotate()
-      .resize(width, Math.round(width * 1.25), { fit: 'cover', position: 'attention' });
+      .resize(width, Math.round(width * 1.25), { fit: 'cover', position });
+    if (warm)
+      crop.modulate({ saturation: 0.35, brightness: 1.14 }).recomb([
+        [1.07, 0.06, 0],
+        [0.02, 1, 0],
+        [0, 0.04, 0.8],
+      ]);
     await crop
       .clone()
       .avif({ quality: quality.avif ?? 55, effort: 5 })
@@ -45,7 +58,14 @@ async function imageVariants(input, name, quality = {}, directory = imageDir({})
 for (const asset of images.filter(selected)) {
   const input = `${cache}/${asset.name}.jpg`;
   await download(asset.url, input);
-  await imageVariants(input, asset.name, asset.quality, imageDir(asset));
+  await imageVariants(
+    input,
+    asset.name,
+    asset.quality,
+    imageDir(asset),
+    asset.position,
+    asset.warm,
+  );
   console.info(`Prepared image: ${asset.name}`);
 }
 

@@ -13,6 +13,24 @@ export const STUDIO_PAGES: readonly NavItem[] = [
   },
 ];
 
+export const SERVICE_PAGES: readonly NavItem[] = [
+  {
+    label: 'Software development',
+    to: ROUTES.softwareDevelopment,
+    description: 'Custom software and web apps.',
+  },
+  {
+    label: 'Website development',
+    to: ROUTES.websiteDevelopment,
+    description: 'Websites and online stores.',
+  },
+  {
+    label: 'Branding identity',
+    to: ROUTES.branding,
+    description: 'Logos, identities, and packaging.',
+  },
+];
+
 export const PRODUCT_PAGES: readonly NavItem[] = [
   {
     label: 'Software solutions',
@@ -55,6 +73,12 @@ export const PRIMARY_NAVIGATION: readonly NavGroup[] = [
     to: ROUTES.works,
     description: 'Selected studies across brand, digital, and experience.',
     children: [],
+  },
+  {
+    label: 'Services',
+    to: ROUTES.services,
+    description: 'What we do for you.',
+    children: SERVICE_PAGES,
   },
   { label: 'Studio', to: ROUTES.about, description: 'About the studio.', children: STUDIO_PAGES },
   { label: 'Products', to: ROUTES.products, description: 'What we make.', children: PRODUCT_PAGES },

@@ -9,6 +9,8 @@ import { SiteLayout } from '@/ui/layouts/SiteLayout';
 import HomePage from '@/ui/pages/HomePage';
 
 const WorksPage = lazy(PAGE_MODULES.works);
+const ServicesPage = lazy(PAGE_MODULES.services);
+const ServicePage = lazy(PAGE_MODULES.service);
 const AboutPage = lazy(PAGE_MODULES.about);
 const FoundersPage = lazy(PAGE_MODULES.founders);
 const TestimonialsPage = lazy(PAGE_MODULES.testimonials);
@@ -28,6 +30,10 @@ const router = createBrowserRouter([
         element: <PageLayout />,
         children: [
           { path: ROUTES.works, element: <WorksPage /> },
+          { path: ROUTES.services, element: <ServicesPage /> },
+          { path: ROUTES.softwareDevelopment, element: <ServicePage service="software" /> },
+          { path: ROUTES.websiteDevelopment, element: <ServicePage service="websites" /> },
+          { path: ROUTES.branding, element: <ServicePage service="branding" /> },
           { path: ROUTES.about, element: <AboutPage /> },
           { path: ROUTES.founders, element: <FoundersPage /> },
           { path: ROUTES.testimonials, element: <TestimonialsPage /> },

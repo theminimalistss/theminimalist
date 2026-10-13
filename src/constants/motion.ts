@@ -61,11 +61,15 @@ export const TESTIMONIAL_RAIN = {
   perspective: 680,
   horizon: 0.38,
   bands: [
-    { share: 0.3, z: [60, 160], speed: 30, fade: 1 },
-    { share: 0.38, z: [-420, -300], speed: 20, fade: 0.82 },
-    { share: 0.32, z: [-1050, -880], speed: 13, fade: 0.6 },
+    { share: 0.3, z: [60, 160], speed: 22, fade: 1 },
+    { share: 0.38, z: [-420, -300], speed: 22, fade: 0.82 },
+    { share: 0.32, z: [-1050, -880], speed: 22, fade: 0.6 },
   ],
+  candidates: 80,
+  videoCheck: 500,
   echo: { z: [-2300, -1800], speed: 8, fade: 0.26 },
   ease: 260,
   release: 180,
+  edge: 16,
+  focus: { z: 220, pull: 0.45, width: [340, 420], margin: 24 },
 } as const;

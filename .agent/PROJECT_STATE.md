@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.16.0
+VERSION: 0.18.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: Review 0.16.0 Testimonials depth field.
+CURRENT TASK: Review 0.17.0 Testimonials redesign and 0.18.0 Services section.
 
 ## Completed
 
@@ -48,16 +48,12 @@ CURRENT TASK: Review 0.16.0 Testimonials depth field.
   and pause control. Responsive
   local media, reduced-motion presentation, and hidden/offscreen suspension.
 
-## Latest verification — 2026-10-12
+## Latest verification — 2026-10-13
 
-- `npm run check`: passed, including 105 unit tests, production build, version
+- `npm run check`: passed, including 120 unit tests, production build, version
   consistency, and local media audit.
-- `npm run test:e2e`: 111 passed, 12 configured skips for the slideshow.
-- After adding pointer depth and clearing the pause control from the contact FAB:
-  `npm run test:e2e -- --grep 'founder|new pages pass'`: 11 passed, 1 touch-only
-  skip across Chromium and desktop/mobile WebKit, including accessibility.
-- Desktop/mobile visuals reviewed; no horizontal overflow at 390 px.
-  Firefox remains a CI check.
+- `npm run test:e2e`: 130 passed, 14 configured skips across desktop Chromium,
+  desktop WebKit, and mobile WebKit. Firefox remains a CI check.
 
 ## Known issues / limits
 

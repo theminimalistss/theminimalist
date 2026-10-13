@@ -1,3 +1,5 @@
+import deskAvif from '@/assets/images/menu/desk-480.avif';
+import deskWebp from '@/assets/images/menu/desk-480.webp';
 import arcAvif from '@/assets/images/hero/arc-480.avif';
 import arcWebp from '@/assets/images/hero/arc-480.webp';
 import earthAvif from '@/assets/images/hero/earth-poster-480.avif';
@@ -15,6 +17,7 @@ export type MenuPreview = { avif: string; webp: string; cue: string };
 export const MENU_PREVIEWS: Partial<Record<RoutePath, MenuPreview>> = {
   [ROUTES.home]: { avif: formaAvif, webp: formaWebp, cue: 'View the collection' },
   [ROUTES.works]: { avif: stillAvif, webp: stillWebp, cue: 'View works' },
+  [ROUTES.services]: { avif: deskAvif, webp: deskWebp, cue: 'See our services' },
   [ROUTES.about]: { avif: earthAvif, webp: earthWebp, cue: 'Meet the studio' },
   [ROUTES.products]: { avif: solenneAvif, webp: solenneWebp, cue: 'Browse products' },
   [ROUTES.contact]: { avif: arcAvif, webp: arcWebp, cue: 'Get in touch' },

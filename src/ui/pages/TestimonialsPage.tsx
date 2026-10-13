@@ -1,11 +1,13 @@
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { useTestimonialDetail } from '@/hooks/useTestimonialDetail';
 import { useTestimonialRain } from '@/hooks/useTestimonialRain';
 import { useTestimonials } from '@/hooks/useTestimonials';
+import { useWorkPreview } from '@/hooks/useWorkPreview';
+import type { Testimonial } from '@/types/testimonial';
 import { ROUTES } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageSection } from '@/ui/sections/Page/PageSection';
+import { TestimonialBackdrop } from '@/ui/sections/Testimonials/TestimonialBackdrop';
 import { TestimonialDialog } from '@/ui/sections/Testimonials/TestimonialDialog';
 import { TestimonialRain } from '@/ui/sections/Testimonials/TestimonialRain';
 import '@/ui/styles/testimonials.css';
@@ -19,11 +21,16 @@ export default function TestimonialsPage() {
   const state = useTestimonials();
   const reducedMotion = useReducedMotion();
   const testimonials = state.status === 'ready' ? state.testimonials : [];
-  const detail = useTestimonialDetail(testimonials.length);
-  const current = detail.index === null ? null : (testimonials[detail.index] ?? null);
+  const preview = useWorkPreview<Testimonial>();
+  const current = preview.work;
+  const position = current ? testimonials.findIndex((item) => item.id === current.id) : 0;
+  const step = (direction: 1 | -1) => {
+    const next = testimonials[(position + direction + testimonials.length) % testimonials.length];
+    if (next) preview.show(next);
+  };
   const rain = useTestimonialRain({
     enabled: !reducedMotion && testimonials.length > 0,
-    held: current !== null || detail.morphing,
+    held: current !== null || preview.transitioning,
     layout: String(testimonials.length),
   });
   const rated = testimonials.filter((item) => item.rating);
@@ -39,6 +46,7 @@ export default function TestimonialsPage() {
         data-receded={current ? '' : undefined}
         data-still={reducedMotion ? '' : undefined}
       >
+        <TestimonialBackdrop />
         <div className="testimonials-intro">
           <span className="eyebrow">Studio — Testimonials</span>
           <h1 id="testimonials-title">
@@ -46,7 +54,7 @@ export default function TestimonialsPage() {
           </h1>
           <p>
             What working with the studio feels like, in our clients’ own words. Hover a frame to
-            hold it still; open one to read it in full.
+            bring it close; open it to read it in full.
           </p>
           {testimonials.length > 0 && (
             <dl className="testimonials-stats">
@@ -72,16 +80,20 @@ export default function TestimonialsPage() {
           <TestimonialRain
             testimonials={testimonials}
             stageRef={rain.stageRef}
-            onOpen={detail.open}
+            playing={!reducedMotion}
+            onOpen={(index, element) => {
+              const testimonial = testimonials[index];
+              if (testimonial) preview.open(testimonial, element);
+            }}
           />
         )}
       </section>
       <TestimonialDialog
         testimonial={current}
-        position={detail.index ?? 0}
+        position={position}
         total={testimonials.length}
-        onClose={() => detail.close(current?.id)}
-        onStep={detail.step}
+        onClose={preview.close}
+        onStep={step}
       />
       <PageSection eyebrow="Continue" title="See the work.">
         <LinkCards items={NEXT} label="Next steps" />

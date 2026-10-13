@@ -22,6 +22,34 @@
       "description": "Selected brand, digital, and motion studies from The Minimalist — Design Studio.",
       "image": "works"
     },
+    "/services": {
+      "title": "Services",
+      "eyebrow": "Services",
+      "heading": "Software, websites, and brands.",
+      "description": "Software development, website development, and branding identity from The Minimalist — Design Studio.",
+      "image": "services"
+    },
+    "/services/software": {
+      "title": "Software development",
+      "eyebrow": "Services — Software",
+      "heading": "Software built to feel calm.",
+      "description": "Custom software, web apps, and internal tools, designed and engineered with care by The Minimalist — Design Studio.",
+      "image": "software-development"
+    },
+    "/services/websites": {
+      "title": "Website development",
+      "eyebrow": "Services — Websites",
+      "heading": "Websites, calm and fast.",
+      "description": "Editorial websites and online stores that load fast, read well, and stay easy to update. By The Minimalist — Design Studio.",
+      "image": "websites"
+    },
+    "/services/branding": {
+      "title": "Branding identity",
+      "eyebrow": "Services — Branding",
+      "heading": "Clarity and character.",
+      "description": "Logos, identities, packaging, and hang tags with clarity and character, by The Minimalist — Design Studio.",
+      "image": "branding"
+    },
     "/about": {
       "title": "About",
       "eyebrow": "About the studio",

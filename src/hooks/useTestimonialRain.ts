@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { TESTIMONIAL_RAIN } from '@/constants/motion';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
-import { toWorld } from '@/utils/testimonialField';
+import { focusPose, spreadFrames, toWorld } from '@/utils/testimonialField';
 
 type Options = { enabled: boolean; held: boolean; layout: string };
 
@@ -39,19 +39,36 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
       const height = stage.clientHeight;
       const vanishX = width / 2;
       const vanishY = height * TESTIMONIAL_RAIN.horizon;
-      animations = floats.flatMap((float, index) => {
-        if (!float.animate) return [];
-        const w = float.offsetWidth || 236;
-        const h = float.offsetHeight || 320;
+      const measure = (float: HTMLElement) => {
         const z = Number(float.dataset.z) || 0;
         const scale = TESTIMONIAL_RAIN.perspective / (TESTIMONIAL_RAIN.perspective - z);
-        const margin = (h * scale) / 2 + 24;
-        const centerX = toWorld(Number(float.dataset.x) * width, vanishX, z);
-        const from = toWorld(-margin, vanishY, z);
-        const to = toWorld(height + margin, vanishY, z);
-        const speed = Number(float.dataset.speed) || 20;
+        const w = float.offsetWidth || 250;
+        const h = float.offsetHeight || 312;
+        return { z, w, h, width: w * scale, height: h * scale };
+      };
+      const main = floats.filter((float) => !float.closest('.testimonial-echoes'));
+      const mainSizes = main.map(measure);
+      const reach = Math.max(0, ...mainSizes.map((size) => size.height)) / 2 + 24;
+      const loop = height + reach * 2;
+      const spots = spreadFrames(mainSizes, width, loop);
+      animations = floats.flatMap((float, index) => {
+        if (!float.animate) return [];
+        const size = measure(float);
+        const slot = main.indexOf(float);
+        const spot = slot >= 0 ? spots[slot] : undefined;
+        const margin = spot ? reach : size.height / 2 + 24;
+        const half = size.width / 2 + TESTIMONIAL_RAIN.edge;
+        const screenX = spot
+          ? spot.x
+          : Math.min(width - half, Math.max(half, Number(float.dataset.x) * width));
+        const centerX = toWorld(screenX, vanishX, size.z);
+        const from = toWorld(-margin, vanishY, size.z);
+        const to = toWorld(height + margin, vanishY, size.z);
+        const speed = Number(float.dataset.speed) || TESTIMONIAL_RAIN.bands[0].speed;
         const duration = ((height + margin * 2) / speed) * 1000;
-        const left = centerX - w / 2;
+        const left = centerX - size.w / 2;
+        const z = size.z;
+        const h = size.h;
         const animation = float.animate(
           [
             { transform: `translate3d(${left}px, ${from - h / 2}px, ${z}px)` },
@@ -59,7 +76,8 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
           ],
           { duration, iterations: Infinity, easing: 'linear' },
         );
-        const start = progress[index] ?? Number(float.dataset.offset) % 1;
+        const phase = spot ? spot.y / loop : Number(float.dataset.offset) % 1;
+        const start = progress[index] ?? phase;
         animation.currentTime = start * duration;
         animation.playbackRate = rate;
         return [animation];
@@ -94,12 +112,33 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
     };
     wakeRef.current = wake;
 
+    const topSafe = () =>
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) ||
+      96;
+    const pose = (frameElement: HTMLElement) => {
+      const float = frameElement.closest<HTMLElement>('[data-float]');
+      if (!float) return;
+      const box = float.getBoundingClientRect();
+      const area = stage.getBoundingClientRect();
+      const result = focusPose({
+        frame: box,
+        stage: area,
+        size: { width: float.offsetWidth, height: float.offsetHeight },
+        z: Number(float.dataset.z) || 0,
+        topSafe: Math.max(0, topSafe() - area.top),
+      });
+      frameElement.style.setProperty(
+        '--focus',
+        `translate3d(${result.x.toFixed(1)}px, ${result.y.toFixed(1)}px, ${result.z.toFixed(1)}px) scale(${result.scale.toFixed(4)})`,
+      );
+    };
     const setFocus = (next: HTMLElement | null) => {
       window.clearTimeout(releaseTimer);
       if (next === focused) return;
+      focused?.style.removeProperty('--focus');
       focused?.removeAttribute('data-focused');
-      focused?.querySelector('video')?.pause();
       focused = next;
+      if (next) pose(next);
       next?.setAttribute('data-focused', '');
       const video = next?.querySelector('video');
       if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -107,13 +146,29 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
         void video.play().catch(() => undefined);
       }
       stage.toggleAttribute('data-focus', !!next);
+      stage.parentElement?.toggleAttribute('data-focus', !!next);
       wake();
     };
     const frameOf = (target: EventTarget | null) =>
       target instanceof Element ? target.closest<HTMLElement>('[data-frame]') : null;
+    const inside = (element: HTMLElement, event: PointerEvent) => {
+      const box = element.getBoundingClientRect();
+      return (
+        event.clientX >= box.left &&
+        event.clientX <= box.right &&
+        event.clientY >= box.top &&
+        event.clientY <= box.bottom
+      );
+    };
     const over = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') return;
       const next = frameOf(event.target);
+      const home = focused?.closest<HTMLElement>('[data-float]');
+      const held = focused && (inside(focused, event) || (home && inside(home, event)));
+      if (focused && next !== focused && held) {
+        window.clearTimeout(releaseTimer);
+        return;
+      }
       if (next) setFocus(next);
       else if (focused) {
         window.clearTimeout(releaseTimer);
@@ -136,6 +191,27 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
       wake();
     });
     observer.observe(stage);
+    const videos = Array.from(stage.querySelectorAll<HTMLVideoElement>('.testimonial-space video'));
+    const playVisible = () => {
+      const area = stage.getBoundingClientRect();
+      for (const video of videos) {
+        const box = video.getBoundingClientRect();
+        const shown =
+          !document.hidden &&
+          box.bottom > area.top &&
+          box.top < area.bottom &&
+          box.right > area.left &&
+          box.left < area.right;
+        if (shown && video.paused) {
+          video.muted = true;
+          void video.play().catch(() => undefined);
+        } else if (!shown && !video.paused) video.pause();
+      }
+    };
+    const playback = videos.length
+      ? window.setInterval(playVisible, TESTIMONIAL_RAIN.videoCheck)
+      : 0;
+    playVisible();
     stage.addEventListener('pointerover', over);
     stage.addEventListener('pointerleave', leave);
     stage.addEventListener('focusin', focusIn);
@@ -146,12 +222,16 @@ export function useTestimonialRain({ enabled, held, layout }: Options) {
       window.clearTimeout(releaseTimer);
       resize.disconnect();
       observer.disconnect();
+      window.clearInterval(playback);
+      videos.forEach((video) => video.pause());
       stage.removeEventListener('pointerover', over);
       stage.removeEventListener('pointerleave', leave);
       stage.removeEventListener('focusin', focusIn);
       stage.removeEventListener('focusout', focusOut);
+      focused?.style.removeProperty('--focus');
       focused?.removeAttribute('data-focused');
       stage.removeAttribute('data-focus');
+      stage.parentElement?.removeAttribute('data-focus');
       animations.forEach((animation) => animation.cancel());
       wakeRef.current = () => {};
     };

@@ -70,6 +70,13 @@ export const images = [
     url: 'https://images.pexels.com/photos/3328240/pexels-photo-3328240.jpeg?auto=compress&cs=tinysrgb&w=1200',
     quality: { avif: 40, webp: 46 },
   },
+  {
+    name: 'desk',
+    group: 'menu',
+    position: 'west',
+    warm: true,
+    url: 'https://images.pexels.com/photos/7718788/pexels-photo-7718788.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  },
 ];
 
 export const videos = [

@@ -10,6 +10,7 @@ for (const directory of [
   'src/assets/images/founders',
   'src/assets/videos/hero',
   'src/assets/images/testimonials',
+  'src/assets/images/menu',
   'src/assets/videos/testimonials',
 ]) {
   for (const filename of (await readdir(directory)).sort()) {

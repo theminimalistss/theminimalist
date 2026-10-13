@@ -1,5 +1,7 @@
 export const PAGE_MODULES = {
   works: () => import('@/ui/pages/WorksPage'),
+  services: () => import('@/ui/pages/ServicesPage'),
+  service: () => import('@/ui/pages/ServicePage'),
   about: () => import('@/ui/pages/AboutPage'),
   founders: () => import('@/ui/pages/FoundersPage'),
   testimonials: () => import('@/ui/pages/TestimonialsPage'),

@@ -2,11 +2,15 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { openPage, revealAll } from './helpers';
 
-const FOOTER_PAGES = [
+const FOOTER_PAGES: readonly (readonly [string, RegExp, string?])[] = [
   ['About', /The Minimalist/],
   ['Founders', /Two founders/],
   ['Testimonials', /Kind words/],
   ['Works', /Selected works/],
+  ['All services', /Software, websites/, 'Services'],
+  ['Software development', /Software development/],
+  ['Website development', /Website development/],
+  ['Branding identity', /Branding identity/],
   ['Software solutions', /Software solutions/],
   ['Website templates', /Website templates/],
   ['Hardware products', /Hardware products/],
@@ -14,15 +18,16 @@ const FOOTER_PAGES = [
   ['General inquiry', /General inquiry/],
   ['Request a quote', /Request a quote/],
   ['Book an appointment', /Book an appointment/],
-] as const;
+];
 
 test('the footer sitemap reaches every page', async ({ page }) => {
+  test.slow();
   await openPage(page, '/about');
   const footer = page.getByRole('navigation', { name: 'Footer' });
-  for (const [label, heading] of FOOTER_PAGES) {
+  for (const [label, heading, title = label] of FOOTER_PAGES) {
     await footer.getByRole('link', { name: label, exact: true }).click();
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
-    await expect(page).toHaveTitle(new RegExp(`^${label}.* — The Minimalist$`));
+    await expect(page).toHaveTitle(new RegExp(`^${title}.* — The Minimalist$`));
   }
 });
 
@@ -69,6 +74,8 @@ test('new pages pass accessibility checks', async ({ page }) => {
   for (const path of [
     '/about',
     '/founders',
+    '/services',
+    '/services/branding',
     '/products/hardware',
     '/contact',
     '/inquiries/quote',
