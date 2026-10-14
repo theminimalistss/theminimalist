@@ -14,6 +14,7 @@ export function InquiryForm() {
     errors,
     status,
     animate,
+    engaged,
     emailText,
     today,
     email,
@@ -72,6 +73,7 @@ export function InquiryForm() {
       data-kind={draft.kind}
       data-status={status}
       data-motion={animate ? 'running' : 'paused'}
+      data-engaged={engaged ? '' : undefined}
       noValidate
       aria-labelledby={`${id}-title`}
       onSubmit={submit}
@@ -81,7 +83,11 @@ export function InquiryForm() {
           <span className="eyebrow">Send a message</span>
           <h2 id={`${id}-title`}>What can we help with?</h2>
         </div>
-        <ContactEnvelope kind={draft.kind} fill={Math.min(1, draft.message.trim().length / 220)} />
+        <ContactEnvelope
+          kind={draft.kind}
+          fill={Math.min(1, draft.message.trim().length / 220)}
+          animated={animate}
+        />
       </div>
       <fieldset className="inquiry-intents">
         <legend className="sr-only">Kind of message</legend>

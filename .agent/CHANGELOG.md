@@ -5,6 +5,65 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.26.0] — 2026-10-15
+
+### Changed
+
+- A softer shared ambient: warm sustained harmonies, quiet air, and sparse
+  felt-key tones. Chords crossfade without pitch slides; the background continues
+  uninterrupted through Works and every other page. Removed the separate Works
+  music and audio heartbeat scheduler; the visual heart remains.
+
+### Fixed
+
+- Page entry keeps fixed headers and live 3D/WebGL layers steady. Removed the
+  startup shell scale and overlapping route snapshot/wrapper fades; ordinary
+  navigation uses a short ivory reveal over untransformed live content.
+- Route modules resolve before navigation commits, retaining the previous page
+  during cold loads. Scroll and focus reset before the destination paints.
+- The loader includes all eight audio samples in progress and waits for downloads
+  and decoding before exiting. Its visual readiness timeout cannot bypass audio.
+  Failed formats fall back to the alternate; failed samples expose Retry audio
+  while the page stays inert. Successful samples remain cached on retry.
+- Audio prepares in one offline decoder; playback/ambient creation still waits
+  for a user gesture. Videos remain optional and can show their local posters.
+- Loader progress uses a fixed task total, avoiding an early 100% reading while
+  new media/audio tasks are still pending. Initial lazy-page mounting is tracked.
+  The loader also waits through a slow initial route load instead of revealing
+  an empty shell at its visual timeout; route errors retain a focusable main.
+- Contact's envelope opens on actual form interaction, including Safari inquiry
+  label clicks that leave focus outside the form. A finite native SVG tween rocks
+  the envelope and stamps the new symbol on persistent nodes. It stops when
+  hidden/offscreen or under reduced motion; rapid changes cancel the old tween.
+
+### AI session
+
+Changed: audio preparation/cache/timeouts, loader readiness/progress/retry UI,
+startup/route presentation, route-level module loading, pre-paint scroll/focus,
+shared ambient synthesis, envelope interaction/tween, unit/browser regressions,
+and current engineering/handoff records.
+
+Reason: Safari entry combined fixed-header transforms with moving scene snapshots;
+its inquiry-label clicks also changed the radio without focusing the form. The
+requested direction requires stable page/envelope motion, audio-completion loading,
+and one soothing background across all pages. Interaction state now gives each
+engine the same envelope behavior without forcing pointer focus. Existing in-page
+previews and spatial/gallery morphs retain their transitions. No dependency or
+runtime media added.
+
+Verification: `npm run check` passed (142 unit tests, formatting, lint, strict
+types, build, version alignment, and media audit). `deploy:check` verified 14
+routes, three legacy aliases, the 404 fallback, and 126 asset references. Final
+production browser suite: 210 passed, 18 platform/visibility skips across Chromium
+and desktop/mobile WebKit; one skip was a random Testimonials arrangement with
+no unobscured far frame. Tests cover slow audio/initial modules beyond the visual
+timeout, audio retry, fixed-header geometry, cold navigation, inquiry-label
+interaction, persistent SVG tweening, reduced motion, and existing scene effects.
+The ambient continuity test confirms one graph across page scenes; a 14 s offline
+preview had peak 0.0244 and RMS 0.00593 without clipping. Shared CSS: 20.51 KB
+gzip; media remains 10.96 MiB. Firefox remains Linux-CI-only on this host.
+No hosting publication performed.
+
 ## [0.25.0] — 2026-10-14
 
 ### Changed

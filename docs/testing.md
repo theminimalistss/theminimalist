@@ -23,6 +23,15 @@ Run `npm run test:e2e` after interaction or layout changes.
 - Contact: kind-specific fields and validation, legacy route HTML/redirects,
   missing/denied/successful clipboard access, manual copying, interrupted resizing,
   reduced motion, and collapsed channel tab order without native `inert`.
+- Loader/audio: fixed progress totals, required initial-route mounting, downloaded
+  and decoded samples, shared preparation, alternate-format fallback, retryable
+  failures, and pending audio/page modules beyond the visual readiness timeout.
+- Navigation: cold route modules retain the current page, scroll/focus reset
+  before paint, no route snapshots, and stable fixed-header entry geometry.
+- Contact animation: inquiry label clicks open the envelope without requiring
+  radio focus; persistent stamp nodes tween/settle across all inquiry types.
+  Reduced motion retains visible static symbols. The ambient engine keeps one
+  default graph while page feedback scenes change.
 
 Playwright runs Chromium desktop, WebKit desktop, and WebKit mobile against a
 production build; CI adds Firefox (set `E2E_FIREFOX=1` to include it locally).

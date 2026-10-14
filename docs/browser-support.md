@@ -17,7 +17,10 @@ Emulated iPhone tests do not replace checks on real iOS hardware or in-app brows
 ## Progressive behavior
 
 - Missing/lost WebGL retains static illustrations or native portfolio media.
-- Missing View Transitions uses normal navigation and existing fades.
+- Ordinary page navigation uses a live reveal without View Transition snapshots;
+  in-page previews/gallery morphs retain the API and their existing fallbacks.
+- Audio download and offline decoding gate the loader. Failed formats fall back;
+  unrecoverable samples show Retry audio. Unsupported Web Audio skips audio tasks.
 - Reduced motion keeps galleries and content usable without automatic playback.
 - Contact selected states use attributes and native focus rather than `:has()`;
   collapsed channel links have explicit ARIA/tab-order state alongside `inert`.

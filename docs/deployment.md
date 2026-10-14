@@ -58,8 +58,8 @@ After a deployment, verify:
 The flower's idle motion uses native browser animations and pauses offscreen or
 when the tab is hidden. Its pointer response runs only during interaction and
 settling. Loader/menu buffers are capped at 1.5× DPR and a 2048 px edge; the Works
-sculpture has its own 1800 px cap. Optional sound/video buffering does not gate
-the loader. Route prefetch waits until entry, runs sequentially, and skips reported
+sculpture has its own 1800 px cap. Audio samples download and decode before the loader exits; failed audio requires
+retry. Video buffering remains optional. Route prefetch waits until entry, runs sequentially, and skips reported
 data-saving/2G connections. These behaviours are client-side and need no special
 Hostinger process or animation service.
 

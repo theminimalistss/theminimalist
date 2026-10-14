@@ -37,6 +37,7 @@ export const SOUNDS = {
 export type SoundName = keyof typeof SOUNDS;
 
 export const SOUND_MIX = {
+  loadTimeout: 30_000,
   master: 0.7,
   pitchVariation: 0.06,
   groupGap: 150,
@@ -50,102 +51,52 @@ export const SWELL = {
   close: [440, 659.25],
 } as const;
 
-export const HEARTBEAT = {
-  period: 1000,
-  dub: 0.24,
-} as const;
-
-export type PulseSpec = {
-  heart: number;
-  pluck: number;
-  pluckDecay: number;
-  noteChance: number;
-  ghostChance: number;
-  echo: number;
-  feedback: number;
-  scale: readonly number[];
-};
-
 export type AmbientPreset = {
   level: number;
   fadeIn: number;
-  glide: number;
+  crossfade: number;
   reverbSeconds: number;
   chordSeconds: number;
   filter: number;
   filterSweep: number;
-  chimeLevel: number;
-  chimeEvery: readonly [number, number];
-  /** Bell overtone (ratio, relative level) layered on each chime; 0 keeps a pure tone. */
-  chimeBell: readonly [number, number];
-  /** The noise layer: a low surf at home, high air in the Works sculpture. */
+  keyLevel: number;
+  keyEvery: readonly [number, number];
+  /** Harmonic partial (ratio, relative level) for the soft key tone. */
+  keyPartial: readonly [number, number];
+  /** A barely audible warm air layer shared by every page. */
   air: { type: BiquadFilterType; frequency: number };
   waveLevel: readonly [number, number];
   waveSeconds: number;
   chords: readonly (readonly number[])[];
-  chimes: readonly number[];
-  pulse?: PulseSpec;
+  keys: readonly number[];
 };
 
+/** Warm sustained harmonies with sparse, softly struck felt-key notes. */
 export const AMBIENT = {
-  level: 0.06,
-  fadeIn: 8,
-  glide: 8,
-  reverbSeconds: 6,
-  chordSeconds: 36,
-  filter: 720,
-  filterSweep: 200,
-  chimeLevel: 0.028,
-  chimeEvery: [14, 26],
-  chimeBell: [1, 0],
-  air: { type: 'lowpass', frequency: 650 },
-  waveLevel: [0.002, 0.011],
-  waveSeconds: 14,
+  level: 0.15,
+  fadeIn: 9,
+  crossfade: 10,
+  reverbSeconds: 4,
+  chordSeconds: 48,
+  filter: 1_100,
+  filterSweep: 80,
+  keyLevel: 0.07,
+  keyEvery: [7, 12],
+  keyPartial: [2, 0.16],
+  air: { type: 'lowpass', frequency: 280 },
+  waveLevel: [0.0004, 0.0012],
+  waveSeconds: 28,
   chords: [
-    [146.83, 220, 277.18, 329.63, 369.99],
-    [123.47, 185, 220, 293.66, 329.63],
-    [130.81, 196, 246.94, 293.66, 329.63],
-    [110, 164.81, 220, 277.18, 329.63],
+    [130.81, 196, 261.63, 329.63],
+    [110, 164.81, 220, 261.63],
+    [87.31, 130.81, 196, 261.63],
+    [98, 146.83, 246.94, 293.66],
   ],
-  chimes: [587.33, 659.25, 739.99, 880],
+  keys: [261.63, 293.66, 329.63, 392, 440],
 } as const satisfies AmbientPreset;
 
-export const AMBIENT_WORKS = {
-  level: 0.05,
-  fadeIn: 5,
-  glide: 4,
-  reverbSeconds: 5.5,
-  chordSeconds: 16,
-  filter: 950,
-  filterSweep: 260,
-  chimeLevel: 0.012,
-  chimeEvery: [20, 34],
-  chimeBell: [1, 0],
-  air: { type: 'lowpass', frequency: 520 },
-  waveLevel: [0.001, 0.004],
-  waveSeconds: 16,
-  chords: [
-    [174.61, 261.63, 329.63, 392, 440],
-    [146.83, 220, 261.63, 329.63, 349.23],
-    [116.54, 174.61, 220, 293.66, 329.63],
-    [130.81, 196, 293.66, 329.63, 440],
-  ],
-  chimes: [1046.5, 1174.66, 1318.51],
-  pulse: {
-    heart: 0.018,
-    pluck: 0.026,
-    pluckDecay: 1.8,
-    noteChance: 0.45,
-    ghostChance: 0.12,
-    echo: 0.5,
-    feedback: 0.32,
-    scale: [523.25, 587.33, 659.25, 783.99, 880, 1046.5],
-  },
-} as const satisfies AmbientPreset;
-
-export const AMBIENTS = { home: AMBIENT, works: AMBIENT_WORKS } as const;
-
-export type SoundScene = keyof typeof AMBIENTS;
+/** Page-specific interaction feedback; background music never changes scene. */
+export type SoundScene = 'home' | 'works';
 
 /** Synthesized glass feedback for the Works sculpture; each point has its own note. */
 export const GLASS = {

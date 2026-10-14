@@ -1,5 +1,28 @@
 # Architecture decisions
 
+## 2026-10-15 — Stable page layers and audio-gated entry
+
+The same release also uses one uninterrupted warm ambient across every page,
+removing the Works preset and audio heartbeat. Chords crossfade between steady
+pitches and soft key tones replace the brighter chimes. Page scene selection
+now affects interaction feedback only. Contact tracks explicit interaction to
+open its envelope: WebKit inquiry-label clicks changed the radio while leaving
+focus outside the form. A finite SVG-attribute tween replaces remount-triggered
+stamp animation, with visibility and reduced-motion suspension.
+
+Decision: Remove startup shell transforms and ordinary route snapshot transitions.
+Reveal live pages with a separate CSS overlay; resolve route modules before
+committing navigation and reset scroll/focus before paint. Track all downloaded
+and decoded sound samples in the loader; require retry when a sample fails.
+
+Reason: The user reported Safari entry/navigation glitches and explicitly asked
+for audio loading to gate entry, superseding the earlier optional-audio policy.
+
+Impact: Fixed/3D/GPU scene ancestors keep steady geometry. Existing in-page work
+previews and gallery morphs retain their transitions. Offline decoding prepares
+buffers without playback; one cache avoids duplicate downloads and retries only
+failed samples. Video remains optional. No dependency or media added.
+
 ## 2026-10-14 — Unified Contact with explicit browser fallbacks
 
 Decision: Keep inquiry validation and mail composition in a pure service;

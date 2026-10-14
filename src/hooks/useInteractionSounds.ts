@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { soundEngine } from '@/audio/soundEngine';
-import { scheduleIdle } from '@/utils/idle';
 
 const INTERACTIVE = 'a[href], button:not(:disabled), [role="button"], summary';
 
@@ -16,7 +15,9 @@ export function useInteractionSounds(pathname: string, menuOpen: boolean) {
 
   useEffect(() => {
     let hovered: Element | null = null;
-    const unlock = () => soundEngine.unlock();
+    const unlock = () => {
+      if (!document.querySelector('.page-loader:not([data-exiting])')) soundEngine.unlock();
+    };
     const over = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') return;
       const element = interactive(event.target);
@@ -35,14 +36,12 @@ export function useInteractionSounds(pathname: string, menuOpen: boolean) {
       }
     };
     const visibility = () => soundEngine.setVisible(document.visibilityState === 'visible');
-    const cancelIdle = scheduleIdle(() => void soundEngine.prefetch(), 5_000);
     document.addEventListener('visibilitychange', visibility);
     document.addEventListener('click', unlock, { capture: true });
     document.addEventListener('pointerover', over, { passive: true });
     document.addEventListener('pointerdown', down, { passive: true, capture: true });
     document.addEventListener('keydown', key, { capture: true });
     return () => {
-      cancelIdle();
       document.removeEventListener('visibilitychange', visibility);
       document.removeEventListener('click', unlock, { capture: true });
       document.removeEventListener('pointerover', over);

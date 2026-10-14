@@ -144,3 +144,54 @@ test('collapsed social links stay out of keyboard navigation without inert suppo
   await page.getByRole('button', { name: 'Less', exact: true }).click();
   await expect(more.locator('a').first()).toHaveAttribute('tabindex', '-1');
 });
+
+test('inquiry labels open the envelope and animate a persistent stamp without requiring focus', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await openPage(page, '/contact');
+  const form = page.locator('.inquiry-form');
+  const svg = form.locator('.envelope');
+  const stamp = svg.locator('[data-envelope-stamp]');
+  await svg.scrollIntoViewIfNeeded();
+  await expect(form).toHaveAttribute('data-motion', 'running');
+  await stamp.evaluate((element) => element.setAttribute('data-test-identity', 'original'));
+  for (const label of ['Request a quote', 'Book a meeting', 'Say hello']) {
+    await form.getByText(label, { exact: true }).click();
+    await expect(form).toHaveAttribute('data-engaged', '');
+    await expect(svg).toHaveAttribute('data-changing', '');
+    await expect(stamp).toHaveAttribute('data-test-identity', 'original');
+    const first = await stamp.getAttribute('transform');
+    expect(first).not.toBeNull();
+    await expect.poll(() => stamp.getAttribute('transform')).not.toBe(first);
+    await expect
+      .poll(() =>
+        svg
+          .locator('.envelope-flap--open')
+          .evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).m22),
+      )
+      .toBeGreaterThan(0.99);
+    await expect(svg).not.toHaveAttribute('data-changing', '');
+    await expect(stamp).not.toHaveAttribute('transform');
+  }
+});
+
+test('reduced motion leaves the selected envelope symbol visible without a tween', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openPage(page, '/contact');
+  const form = page.locator('.inquiry-form');
+  await form.getByText('Book a meeting', { exact: true }).click();
+  await expect(form).toHaveAttribute('data-engaged', '');
+  await expect(form.locator('.envelope')).not.toHaveAttribute('data-changing', '');
+  await expect(form.locator('[data-envelope-stamp]')).not.toHaveAttribute('transform');
+  await expect(form.getByLabel('Preferred date')).toBeVisible();
+  await expect
+    .poll(() =>
+      form
+        .locator('.envelope-flap--open')
+        .evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).m22),
+    )
+    .toBeGreaterThan(0.99);
+});

@@ -1,6 +1,6 @@
 import { createAmbient, createImpulse, type Ambient } from '@/audio/ambient';
 import {
-  AMBIENTS,
+  AMBIENT,
   GLASS,
   SOUND_MIX,
   SOUNDS,
@@ -18,16 +18,41 @@ const AudioContextClass =
     : (window.AudioContext ??
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext);
 
-function decode(context: AudioContext, data: ArrayBuffer) {
-  return new Promise<AudioBuffer>((resolve, reject) =>
-    context.decodeAudioData(data, resolve, reject),
-  );
+function decode(context: BaseAudioContext, data: ArrayBuffer) {
+  return new Promise<AudioBuffer>((resolve, reject) => {
+    const fail = (error: unknown) => {
+      window.clearTimeout(timeout);
+      reject(error);
+    };
+    const timeout = window.setTimeout(
+      () => fail(new Error('Audio decoding timed out')),
+      SOUND_MIX.loadTimeout,
+    );
+    try {
+      context.decodeAudioData(
+        data,
+        (buffer) => {
+          window.clearTimeout(timeout);
+          resolve(buffer);
+        },
+        fail,
+      );
+    } catch (error) {
+      fail(error);
+    }
+  });
 }
 
 async function fetchBytes(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Sound unavailable: ${url}`);
-  return response.arrayBuffer();
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), SOUND_MIX.loadTimeout);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error(`Sound unavailable: ${url}`);
+    return await response.arrayBuffer();
+  } finally {
+    window.clearTimeout(timeout);
+  }
 }
 
 function createNoise(context: AudioContext) {
@@ -48,7 +73,8 @@ class SoundEngine {
   private suspendTimer = 0;
   private enabled = true;
   private listeners = new Set<Listener>();
-  private bytes = new Map<SoundName, Promise<ArrayBuffer>>();
+  private decoder: BaseAudioContext | null = null;
+  private loads = new Map<SoundName, Promise<void>>();
   private buffers = new Map<SoundName, AudioBuffer>();
   private lastPlayed = new Map<string, number>();
 
@@ -75,14 +101,9 @@ class SoundEngine {
     this.applyState();
   }
 
-  /** Each scene has its own ambient bed; switching crossfades between them. */
+  /** Only interaction feedback changes; one ambient graph continues across routes. */
   setScene(scene: SoundScene) {
-    if (this.scene === scene) return;
     this.scene = scene;
-    const context = this.context;
-    if (!context || !this.master || !this.noise || !this.ambient) return;
-    this.ambient.stop(2.5);
-    this.ambient = createAmbient(context, this.master, this.noise, AMBIENTS[scene], 4);
   }
 
   private applyState() {
@@ -94,55 +115,67 @@ class SoundEngine {
     if (audible) {
       void context.resume();
       if (!this.ambient && this.noise)
-        this.ambient = createAmbient(context, this.master, this.noise, AMBIENTS[this.scene]);
+        this.ambient = createAmbient(context, this.master, this.noise, AMBIENT);
       return;
     }
     this.suspendTimer = window.setTimeout(() => void context.suspend(), 400);
   }
 
-  prefetch(): Promise<unknown>[] {
+  /** Download and decode without starting playback or an ambient graph. */
+  prefetch(): Promise<void>[] {
     if (!this.supported) return [];
     return (Object.keys(SOUNDS) as SoundName[]).map((name) => {
-      let bytes = this.bytes.get(name);
-      if (!bytes) {
-        bytes = fetchBytes(SOUNDS[name].webm).catch(() => fetchBytes(SOUNDS[name].mp3));
-        this.bytes.set(name, bytes);
+      let task = this.loads.get(name);
+      if (!task) {
+        task = this.load(name).catch((error: unknown) => {
+          this.loads.delete(name);
+          throw error;
+        });
+        this.loads.set(name, task);
       }
-      return bytes.catch(() => undefined);
+      return task;
     });
   }
 
   unlock() {
     if (!AudioContextClass) return;
-    if (this.context) {
+    if (this.context && this.master) {
       if (this.context.state === 'suspended' && this.enabled && this.visible) {
         void this.context.resume();
       }
       return;
     }
-    this.context = new AudioContextClass();
+    this.context ??= new AudioContextClass();
     this.master = this.context.createGain();
     this.master.gain.value = this.enabled ? SOUND_MIX.master : 0;
     this.master.connect(this.context.destination);
     this.noise = createNoise(this.context);
-    this.prefetch();
-    for (const name of Object.keys(SOUNDS) as SoundName[]) void this.load(name);
+    for (const task of this.prefetch()) void task.catch(() => undefined);
     this.applyState();
   }
 
   private async load(name: SoundName) {
-    const context = this.context;
-    const bytes = this.bytes.get(name);
-    if (!context || !bytes) return;
-    try {
-      this.buffers.set(name, await decode(context, (await bytes).slice(0)));
-    } catch {
+    if (this.buffers.has(name)) return;
+    const OfflineContext =
+      window.OfflineAudioContext ??
+      (window as unknown as { webkitOfflineAudioContext?: typeof OfflineAudioContext })
+        .webkitOfflineAudioContext;
+    this.decoder ??= OfflineContext
+      ? new OfflineContext(1, 1, 44_100)
+      : (this.context ??= new AudioContextClass!());
+    const preferWebm = !!document.createElement('audio').canPlayType('audio/webm; codecs="opus"');
+    const urls = preferWebm
+      ? [SOUNDS[name].webm, SOUNDS[name].mp3]
+      : [SOUNDS[name].mp3, SOUNDS[name].webm];
+    for (const url of urls) {
       try {
-        this.buffers.set(name, await decode(context, await fetchBytes(SOUNDS[name].mp3)));
+        this.buffers.set(name, await decode(this.decoder, await fetchBytes(url)));
+        return;
       } catch {
-        this.buffers.delete(name);
+        // Retry the alternate format before exposing a recoverable loader error.
       }
     }
+    throw new Error(`Could not prepare audio: ${name}`);
   }
 
   private ready() {

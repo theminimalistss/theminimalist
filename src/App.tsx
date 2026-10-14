@@ -11,7 +11,7 @@ import { PageLoader } from '@/ui/components/PageLoader';
 export default function App() {
   const reducedMotion = useReducedMotion();
   const intro = useIntro();
-  const { ready, progress } = usePageLoad({
+  const { ready, progress, audioError, retryAudio } = usePageLoad({
     minimum: reducedMotion ? LOADER.reducedDuration : LOADER.minimumDuration[intro.mode],
     maximum: LOADER.maximumDuration,
   });
@@ -23,7 +23,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <div className="app-shell" inert={!ready} data-entering={ready && loading ? '' : undefined}>
+      <div className="app-shell" inert={!ready}>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
@@ -35,6 +35,8 @@ export default function App() {
           progress={progress}
           animated={!reducedMotion}
           bloomDuration={LOADER.bloomDuration[intro.mode]}
+          audioError={audioError}
+          onRetryAudio={retryAudio}
           onExited={() => {
             intro.complete();
             setLoading(false);

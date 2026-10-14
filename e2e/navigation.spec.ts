@@ -125,8 +125,10 @@ test('the studio sprig waves, responds to the pointer, and respects reduced moti
   await expect(sprig.locator('svg')).toHaveCSS('filter', 'none');
 });
 
-test('optional audio and video downloads do not block the opening screen', async ({ page }) => {
-  await page.route(/\.(?:mp3|mp4|webm)(?:\?|$)/u, () => {});
+test('optional video downloads do not block the opening screen', async ({ page }) => {
+  await page.route(/\.(?:mp4|webm)(?:\?|$)/u, (route) => {
+    if (route.request().resourceType() !== 'media') return route.continue();
+  });
   await page.goto('/?utm_source=deployment-check', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.page-loader')).toHaveCount(0, { timeout: 6_000 });
   await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeVisible();

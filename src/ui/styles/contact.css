@@ -569,15 +569,17 @@
 .envelope-plane .envelope-plane-wing {
   fill: var(--color-surface);
 }
-.inquiry-form:focus-within:not([data-status='sent'], [data-status='copied'])
+.inquiry-form:is(:focus-within, [data-engaged]):not([data-status='sent'], [data-status='copied'])
   .envelope-flap--closed {
   transform: scaleY(0);
 }
-.inquiry-form:focus-within:not([data-status='sent'], [data-status='copied']) .envelope-flap--open {
+.inquiry-form:is(:focus-within, [data-engaged]):not([data-status='sent'], [data-status='copied'])
+  .envelope-flap--open {
   transform: scaleY(1);
   transition-delay: 220ms;
 }
-.inquiry-form:focus-within:not([data-status='sent'], [data-status='copied']) .envelope-letter {
+.inquiry-form:is(:focus-within, [data-engaged]):not([data-status='sent'], [data-status='copied'])
+  .envelope-letter {
   transform: translateY(calc(14px - var(--fill, 0) * 20px));
   transition-delay: 300ms;
 }
@@ -586,13 +588,10 @@
   .envelope-body {
     animation: envelope-in 900ms var(--ease-editorial) both;
   }
-  .inquiry-form:not(:focus-within) .envelope-body {
+  .inquiry-form:not(:focus-within, [data-engaged]) .envelope-body {
     animation:
       envelope-in 900ms var(--ease-editorial) both,
       envelope-float 5s ease-in-out 900ms infinite alternate;
-  }
-  .envelope-stamp {
-    animation: envelope-stamp 520ms cubic-bezier(0.34, 1.5, 0.5, 1) 120ms both;
   }
   .inquiry-form:is([data-status='sent'], [data-status='copied']) .envelope-body {
     animation: envelope-fly 900ms cubic-bezier(0.6, 0, 0.3, 1) 380ms both;
@@ -633,12 +632,6 @@
   }
   to {
     transform: translateY(-5px) rotate(-1.5deg);
-  }
-}
-@keyframes envelope-stamp {
-  from {
-    opacity: 0;
-    transform: scale(1.7) rotate(-14deg);
   }
 }
 @keyframes envelope-fly {

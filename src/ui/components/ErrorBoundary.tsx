@@ -1,8 +1,9 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 
 export function ErrorFallback() {
   return (
-    <main className="not-found">
+    <main id={MAIN_CONTENT_ID} tabIndex={-1} className="not-found">
       <span className="eyebrow">THE MINIMALIST</span>
       <h1>A moment of pause.</h1>
       <p>Something didn’t load as expected.</p>

@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.25.0 · Immersive studio portfolio**
+**Design studio · v0.26.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -25,8 +25,9 @@ It traces itself in, wanders slowly with a heartbeat at its centre, and shows th
 study nearest the viewer, assembled from particles. Drag (with momentum) or use
 the arrow keys to rotate. Hover, focus, or tap a point to preview it, and step
 through studies with the focus control. Switching to the gallery un-draws the
-sculpture as its points stream into the images. Works has its own 60 BPM music,
-in time with the heart, and glass-like sounds. A gallery, a reduced-motion
+sculpture as its points stream into the images. A warm ambient with soft keys
+continues across every page; Works retains its visual heart and glass-like feedback.
+A gallery, a reduced-motion
 presentation, and WebGL fallbacks keep every study accessible.
 
 Products presents three expanding panels with isometric SVG artwork that
@@ -134,7 +135,7 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning (currently `0.25.0`). Keep `package.json`, `package-lock.json`,
+Semantic Versioning (currently `0.26.0`). Keep `package.json`, `package-lock.json`,
 `.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 

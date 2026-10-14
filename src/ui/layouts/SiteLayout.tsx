@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useInteractionSounds } from '@/hooks/useInteractionSounds';
@@ -29,17 +29,9 @@ export function SiteLayout() {
     <SiteMenuContext.Provider value={menu}>
       <span ref={sentinelRef} className="scroll-sentinel" aria-hidden="true" />
       <SiteHeader menuOpen={menuOpen} scrolled={scrolled} onMenu={menu.show} />
-      <Suspense
-        fallback={
-          <main className="page-status" role="status">
-            One moment…
-          </main>
-        }
-      >
-        <div key={pathname} className="route-view">
-          <Outlet />
-        </div>
-      </Suspense>
+      <div key={pathname} className="route-view">
+        <Outlet />
+      </div>
       <ContactFab />
       <StudioMenu open={menuOpen} onClose={menu.close} />
     </SiteMenuContext.Provider>

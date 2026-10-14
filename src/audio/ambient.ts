@@ -1,9 +1,8 @@
-import { schedulePulse } from '@/audio/pulse';
 import type { AmbientPreset } from '@/constants/sounds';
 
 export type Ambient = { stop: (fade?: number) => void };
 
-type Voice = { glide: (frequency: number) => void; stop: () => void };
+type Voice = { crossfade: (frequency: number) => void; stop: () => void };
 
 export function createImpulse(context: AudioContext, seconds: number) {
   const length = Math.round(context.sampleRate * seconds);
@@ -22,33 +21,55 @@ function createVoice(
   frequency: number,
   level: number,
   output: AudioNode,
-  glide: number,
+  crossfade: number,
 ) {
   const gain = context.createGain();
   const swell = context.createOscillator();
   const depth = context.createGain();
-  const oscillators = [-3, 4].map((detune) => {
-    const oscillator = context.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.value = frequency;
-    oscillator.detune.value = detune;
-    oscillator.connect(gain);
-    return oscillator;
-  });
+  const pairs = new Set<{ nodes: OscillatorNode[]; mix: GainNode }>();
+  const pair = (pitch: number, fade: number) => {
+    const mix = context.createGain();
+    mix.gain.value = fade ? 0 : 1;
+    mix.connect(gain);
+    if (fade) mix.gain.setTargetAtTime(1, context.currentTime, fade / 3);
+    const nodes = [-1.5, 1.5].map((detune) => {
+      const oscillator = context.createOscillator();
+      oscillator.type = 'sine';
+      oscillator.frequency.value = pitch;
+      oscillator.detune.value = detune;
+      oscillator.connect(mix);
+      return oscillator;
+    });
+    const voice = { nodes, mix };
+    pairs.add(voice);
+    nodes[0]!.onended = () => {
+      nodes.forEach((node) => node.disconnect());
+      mix.disconnect();
+      pairs.delete(voice);
+    };
+    nodes.forEach((node) => node.start());
+    return voice;
+  };
+  let current = pair(frequency, 0);
   gain.gain.value = level;
   swell.frequency.value = 0.02 + Math.random() * 0.03;
-  depth.gain.value = level * 0.3;
+  depth.gain.value = level * 0.12;
   swell.connect(depth).connect(gain.gain);
   gain.connect(output);
-  [...oscillators, swell].forEach((node) => node.start());
+  swell.start();
   return {
-    glide(next: number) {
-      oscillators.forEach((oscillator) =>
-        oscillator.frequency.setTargetAtTime(next, context.currentTime, glide),
-      );
+    crossfade(next: number) {
+      const previous = current;
+      current = pair(next, crossfade);
+      previous.mix.gain.setTargetAtTime(0, context.currentTime, crossfade / 3);
+      previous.nodes.forEach((node) => node.stop(context.currentTime + crossfade + 0.1));
     },
     stop() {
-      [...oscillators, swell].forEach((node) => node.stop());
+      for (const voice of pairs) voice.nodes.forEach((node) => node.stop());
+      swell.stop();
+      swell.disconnect();
+      depth.disconnect();
+      gain.disconnect();
     },
   } satisfies Voice;
 }
@@ -108,8 +129,8 @@ export function createAmbient(
   sweepDepth.gain.value = preset.filterSweep;
   sweep.connect(sweepDepth).connect(filter.frequency);
   reverb.buffer = createImpulse(context, preset.reverbSeconds);
-  wet.gain.value = 1;
-  dry.gain.value = 0.45;
+  wet.gain.value = 0.35;
+  dry.gain.value = 0.6;
   filter.connect(dry).connect(output);
   filter.connect(reverb).connect(wet).connect(output);
   output.connect(destination);
@@ -117,53 +138,55 @@ export function createAmbient(
 
   const [firstChord = []] = preset.chords;
   const voices = firstChord.map((frequency, index) =>
-    createVoice(context, frequency, index === 0 ? 0.08 : 0.1, filter, preset.glide),
+    createVoice(context, frequency, index === 0 ? 0.035 : 0.045, filter, preset.crossfade),
   );
   const stopWaves = createWaves(context, noise, reverb, preset);
-  const stopPulse = preset.pulse
-    ? schedulePulse(context, output, reverb, preset.pulse)
-    : () => undefined;
 
   let chord = 0;
   const running = () => context.state === 'running';
   const progression = window.setInterval(() => {
     if (!running()) return;
     chord = (chord + 1) % preset.chords.length;
-    preset.chords[chord]?.forEach((frequency, index) => voices[index]?.glide(frequency));
+    preset.chords[chord]?.forEach((frequency, index) => voices[index]?.crossfade(frequency));
   }, preset.chordSeconds * 1_000);
 
-  const [minGap, maxGap] = preset.chimeEvery;
-  let chimeTimer = 0;
-  const chime = () => {
-    chimeTimer = window.setTimeout(chime, (minGap + Math.random() * (maxGap - minGap)) * 1_000);
-    if (!running()) return;
-    const start = context.currentTime;
-    const pitch = preset.chimes[Math.floor(Math.random() * preset.chimes.length)] ?? 587.33;
-    const [bellRatio, bellLevel] = preset.chimeBell;
+  const [minGap, maxGap] = preset.keyEvery;
+  let keyTimer = 0;
+  const key = (start: number) => {
+    const pitch = preset.keys[Math.floor(Math.random() * preset.keys.length)] ?? 587.33;
+    const [bellRatio, bellLevel] = preset.keyPartial;
     const partials = bellLevel
       ? [[1, 1] as const, [bellRatio, bellLevel] as const]
       : [[1, 1] as const];
     partials.forEach(([ratio, level], index) => {
       const tone = context.createOscillator();
       const envelope = context.createGain();
-      const length = 4 / (1 + index * 1.5);
+      const length = 5 / (1 + index * 1.5);
       tone.type = 'sine';
       tone.frequency.value = pitch * ratio;
       envelope.gain.setValueAtTime(0.0001, start);
-      envelope.gain.exponentialRampToValueAtTime(preset.chimeLevel * level, start + 0.09);
+      envelope.gain.exponentialRampToValueAtTime(preset.keyLevel * level, start + 0.055);
       envelope.gain.exponentialRampToValueAtTime(0.0001, start + length);
-      tone.connect(envelope).connect(reverb);
+      tone.connect(envelope).connect(filter);
       tone.start(start);
       tone.stop(start + length + 0.1);
+      tone.onended = () => {
+        tone.disconnect();
+        envelope.disconnect();
+      };
     });
   };
-  chimeTimer = window.setTimeout(chime, minGap * 1_000);
+  const nextKey = () => {
+    keyTimer = window.setTimeout(nextKey, (minGap + Math.random() * (maxGap - minGap)) * 1_000);
+    if (running()) key(context.currentTime);
+  };
+  key(context.currentTime + 3);
+  keyTimer = window.setTimeout(nextKey, (3 + minGap) * 1_000);
 
   return {
     stop(fade = 1) {
       window.clearInterval(progression);
-      window.clearTimeout(chimeTimer);
-      stopPulse();
+      window.clearTimeout(keyTimer);
       const end = context.currentTime;
       output.gain.cancelScheduledValues(end);
       output.gain.setValueAtTime(output.gain.value, end);
@@ -173,6 +196,12 @@ export function createAmbient(
           voices.forEach((voice) => voice.stop());
           stopWaves();
           sweep.stop();
+          sweep.disconnect();
+          sweepDepth.disconnect();
+          filter.disconnect();
+          reverb.disconnect();
+          wet.disconnect();
+          dry.disconnect();
           output.disconnect();
         },
         fade * 1_000 + 100,

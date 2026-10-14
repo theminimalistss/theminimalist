@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from 'react';
-import { HEARTBEAT } from '@/constants/sounds';
+import { HEARTBEAT } from '@/constants/motion';
 
 export function useHeartbeat<T extends HTMLElement>() {
   const ref = useRef<T>(null);

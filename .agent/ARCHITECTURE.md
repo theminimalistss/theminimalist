@@ -13,6 +13,8 @@ UI → hooks → services → repositories. Static presentation is the exception
   The static build preserves their HTML shells. `useCopyText` reports clipboard
   failure; the form exposes manual-copy text. Resize animations cancel/re-measure
   on interruption. Envelope CSS pauses via hook-managed visibility/entry/motion.
+  Explicit interaction state drives flap/letter opening; `useEnvelopeMotion`
+  animates persistent SVG attributes on inquiry changes with a finite 30 fps loop.
 - Products: `ProductPanels` + `useProductPanels` with `productArt` drawings that
   assemble into solid objects when opened; templates flow `templates.json` →
   `templates.service` → `useTemplates` → `TemplateCatalog`.
@@ -55,16 +57,22 @@ UI → hooks → services → repositories. Static presentation is the exception
   styled with the site's radius, colour, and timing tokens.
 - Pages: `src/router/pageModules.ts` lazy-loads and sequentially idle-prefetches page
   chunks after entry, skipping reported data-saving/2G connections.
-- Startup: readiness waits for DOM/fonts/visible images; optional audio/video does
-  not gate entry. Finite loader motion uses wall-clock time. Fullscreen WebGL caps
+- Startup: readiness waits for DOM/initial route/fonts/visible images and all
+  downloaded/decoded audio. Initial route mounting is required; font/image
+  readiness may use the 8 s cap. Audio failure
+  exposes retry while the page stays inert. Videos do not gate entry. Audio shares
+  one offline decoder, caches successful samples, and defers playback to a gesture.
+  Finite loader motion uses wall-clock time. Fullscreen WebGL caps
   DPR at 1.5 and the long edge at 2048 px (Works has its own 1800 px cap).
 - Hosting: static Vite output in `dist`, Node 24, `build:hostinger`/`deploy:check`;
   per-route HTML and assets are verified without a persistent server.
   Production CSS is extracted into one HTML-linked stylesheet (`cssCodeSplit: false`);
   route JavaScript remains lazy. This avoids delayed/unapplied route CSS on the
   deployed Works page. Source CSS stays scoped in its existing modules.
-- Transitions: data router + `PageLink` (view transitions), keyed route fade,
-  `useScrollReveal` (one IntersectionObserver for `[data-reveal]`).
+- Transitions: data router resolves lazy route modules before committing;
+  `PageLink` uses ordinary navigation. A keyed ivory overlay reveals live content
+  without fading/scaling scene ancestors or taking route snapshots. Scroll/focus
+  reset in a layout effect; `useScrollReveal` watches `[data-reveal]`.
 - Previews: `useWorkPreview` morphs card ↔ dialog with View Transitions.
 - Works: the existing work repository → validation service → `useHeroWorks` feeds
   `WorkExplorer`. `useWorkHover` owns preview intent; `useTesseract` owns rotation,
@@ -73,8 +81,9 @@ UI → hooks → services → repositories. Static presentation is the exception
   native image/video. `useWorksView` switches views in a view transition.
   `useAppEntered` holds the trace until the loader reveals the page. Pure geometry,
   trace, and placement live in utils; GLSL lives in `src/shaders/`.
-- Sound scenes: `useSoundScene` swaps the ambient preset; Works synthesizes glass
-  feedback in `soundEngine` with no extra audio files.
+- Sound scenes: `useSoundScene` changes interaction feedback only. A single
+  shared warm ambient graph persists across routes, including Works. It uses
+  crossfaded harmonies and soft key tones; no page-specific music/audio heartbeat.
 - Sound: `soundEngine` (Web Audio, samples + synthesis + ambient) driven by
   `useSound`/`useInteractionSounds`; preference via repository → service.
 - Sharing: `src/router/pageMeta.json` → runtime titles (`useDocumentMeta`) and

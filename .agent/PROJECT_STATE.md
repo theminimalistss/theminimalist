@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.25.0
+VERSION: 0.26.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.25.0 release (unified Contact and browser resilience). Deployment remains pending.
+CURRENT TASK: 0.26.0 release (Safari entry/envelope fixes, audio-gated loading, and shared soothing ambient). Deployment remains pending.
 
 ## Completed
 
@@ -76,8 +76,33 @@ CURRENT TASK: 0.25.0 release (unified Contact and browser resilience). Deploymen
   email-app hand-off, manual copy fallback, interrupted resize handling, and
   visible-only envelope motion. Legacy inquiry HTML/redirects remain available;
   selected options and collapsed channels have explicit accessibility fallbacks.
+- 0.26.0: Stable page entry without shell transforms or route snapshots; modules
+  resolve before navigation commits and scroll/focus reset before paint. Loader
+  progress includes downloaded/decoded audio, with strict completion and retry.
+  One warm ambient continues across every page; Contact's envelope responds to
+  inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 2026-10-14
+## Latest verification — 2026-10-15
+
+- `npm run check`: passed with 142 unit tests, formatting, lint, strict types,
+  production build, version consistency, and media audit (10.96 MiB).
+- `deploy:check`: verified 14 routes, three legacy aliases, the 404 fallback,
+  and 126 asset references. Shared CSS: 20.51 KB gzip.
+- Final production browser suite: 210 passed, 18 platform/visibility skips across
+  Chromium and desktop/mobile WebKit. Covers audio/initial-page completion beyond
+  the visual timeout, retry, cold navigation, stable header geometry, Contact
+  envelope interaction/tweening, reduced motion, and existing scene regressions.
+  One conditional skip had no unobscured far testimonial frame in that arrangement;
+  the equivalent desktop WebKit check passed.
+- Safari's inquiry-label focus mismatch was reproduced: Chrome focused the radio,
+  WebKit kept focus outside the form. Explicit interaction state now opens the
+  envelope in each engine; the SVG tween stays finite and cancels cleanly.
+- One ambient graph persists across page scenes. A 14 s offline preview measured
+  peak 0.0244 / RMS 0.00593 without clipping, stored in ignored QA artifacts.
+  Firefox remains Linux-CI-only; real-device listening/GPU checks remain outside
+  local automated coverage. No hosting publication performed.
+
+## Previous verification — 0.25.0, 2026-10-14
 
 - `npm run check`: passed with 136 unit tests, formatting, lint, strict types,
   production build, version consistency, and local media audit (10.96 MiB).

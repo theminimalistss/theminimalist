@@ -1,4 +1,5 @@
-import { lazy } from 'react';
+import type { ComponentType } from 'react';
+import type { ProductKey, ServiceKey } from '@/constants/pages';
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { PAGE_MODULES } from '@/router/pageModules';
@@ -8,44 +9,52 @@ import { PageLayout } from '@/ui/layouts/PageLayout';
 import { SiteLayout } from '@/ui/layouts/SiteLayout';
 import HomePage from '@/ui/pages/HomePage';
 
-const WorksPage = lazy(PAGE_MODULES.works);
-const ServicesPage = lazy(PAGE_MODULES.services);
-const ServicePage = lazy(PAGE_MODULES.service);
-const AboutPage = lazy(PAGE_MODULES.about);
-const FoundersPage = lazy(PAGE_MODULES.founders);
-const TestimonialsPage = lazy(PAGE_MODULES.testimonials);
-const ProductsPage = lazy(PAGE_MODULES.products);
-const ProductPage = lazy(PAGE_MODULES.product);
-const ContactPage = lazy(PAGE_MODULES.contact);
-const NotFoundPage = lazy(PAGE_MODULES.notFound);
+function lazyPage(load: () => Promise<{ default: ComponentType }>) {
+  return async () => ({ Component: (await load()).default });
+}
+
+function lazyService(service: ServiceKey) {
+  return async () => {
+    const { default: Page } = await PAGE_MODULES.service();
+    return { Component: () => <Page service={service} /> };
+  };
+}
+
+function lazyProduct(product: ProductKey) {
+  return async () => {
+    const { default: Page } = await PAGE_MODULES.product();
+    return { Component: () => <Page product={product} /> };
+  };
+}
 
 const router = createBrowserRouter([
   {
     element: <SiteLayout />,
+    hydrateFallbackElement: <></>,
     errorElement: <ErrorFallback />,
     children: [
       { index: true, element: <HomePage /> },
       {
         element: <PageLayout />,
         children: [
-          { path: ROUTES.works, element: <WorksPage /> },
-          { path: ROUTES.services, element: <ServicesPage /> },
-          { path: ROUTES.softwareDevelopment, element: <ServicePage service="software" /> },
-          { path: ROUTES.websiteDevelopment, element: <ServicePage service="websites" /> },
-          { path: ROUTES.branding, element: <ServicePage service="branding" /> },
-          { path: ROUTES.about, element: <AboutPage /> },
-          { path: ROUTES.founders, element: <FoundersPage /> },
-          { path: ROUTES.testimonials, element: <TestimonialsPage /> },
-          { path: ROUTES.products, element: <ProductsPage /> },
-          { path: ROUTES.software, element: <ProductPage product="software" /> },
-          { path: ROUTES.templates, element: <ProductPage product="templates" /> },
-          { path: ROUTES.hardware, element: <ProductPage product="hardware" /> },
-          { path: ROUTES.contact, element: <ContactPage /> },
+          { path: ROUTES.works, lazy: lazyPage(PAGE_MODULES.works) },
+          { path: ROUTES.services, lazy: lazyPage(PAGE_MODULES.services) },
+          { path: ROUTES.softwareDevelopment, lazy: lazyService('software') },
+          { path: ROUTES.websiteDevelopment, lazy: lazyService('websites') },
+          { path: ROUTES.branding, lazy: lazyService('branding') },
+          { path: ROUTES.about, lazy: lazyPage(PAGE_MODULES.about) },
+          { path: ROUTES.founders, lazy: lazyPage(PAGE_MODULES.founders) },
+          { path: ROUTES.testimonials, lazy: lazyPage(PAGE_MODULES.testimonials) },
+          { path: ROUTES.products, lazy: lazyPage(PAGE_MODULES.products) },
+          { path: ROUTES.software, lazy: lazyProduct('software') },
+          { path: ROUTES.templates, lazy: lazyProduct('templates') },
+          { path: ROUTES.hardware, lazy: lazyProduct('hardware') },
+          { path: ROUTES.contact, lazy: lazyPage(PAGE_MODULES.contact) },
           ...Object.entries(LEGACY_INQUIRY_PATHS).map(([path, to]) => ({
             path,
             element: <Navigate to={to} replace />,
           })),
-          { path: '*', element: <NotFoundPage /> },
+          { path: '*', lazy: lazyPage(PAGE_MODULES.notFound) },
         ],
       },
     ],

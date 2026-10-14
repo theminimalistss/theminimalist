@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { soundEngine } from '@/audio/soundEngine';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 
 type Options = { minimum: number; maximum: number };
@@ -12,6 +13,19 @@ function settled(target: EventTarget, events: string[], cleanup: (() => void)[])
     };
     cleanup.push(cancel);
     for (const event of events) target.addEventListener(event, done, { once: true });
+  });
+}
+
+function mainMounted(cleanup: (() => void)[]) {
+  if (document.getElementById(MAIN_CONTENT_ID)) return Promise.resolve();
+  return new Promise<void>((resolve) => {
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById(MAIN_CONTENT_ID)) return;
+      observer.disconnect();
+      resolve();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    cleanup.push(() => observer.disconnect());
   });
 }
 
@@ -29,58 +43,82 @@ function inView(element: Element) {
 function visibleMedia(cleanup: (() => void)[]) {
   const main = document.getElementById(MAIN_CONTENT_ID);
   if (!main) return [];
-  const images = Array.from(main.querySelectorAll('img'))
+  return Array.from(main.querySelectorAll('img'))
     .filter((image) => !image.complete && inView(image))
     .map((image) => settled(image, ['load', 'error'], cleanup));
-  return images;
 }
 
 export function usePageLoad({ minimum, maximum }: Options) {
   const [ready, setReady] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [audioError, setAudioError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const retryAudio = useCallback(() => {
+    setAudioError(false);
+    setProgress(0);
+    setAttempt((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     let active = true;
-    let total = 0;
-    let completed = 0;
     const timers: number[] = [];
     const cleanup: (() => void)[] = [];
     const wait = (duration: number) =>
       new Promise<void>((resolve) => timers.push(window.setTimeout(resolve, duration)));
-    const track = (tasks: Promise<unknown>[]) => {
-      total += tasks.length;
-      return Promise.all(
-        tasks.map((task) =>
-          task.then(() => {
-            completed += 1;
-            if (active) setProgress((current) => Math.max(current, completed / total));
-          }),
-        ),
-      );
+    const audio = soundEngine.prefetch();
+    const completed = new Set<number>();
+    const visualCount = 5;
+    const total = visualCount + audio.length;
+    const complete = (index: number) => {
+      completed.add(index);
+      if (active) setProgress(completed.size / total);
     };
-
     const loaded =
       document.readyState !== 'loading'
         ? Promise.resolve()
         : settled(document, ['DOMContentLoaded'], cleanup);
-    const fonts = document.fonts?.ready ?? Promise.resolve();
-    const essentials = track([loaded, fonts]);
-    const media = loaded
-      .then(() => new Promise((resolve) => requestAnimationFrame(resolve)))
-      .then(() => (active ? track(visibleMedia(cleanup)) : []));
-
-    void Promise.race([Promise.all([essentials, media, wait(minimum)]), wait(maximum)]).then(() => {
-      if (!active) return;
-      setProgress(1);
-      setReady(true);
+    const content = loaded
+      .then(() => (active ? mainMounted(cleanup) : undefined))
+      .then(
+        () =>
+          new Promise<void>((resolve) => {
+            if (!active) {
+              resolve();
+              return;
+            }
+            const frame = requestAnimationFrame(() => resolve());
+            cleanup.push(() => cancelAnimationFrame(frame));
+          }),
+      );
+    const fonts = content.then(() => document.fonts?.ready);
+    const media = content.then(() => (active ? Promise.all(visibleMedia(cleanup)) : undefined));
+    const visualTasks = [loaded, content, fonts, media, wait(minimum)];
+    const visuals = Promise.race([
+      Promise.all(
+        visualTasks.map((task, index) => task.catch(() => undefined).then(() => complete(index))),
+      ),
+      wait(maximum),
+    ]).then(() => {
+      // Fonts/images may time out; the initial route itself must exist before entry.
+      for (let index = 0; index < visualCount; index++) if (index !== 1) complete(index);
     });
-
+    const sounds = Promise.all(
+      audio.map((task, index) => task.then(() => complete(visualCount + index))),
+    );
+    void Promise.all([visuals, sounds, content]).then(
+      () => {
+        if (active) setReady(true);
+      },
+      () => {
+        if (active) setAudioError(true);
+      },
+    );
     return () => {
       active = false;
       timers.forEach((timer) => window.clearTimeout(timer));
       cleanup.forEach((cancel) => cancel());
     };
-  }, [minimum, maximum]);
+  }, [minimum, maximum, attempt]);
 
-  return { ready, progress };
+  return { ready, progress, audioError, retryAudio };
 }

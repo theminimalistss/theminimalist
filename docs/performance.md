@@ -22,10 +22,14 @@ Budgets enforced by `npm run media:audit`:
 
 ## Sound
 
-- Eight samples total about 16 KB per format; optional fetching does not block
-  entry and decoding happens after the first
-  gesture. Ambient and synthesized sounds download
+- Eight samples total about 16 KB per format; downloads and offline decoding
+  complete before entry. Shared promises/buffers avoid repeated work; retries
+  preserve successful samples. Playback starts after the first gesture. Ambient and synthesized sounds download
   nothing. The audio context suspends when sound is off or the page is hidden.
+- One shared ambient graph persists through route changes. It uses crossfaded
+  stable harmonies and soft key tones; there is no Works music restart or audio
+  heartbeat scheduler. The rendered preview was checked for clipping; perceived
+  volume and timbre still need listening on representative speakers/headphones.
 
 ## Startup and navigation
 
@@ -44,6 +48,12 @@ Budgets enforced by `npm run media:audit`:
 - Contact artwork uses native SVG/CSS; its idle motion stops before entry,
   offscreen, in hidden tabs, and under reduced motion. Form resizing only runs
   on structural changes, cancels interrupted animation, and uses no RAF loop.
+- Inquiry switching uses one finite 600 ms SVG tween at 30 fps, with no layout
+  reads or React renders per frame. It cancels on interruption, visibility loss,
+  and reduced motion. Explicit interaction state handles Safari label clicks.
+- Page navigation waits for its route module before committing. A short ivory
+  overlay reveals live content without snapshotting moving canvases or scaling
+  fixed/3D ancestors. Scroll/focus reset before paint; existing in-page morphs remain.
 
 Earlier headless Chromium measurements with software WebGL were approximately
 4.2s for first entry and 2.2s for same-session reload. They are historical local

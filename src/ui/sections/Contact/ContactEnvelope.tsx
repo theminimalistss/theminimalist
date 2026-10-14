@@ -1,5 +1,6 @@
 import { useId, type CSSProperties } from 'react';
 import type { InquiryKind } from '@/types/inquiry';
+import { useEnvelopeMotion } from '@/hooks/useEnvelopeMotion';
 
 const STAMPS: Record<InquiryKind, string> = {
   general:
@@ -8,11 +9,21 @@ const STAMPS: Record<InquiryKind, string> = {
   appointment: 'M-7-5h14v12h-14ZM-7-1h14M-3-8v4M3-8v4',
 };
 
-export function ContactEnvelope({ kind, fill }: { kind: InquiryKind; fill: number }) {
+export function ContactEnvelope({
+  kind,
+  fill,
+  animated,
+}: {
+  kind: InquiryKind;
+  fill: number;
+  animated: boolean;
+}) {
   const clip = `${useId()}-pocket`;
+  const ref = useEnvelopeMotion(kind, animated);
   return (
     <svg
       className="envelope"
+      ref={ref}
       viewBox="0 0 170 120"
       aria-hidden="true"
       style={{ '--fill': fill.toFixed(3) } as CSSProperties}
@@ -23,24 +34,26 @@ export function ContactEnvelope({ kind, fill }: { kind: InquiryKind; fill: numbe
         </clipPath>
       </defs>
       <path className="envelope-trail" d="M70 96 C104 98 130 76 166 30" pathLength="1" />
-      <g className="envelope-body">
-        <rect className="envelope-back" x="20" y="44" width="120" height="66" rx="2" />
-        <path className="envelope-flap envelope-flap--open" d="M20 44 80 12 140 44Z" />
-        <g clipPath={`url(#${clip})`}>
-          <g className="envelope-letter">
-            <rect x="30" y="30" width="100" height="70" rx="1.5" />
-            <path d="M42 46h52M42 56h76M42 66h64M42 76h70" />
+      <g data-envelope-response>
+        <g className="envelope-body">
+          <rect className="envelope-back" x="20" y="44" width="120" height="66" rx="2" />
+          <path className="envelope-flap envelope-flap--open" d="M20 44 80 12 140 44Z" />
+          <g clipPath={`url(#${clip})`}>
+            <g className="envelope-letter">
+              <rect x="30" y="30" width="100" height="70" rx="1.5" />
+              <path d="M42 46h52M42 56h76M42 66h64M42 76h70" />
+            </g>
           </g>
-        </g>
-        <path className="envelope-pocket" d="M20 110V62l60 26 60-26v48Z" />
-        <path className="envelope-seam" d="M20 110 66 82M140 110 94 82" />
-        <g transform="translate(121 94)">
-          <g className="envelope-stamp" key={kind}>
-            <rect x="-11" y="-11" width="22" height="22" rx="1.5" />
-            <path d={STAMPS[kind]} />
+          <path className="envelope-pocket" d="M20 110V62l60 26 60-26v48Z" />
+          <path className="envelope-seam" d="M20 110 66 82M140 110 94 82" />
+          <g transform="translate(121 94)">
+            <g className="envelope-stamp" data-envelope-stamp>
+              <rect x="-11" y="-11" width="22" height="22" rx="1.5" />
+              <path d={STAMPS[kind]} />
+            </g>
           </g>
+          <path className="envelope-flap envelope-flap--closed" d="M20 44 80 78 140 44Z" />
         </g>
-        <path className="envelope-flap envelope-flap--closed" d="M20 44 80 78 140 44Z" />
       </g>
       <g className="envelope-plane">
         <path className="envelope-plane-wing" d="M118 52 164 26 148 70 136 58Z" />

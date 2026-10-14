@@ -78,10 +78,6 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.24em;
 }
-.app-shell[data-entering] {
-  animation: shell-enter 1100ms var(--ease-editorial) both;
-}
-
 @keyframes loader-breathe {
   from {
     opacity: 0.55;
@@ -90,13 +86,6 @@
     opacity: 1;
   }
 }
-@keyframes shell-enter {
-  from {
-    opacity: 0.4;
-    transform: scale(0.985);
-  }
-}
-
 @media (min-width: 768px) {
   .page-loader-progress {
     top: calc(50% + 86px);
@@ -108,4 +97,25 @@
   .page-loader-mark svg {
     width: 104px;
   }
+}
+
+.page-loader-error {
+  position: absolute;
+  top: calc(50% + 125px);
+  left: 50%;
+  width: min(320px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.page-loader-error button {
+  min-height: 44px;
+  margin-top: 12px;
+  padding: 8px 20px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius);
+}
+.page-loader-error button:focus-visible {
+  outline-color: var(--color-loader-ink);
 }

@@ -8,9 +8,19 @@ type Props = {
   animated: boolean;
   bloomDuration: number;
   onExited: () => void;
+  audioError: boolean;
+  onRetryAudio: () => void;
 };
 
-export function PageLoader({ ready, progress, animated, bloomDuration, onExited }: Props) {
+export function PageLoader({
+  ready,
+  progress,
+  animated,
+  bloomDuration,
+  onExited,
+  audioError,
+  onRetryAudio,
+}: Props) {
   const { rootRef, canvasRef } = useLoaderScene({ ready, animated, bloomDuration, onExited });
   const [before, after] = LOTUS_MARK.established;
   return (
@@ -27,6 +37,14 @@ export function PageLoader({ ready, progress, animated, bloomDuration, onExited 
         <LotusMark />
         <span>{after}</span>
       </div>
+      {audioError && (
+        <div className="page-loader-error" data-sound="off">
+          <p>Some audio couldn’t load. Please retry to finish loading.</p>
+          <button type="button" onClick={onRetryAudio}>
+            Retry audio
+          </button>
+        </div>
+      )}
       <div
         className="page-loader-progress"
         role="progressbar"

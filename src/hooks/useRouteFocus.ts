@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 export const MAIN_CONTENT_ID = 'main-content';
 
@@ -9,7 +9,7 @@ export function focusMainContent() {
 export function useRouteFocus(pathname: string) {
   const previous = useRef(pathname);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (previous.current === pathname) return;
     previous.current = pathname;
     window.scrollTo({ top: 0 });

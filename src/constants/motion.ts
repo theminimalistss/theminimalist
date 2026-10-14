@@ -104,3 +104,6 @@ export const TESTIMONIAL_VIEW = {
   stagger: 30,
   easing: 'cubic-bezier(0.65, 0, 0.2, 1)',
 } as const;
+
+/** The Works heart remains visual; ambient music is shared across routes. */
+export const HEARTBEAT = { period: 1_000 } as const;

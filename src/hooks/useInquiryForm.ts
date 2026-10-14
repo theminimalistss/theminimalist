@@ -28,6 +28,7 @@ export function useInquiryForm() {
   const [errors, setErrors] = useState<InquiryErrors>({});
   const [status, setStatus] = useState<Status>('editing');
   const [kindFromLink, setKindFromLink] = useState(requested);
+  const [engaged, setEngaged] = useState(false);
   const visible = usePageVisibility();
   const reduced = useReducedMotion();
   const entered = useAppEntered();
@@ -44,6 +45,18 @@ export function useInquiryForm() {
     setErrors({});
     setStatus('editing');
   }
+
+  useEffect(() => {
+    const interaction = (event: Event) => {
+      setEngaged(event.target instanceof Node && !!formRef.current?.contains(event.target));
+    };
+    document.addEventListener('pointerdown', interaction, { passive: true });
+    document.addEventListener('focusin', interaction);
+    return () => {
+      document.removeEventListener('pointerdown', interaction);
+      document.removeEventListener('focusin', interaction);
+    };
+  }, []);
 
   useEffect(() => {
     const artwork = formRef.current?.querySelector('.envelope');
@@ -85,12 +98,14 @@ export function useInquiryForm() {
   useEffect(() => () => resizeAnimation.current?.cancel(), []);
 
   const setKind = useCallback((kind: InquiryKind) => {
+    setEngaged(true);
     setDraft((value) => ({ ...value, kind }));
     setErrors({});
     setStatus('editing');
   }, []);
 
   const setField = useCallback((field: InquiryField, value: string) => {
+    setEngaged(true);
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => {
       if (!current[field]) return current;
@@ -127,6 +142,7 @@ export function useInquiryForm() {
     errors,
     status,
     animate,
+    engaged,
     emailText,
     today: today(),
     email: contact.email,

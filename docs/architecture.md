@@ -60,10 +60,11 @@ window crosses the mobile breakpoint, along with gallery cards reflowing.
 ## Transitions and reveals
 
 `AppRouter` uses `createBrowserRouter` with `RouterProvider` from
-`react-router/dom`. `PageLink` (all links except the menu's) sets
-`viewTransition`: CSS lifts and fades the old snapshot while the header, which
-has its own `view-transition-name`, stays still. `SiteLayout` keys the outlet by
-path so every new page fades in, with or without the API. `useScrollReveal`
+`react-router/dom`. Lazy route modules resolve before navigation commits, keeping
+the previous page visible during loading. `PageLink` uses ordinary navigation;
+`SiteLayout` keys a short ivory reveal overlay by path. Live scene ancestors stay
+opaque and untransformed, avoiding Safari snapshot/3D compositing jumps. Scroll
+and focus reset in a layout effect before paint. `useScrollReveal`
 watches `[data-reveal="item"]` elements and `[data-reveal="stagger"]` groups with
 one IntersectionObserver (plus a MutationObserver for new routes) and marks them
 `data-revealed`; CSS provides the rise. Reduced motion shows everything at once.
@@ -79,14 +80,20 @@ runs, and requests made mid-morph are queued.
 
 ## Sound
 
-`soundEngine` (`src/audio/`) owns one `AudioContext`, created on the first click
-or key press (browsers block audio before a gesture). It decodes short samples
-(Opus/WebM, MP3 fallback) with slight pitch variation, throttles hover and
+`soundEngine` (`src/audio/`) prepares all eight samples in one offline decoder
+before entry. Format support chooses Opus/WebM or MP3 first; download/decoding
+failure tries the alternate format. Successful buffers and in-flight promises
+are shared; rejected samples can be retried without reloading successful ones.
+The playback `AudioContext` and ambient graph start on the first user gesture
+(a decoder fallback may create a silent context earlier on older engines).
+Playback uses slight pitch variation, throttles hover and
 detent sounds, and lets only one “transition” sound play per 150 ms so a menu
 link does not stack sounds. Synthesized sounds: the spiral whoosh (filtered
 noise that follows wheel speed), the preview swell (air sweep plus two soft sine
 notes in the ambient key), and the ambient bed (`ambient.ts`: detuned sine chords
-through a low-pass and long generated reverb, a slow ocean wash, rare chimes).
+through a low-pass and short generated reverb, with crossfaded chords, quiet air,
+and sparse felt-key tones). The same ambient graph persists across every route;
+Works changes interaction feedback only, never the background or its playback.
 The context suspends when sound is off or the tab is hidden.
 `useInteractionSounds` adds delegated hover/click listeners and navigation/menu
 sounds in `SiteLayout`; `useSpiralLoop` and `useWorkPreview` call the engine
@@ -108,15 +115,20 @@ centered so square crops keep it), app icons, and the web manifest.
 
 ## Loader and menu morph
 
-`usePageLoad` waits for DOM readiness, fonts, visible images, and a minimum intro
-(with an 8 s readiness cap). `PageLoader` keeps the app shell `inert` until then.
+`usePageLoad` waits for DOM/initial-route readiness, fonts, visible images, a
+minimum intro, and all downloaded/decoded sound samples. Five visual milestones
+and eight audio tasks form one fixed progress total. Initial route mounting and
+audio completion are required; only font/image readiness may use the 8 s cap.
+Audio failures keep progress below 100% and expose Retry
+audio; individual network/decode operations have 30 s failure deadlines.
+`PageLoader` keeps the app shell `inert` until readiness succeeds.
 `useLoaderScene` paints the lotus mark and “EST. 2020” into a texture
 (`lotusArtwork.ts`) and renders `src/shaders/loader.ts`: a bloom from the
 flower's base, a shimmer while waiting, then an organic opening onto the hero. A
 boot splash in `index.html` matches the loader before JavaScript runs.
 
-Optional sound downloads and video buffering do not gate entry. Sound retains
-its existing idle prefetch; video can start from its local poster. Finite loader
+Video buffering does not gate entry and starts from local posters. Audio
+preparation runs immediately and cannot start audible playback. Finite loader
 motion uses wall-clock time so slow frames do not prolong it. Fullscreen loader
 and menu buffers are capped at 1.5× DPR and a 2048 px edge.
 
@@ -236,6 +248,12 @@ animation, and measure the natural destination before animating again. Hooks
 pause the envelope before entry, when hidden/offscreen, or under reduced motion.
 Contact option styling uses selected-state attributes and native focus; collapsed
 social links explicitly leave the tab order and accessibility tree.
+Form pointer/focus interaction also sets `data-engaged`: Safari inquiry labels may
+change the radio without focusing it, so `:focus-within` alone cannot open the
+envelope. `useEnvelopeMotion` uses explicit native SVG transforms/opacity on
+persistent envelope/stamp groups, avoiding remount-triggered CSS restart behavior.
+The tween is finite, capped at 30 fps, and cancelled on interruption/visibility
+loss/reduced motion; it introduces no per-frame React updates.
 The overview keeps presentation copy in the UI, with no new domain rules.
 Founder previews reuse shared constants; Works artwork follows the existing
 `useHeroWorks` → service → repository pipeline and uses `WorkImage` for lazy,
@@ -399,8 +417,8 @@ traces in. Both canvases have view-transition names with no animation, so they
 stay live during the crossfade. Without the API, the new presentation fades in.
 
 Heart: a dot at the projected centre beats with a ripple. `useHeartbeat` sets
-`--beat-delay` so the CSS beat falls on `HEARTBEAT.period`, the same grid the
-music's `schedulePulse` uses.
+`--beat-delay` from `HEARTBEAT.period` in the motion constants. The beat is visual;
+it does not schedule audio or change the shared ambient.
 
 Wander: when idle, the cruise follows a heading from `chooseHeading` (yaw rate,
 sometimes reversed, and a pitch drift toward a new tilt), renewed every 9–16 s and
@@ -411,9 +429,8 @@ Resizing: `useLayoutGlide` watches `[data-glide]` elements. A move larger than t
 resize itself (a breakpoint or reflow) glides from the old box. A docked preview
 keeps its slot until it has fully dispersed.
 
-Sound: `useSoundScene('works')` crossfades the ambient bed to `AMBIENT_WORKS`: a
-warm pad plus `schedulePulse`, which adds a quiet heartbeat and a wandering
-plucked melody on the shared beat grid. While the scene is active, `soundEngine`
+Sound: `useSoundScene('works')` selects interaction feedback while the default
+warm pad/felt-key ambient continues uninterrupted. While the scene is active, `soundEngine`
 answers hover, click, and switch with synthesized glass tones, and adds per-point
 notes (`note`), assembly sparkle (`shimmer`), and `grab`/`fling` gestures through
 a shared short reverb.
