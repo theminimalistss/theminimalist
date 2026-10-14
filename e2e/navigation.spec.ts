@@ -15,9 +15,8 @@ const FOOTER_PAGES: readonly (readonly [string, RegExp, string?])[] = [
   ['Website templates', /Website templates/],
   ['Hardware products', /Hardware products/],
   ['Contact', /Let’s talk/],
-  ['General inquiry', /General inquiry/],
-  ['Request a quote', /Request a quote/],
-  ['Book an appointment', /Book an appointment/],
+  ['Request a quote', /Let’s talk/, 'Contact'],
+  ['Book an appointment', /Let’s talk/, 'Contact'],
 ];
 
 test('the footer sitemap reaches every page', async ({ page }) => {
@@ -126,32 +125,6 @@ test('the studio sprig waves, responds to the pointer, and respects reduced moti
   await expect(sprig.locator('svg')).toHaveCSS('filter', 'none');
 });
 
-test('overview directories are visible and navigate to each destination', async ({ page }) => {
-  test.slow();
-  for (const [path, name] of [['/contact', 'Ways to get in touch']] as const) {
-    await openPage(page, path);
-    const directory = page
-      .locator('.page-directory')
-      .getByRole('navigation', { name, exact: true });
-    const links = directory.getByRole('link');
-    await expect(links).toHaveCount(3);
-    for (let index = 0; index < 3; index += 1) {
-      const link = links.nth(index);
-      await expect(link).toBeInViewport({ ratio: 1 });
-      const destination = await link.getAttribute('href');
-      await link.focus();
-      await page.keyboard.press('Enter');
-      await expect(page).toHaveURL(new RegExp(`${destination}$`));
-      await expect(page.locator('#main-content')).toBeFocused();
-      await page.goBack();
-      await expect(page).toHaveURL(new RegExp(`${path}$`));
-    }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-      true,
-    );
-  }
-});
-
 test('optional audio and video downloads do not block the opening screen', async ({ page }) => {
   await page.route(/\.(?:mp3|mp4|webm)(?:\?|$)/u, () => {});
   await page.goto('/?utm_source=deployment-check', { waitUntil: 'domcontentloaded' });
@@ -206,7 +179,7 @@ test('new pages pass accessibility checks', async ({ page }) => {
     '/services/branding',
     '/products/hardware',
     '/contact',
-    '/inquiries/quote',
+    '/contact?inquiry=appointment',
   ]) {
     await openPage(page, path);
     await revealAll(page);
@@ -472,10 +445,9 @@ test('contact shows main social channels and reveals the rest under More', async
     'href',
     'https://www.behance.net/theminimalistdesigns',
   );
-  await expect(page.getByRole('link', { name: 'theminimalistss@gmail.com' })).toHaveAttribute(
-    'href',
-    'mailto:theminimalistss@gmail.com',
-  );
+  await expect(
+    page.locator('.contact-details').getByRole('link', { name: 'theminimalistss@gmail.com' }),
+  ).toHaveAttribute('href', 'mailto:theminimalistss@gmail.com');
   await expect(page.getByText('7:00 AM – 11:00 AM')).toBeVisible();
-  await expect(page.locator('.contact-details dt')).toHaveText(['Email', 'Hours']);
+  await expect(page.locator('.contact-details dt')).toHaveText(['Email', 'Hours', 'Replies']);
 });

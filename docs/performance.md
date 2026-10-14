@@ -14,15 +14,16 @@ Budgets enforced by `npm run media:audit`:
 - Video format: at most 1,250,000 bytes.
 - Videos: 576×720, 24 fps, approximately 8 seconds, no audio.
 - Transform-only continuous movement; passive wheel steering, no animation library.
-- WebGL effects draw one fullscreen triangle, cap pixel ratio at 2, and run only
-  while the loader is shown or the menu is morphing.
+- Loader/menu WebGL uses one fullscreen triangle, caps pixel ratio at 1.5 and
+  the long buffer edge at 2048 px, and only runs while needed. Works caps its
+  buffer at 1800 px; Services caps transition rendering at 30 fps and idle at 20.
 - View switches use compositor-friendly WAAPI transform animations; the spiral's
   RAF loop pauses during the flight.
 
 ## Sound
 
-- Eight samples total about 16 KB per format; they are fetched while the
-  loader shows (so the site is ready to sound) and decoded after the first
+- Eight samples total about 16 KB per format; optional fetching does not block
+  entry and decoding happens after the first
   gesture. Ambient and synthesized sounds download
   nothing. The audio context suspends when sound is off or the page is hidden.
 
@@ -34,16 +35,20 @@ Budgets enforced by `npm run media:audit`:
 - The menu's WebGL context and shader are prepared in an idle callback (or on
   first open), not during startup. The loader releases its WebGL context after
   it exits.
-- Inner pages are separate chunks (about 0.5–1.5 KB each) prefetched in an idle
-  callback, so navigation does not wait on the network or show a fallback.
+- Inner pages are lazy chunks prefetched sequentially after entry in idle
+  callbacks. Reported data-saving/2G connections skip this optional prefetch.
 - The spiral skips unchanged `z-index` writes; the menu cursor cue animates only
   while it is catching up to the pointer.
-- Main bundle is about 99 KB gzip, mostly React DOM (~200 KB minified) and React
-  Router (~36 KB); application code is about 45 KB minified.
+- Production CSS is HTML-linked in one bundle; route JavaScript stays lazy.
+  This removes the late route stylesheet dependency observed on Hostinger.
+- Contact artwork uses native SVG/CSS; its idle motion stops before entry,
+  offscreen, in hidden tabs, and under reduced motion. Form resizing only runs
+  on structural changes, cancels interrupted animation, and uses no RAF loop.
 
-Measured on the production build in headless Chromium with software WebGL:
-first load to interactive ≈ 4.2s, same-session reload ≈ 2.2s, 0 chunk requests
-and no fallback when navigating after idle. Real devices with GPU are faster.
+Earlier headless Chromium measurements with software WebGL were approximately
+4.2s for first entry and 2.2s for same-session reload. They are historical local
+observations, not current Lighthouse scores or real-device guarantees. Release
+verification and asset audit results live in `.agent/PROJECT_STATE.md`.
 
 Targets: Lighthouse performance 90+, accessibility/best practices/SEO 95+.
 Measure the production build with representative mobile throttling and autoplay.

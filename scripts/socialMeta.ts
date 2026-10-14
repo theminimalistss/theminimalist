@@ -3,6 +3,7 @@ import packageJson from '../package.json' with { type: 'json' };
 import founders from '../src/constants/founders.json' with { type: 'json' };
 import social from '../src/constants/social.json' with { type: 'json' };
 import contact from '../src/constants/contact.json' with { type: 'json' };
+import { LEGACY_INQUIRY_PATHS } from '../src/router/paths.ts';
 import {
   formatPageTitle,
   NOT_FOUND_META,
@@ -121,6 +122,14 @@ export function socialMeta(siteUrl: string): Plugin {
         for (const [path, page] of Object.entries(PAGE_META)) {
           if (path === '/') continue;
           const source = withTags(html, socialTags(siteUrl, path, page));
+          this.emitFile({ type: 'asset', fileName: `${path.slice(1)}/index.html`, source });
+          this.emitFile({ type: 'asset', fileName: `${path.slice(1)}.html`, source });
+        }
+        // Static hosts must serve a shell for legacy links before React redirects them.
+        for (const [path, to] of Object.entries(LEGACY_INQUIRY_PATHS)) {
+          const destination = to.split('?')[0]!;
+          const page = PAGE_META[destination] ?? NOT_FOUND_META;
+          const source = withTags(html, socialTags(siteUrl, destination, page));
           this.emitFile({ type: 'asset', fileName: `${path.slice(1)}/index.html`, source });
           this.emitFile({ type: 'asset', fileName: `${path.slice(1)}.html`, source });
         }

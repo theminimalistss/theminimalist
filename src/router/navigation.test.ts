@@ -17,7 +17,7 @@ describe('site navigation', () => {
     expect(services && isNavGroupActive(services, ROUTES.branding)).toBe(true);
     expect(studio && isNavGroupActive(studio, ROUTES.founders)).toBe(true);
     expect(products && isNavGroupActive(products, ROUTES.hardware)).toBe(true);
-    expect(contact && isNavGroupActive(contact, ROUTES.quote)).toBe(true);
+    expect(contact && isNavGroupActive(contact, ROUTES.contact)).toBe(true);
     expect(works && isNavGroupActive(works, ROUTES.home)).toBe(false);
     expect(works && isNavGroupActive(works, '/worksheet')).toBe(false);
   });

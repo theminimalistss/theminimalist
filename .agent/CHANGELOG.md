@@ -5,6 +5,66 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.25.0] — 2026-10-14
+
+### Changed
+
+- Contact is one straightforward page: the intro, direct details (email with a
+  copy button, hours, replies), and compact social channels sit beside a single
+  form that switches between Say hello, Request a quote, and Book a meeting,
+  showing only the fields each needs. Sending validates the form and opens the
+  visitor's email app with the message composed, with a copy fallback.
+- The form resizes smoothly between options. An envelope illustration opens as
+  you start, lifts its letter as the message grows, stamps a symbol for each
+  option, and folds into a paper plane that flies off when sent. The selected
+  option fills with a sweep, and fields stagger in.
+- The General inquiry, Request a quote, and Book an appointment sub-pages are
+  gone; every quote and appointment link opens Contact with that option chosen,
+  and old `/inquiries/*` links redirect there. The menu's Contact group no longer
+  lists sub-pages, and the footer column is now Contact.
+- Colour consistency: the form card, contact and product materials, and error
+  text use palette tokens only; small labels meet contrast on every background.
+
+### Fixed
+
+- The Contact page fills the viewport, so no blank band sits above the footer.
+- The More social channels match the main tiles in layout and hover, and open
+  smoothly below them instead of stretching sideways.
+- Missing or denied clipboard access now exposes the composed message for manual
+  copying and gives direct email copying an explicit failure message.
+- Rapid form changes resize from the current pose to the natural final height;
+  previous animations are cancelled and cleaned up. Envelope motion pauses before
+  entry, offscreen, in hidden tabs, and under reduced motion.
+- Contact selection and keyboard focus no longer require `:has()`. Collapsed
+  social links leave the tab order and accessibility tree even without `inert`.
+  Contact/Products have fallback colours and viewport sizing for older engines.
+- Legacy inquiry URLs retain generated Contact HTML shells on static hosts.
+  Appointment validation rejects malformed and impossible calendar dates.
+
+### AI session
+
+Changed: `ContactPage`, new `InquiryForm`, `ContactDirect`, `ContactChannels`,
+and `ContactEnvelope`; `useInquiryForm`, `useCopyText`, and `inquiry.service`
+with tests; contact links and legacy redirects in the router; footer, menu, and
+page links; share metadata; `contact.css`, `pages.css`, and `products.css`
+colour tokens; browser tests.
+Release review adds clipboard/resize/visibility fallbacks, date validation,
+legacy HTML generation/audit, and browser support documentation.
+
+Reason: The user asked for one straightforward contact page without sub-pages,
+with smooth resizing, a better envelope animation, consistent colours, no blank
+band, and a fixed More reveal for the social channels.
+
+Verification: `npm run check` passed (136 unit tests, formatting, lint, strict
+types, production build, version consistency, and media audit). `deploy:check`
+verified 14 current routes, three legacy aliases, the 404 fallback, and 126 asset
+references. Full production browser suite: 190 passed, 17 configured skips across
+desktop Chromium and desktop/mobile WebKit. Contact was checked at 320, 390,
+768, and 1440 px in both engines with no horizontal overflow and confirmed
+offscreen motion suspension. Shared CSS is 20.51 KB gzip; local media remains
+10.96 MiB. Firefox's local binary cannot launch on this macOS version; the Linux
+CI project remains enabled. No hosting publication performed.
+
 ## [0.24.0] — 2026-10-14
 
 ### Changed

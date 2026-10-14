@@ -1,5 +1,21 @@
 # Architecture decisions
 
+## 2026-10-14 — Unified Contact with explicit browser fallbacks
+
+Decision: Keep inquiry validation and mail composition in a pure service;
+browser state, copying, resizing, and visibility remain in hooks. No backend
+adapter is introduced for a mail-app hand-off. Generate legacy inquiry HTML
+shells with Contact metadata so direct static-host loads reach their redirects.
+
+Reason: Release the accumulated Contact redesign without silent copy failures,
+interrupted-height clipping, or selection that depends on recent CSS selectors.
+
+Impact: Manual message copying works when clipboard access fails. Selected
+options use data attributes; hidden channel links have explicit tab/ARIA state.
+Envelope motion suspends when invisible; no new animation dependency, media,
+or continuous JavaScript frame loop. Browser syntax targets are distinct from
+verified browser support; local Firefox remains a CI verification requirement.
+
 ## 2026-10-14 — Product panels and validated template catalog
 
 Decision: Use layered native SVG artwork and CSS assembly for the three Product

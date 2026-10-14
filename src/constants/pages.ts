@@ -97,36 +97,4 @@ export const PRODUCT_COPY = {
   },
 } as const satisfies Record<string, ProductCopy>;
 
-export const INQUIRY_COPY = {
-  general: {
-    title: 'General inquiry',
-    accent: 'Say hello.',
-    lead: 'Questions, ideas, introductions. Tell us a little about what you have in mind.',
-    checklist: ['Your name and email', 'Organisation (optional)', 'What you’d like to talk about'],
-  },
-  quote: {
-    title: 'Request a quote',
-    accent: 'Let’s scope it together.',
-    lead: 'Share the shape of a project or product order and we’ll prepare a considered estimate.',
-    checklist: [
-      'Project or product type',
-      'Goals, scope, and timeline',
-      'Budget range',
-      'Contact details',
-    ],
-  },
-  appointment: {
-    title: 'Book an appointment',
-    accent: 'In person or online.',
-    lead: 'Reserve time with the studio to talk through a project, a product, or an idea.',
-    checklist: [
-      'Preferred date and time',
-      'In person or online',
-      'What you’d like to discuss',
-      'Contact details',
-    ],
-  },
-} as const satisfies Record<string, PageCopy>;
-
 export type ProductKey = keyof typeof PRODUCT_COPY;
-export type InquiryKey = keyof typeof INQUIRY_COPY;

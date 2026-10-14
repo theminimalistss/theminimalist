@@ -38,7 +38,8 @@ prints a reminder; development builds can still be checked.
 After a deployment, verify:
 
 - Open and refresh `/about`, `/services/software`, `/products/templates`, and
-  `/inquiries/quote` directly; check their titles and previews. Unknown routes
+  `/contact` directly; check their titles and previews. `/inquiries/quote` should
+  land on `/contact?inquiry=quote`. Unknown routes
   should show the app's 404, while missing media must return 404 rather than HTML.
 - Confirm scripts and styles have correct MIME types, fonts/media load over HTTPS,
   and videos support byte-range requests. The app uses local optimized media.
@@ -48,6 +49,9 @@ After a deployment, verify:
 - Check Products panel expansion with mouse/keyboard and two-step navigation
   on touch. Confirm template filters and coming-soon category pages work after
   a direct load and browser refresh.
+- Check all three legacy inquiry URLs with direct refresh, including their
+  generated HTML shells. Confirm Contact's mail-app hand-off and the manual-copy
+  fallback with blocked clipboard access; the form has no submission backend.
 - Check HTML revalidation and immutable caching for hashed `/assets/` files;
   public icons, manifests, and route HTML must update after a new release.
 

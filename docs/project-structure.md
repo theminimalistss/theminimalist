@@ -19,16 +19,20 @@
 | `src/constants/brand.ts`                           | Lotus mark geometry and “EST. 2020” lockup                        |
 | `src/router/`                                      | Route paths, navigation structure, lazy pages                     |
 | `src/ui/layouts/`                                  | `SiteLayout` (header, menu, focus) and `PageLayout` (footer)      |
-| `src/ui/pages/`                                    | Home, Works, Studio, Products, Contact, inquiries, 404            |
+| `src/ui/pages/`                                    | Home, Works, Studio, Products, Contact, 404                       |
 | `src/ui/sections/Hero/`                            | Hero shell, controls, `WorkCollection`, statement, footer         |
 | `src/ui/sections/Page/`                            | Page intro, sections, link cards, tabs, breadcrumbs, placeholders |
 | `src/ui/sections/Products/`                        | Interactive product panels and filterable template catalog        |
+| `src/ui/sections/Contact/`                         | Unified inquiry form, direct details, social disclosure, envelope |
+| `src/hooks/useInquiryForm.ts`, `useCopyText.ts`    | Form state, resize/visibility, mail hand-off, clipboard handling  |
+| `src/services/inquiry.service.ts`                  | Kind-specific validation and pure email composition               |
+| `src/types/inquiry.ts`, `src/constants/inquiry.ts` | Inquiry contracts and presentation options                        |
 | `src/utils/productArt.ts`                          | Pure layered isometric SVG geometry and assembly poses            |
 | `src/hooks/useProductPanels.ts`, `useTemplates.ts` | Panel selection and cancellable template loading                  |
 | `src/types/template.ts`                            | Template model, layouts, and repository contract                  |
 | `src/repositories/templates.{json,repository.ts}`  | Provisional catalog and isolated content snapshots                |
 | `src/services/templates.service.ts`                | Template validation and category derivation                       |
-| `src/constants/pages.ts`                           | Temporary product and inquiry copy                                |
+| `src/constants/pages.ts`                           | Temporary service and product copy                                |
 | `src/constants/founders.{json,ts}`                 | Founding partners (names, roles, portraits)                       |
 | `src/constants/social.{json,ts}`, `contact.json`   | Social channels (main/More) and contact details                   |
 | `src/constants/menu.ts`                            | Menu section previews and cursor cue labels                       |

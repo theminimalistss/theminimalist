@@ -8,7 +8,6 @@ export const PAGE_MODULES = {
   products: () => import('@/ui/pages/ProductsPage'),
   product: () => import('@/ui/pages/ProductPage'),
   contact: () => import('@/ui/pages/ContactPage'),
-  inquiry: () => import('@/ui/pages/InquiryPage'),
   notFound: () => import('@/ui/pages/NotFoundPage'),
 } as const;
 

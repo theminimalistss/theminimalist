@@ -103,29 +103,8 @@
       "title": "Contact",
       "eyebrow": "Contact",
       "heading": "Let’s talk.",
-      "description": "Start a conversation with The Minimalist — Design Studio: inquiries, quotes, and appointments.",
+      "description": "Contact The Minimalist — Design Studio: say hello, request a quote, or book a meeting, all from one page.",
       "image": "contact"
-    },
-    "/inquiries": {
-      "title": "General inquiry",
-      "eyebrow": "Inquiries",
-      "heading": "Say hello.",
-      "description": "Questions, ideas, introductions. Tell The Minimalist — Design Studio a little about what you have in mind.",
-      "image": "inquiries"
-    },
-    "/inquiries/quote": {
-      "title": "Request a quote",
-      "eyebrow": "Inquiries — Quote",
-      "heading": "Let’s scope it together.",
-      "description": "Share the shape of a project or product order and The Minimalist — Design Studio will prepare a considered estimate.",
-      "image": "quote"
-    },
-    "/inquiries/appointment": {
-      "title": "Book an appointment",
-      "eyebrow": "Inquiries — Appointment",
-      "heading": "In person or online.",
-      "description": "Reserve time with The Minimalist — Design Studio to talk through a project, a product, or an idea.",
-      "image": "appointment"
     }
   },
   "notFound": {

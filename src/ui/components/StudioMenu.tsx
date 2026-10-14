@@ -70,7 +70,7 @@ export function StudioMenu({ open, onClose }: Props) {
         <nav ref={areaRef} className="menu-site-nav" aria-label="Site">
           <ol className="menu-nav">
             {MENU_ITEMS.map((item, index) => {
-              const preview = MENU_PREVIEWS[item.to];
+              const preview = MENU_PREVIEWS[item.to as keyof typeof MENU_PREVIEWS];
               const current =
                 item.to === ROUTES.home
                   ? pathname === ROUTES.home

@@ -4,7 +4,7 @@ const PAGES = [
   ['/', 'The Minimalist — Design Studio', 'home'],
   ['/about', 'About — The Minimalist', 'about'],
   ['/products/software', 'Software solutions — The Minimalist', 'software'],
-  ['/inquiries/quote', 'Request a quote — The Minimalist', 'quote'],
+  ['/contact', 'Contact — The Minimalist', 'contact'],
 ] as const;
 
 const content = (html: string, key: string) =>

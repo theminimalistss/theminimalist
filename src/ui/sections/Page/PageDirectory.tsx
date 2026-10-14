@@ -1,11 +1,11 @@
 import { useId, type ReactNode } from 'react';
-import type { RoutePath } from '@/router/paths';
+import type { LinkTarget } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
 import { PageLink } from '@/ui/components/PageLink';
 import '@/ui/styles/overview.css';
 
 export type DirectoryItem = {
-  to: RoutePath;
+  to: LinkTarget;
   label: string;
   description: string;
   category: string;
@@ -61,20 +61,5 @@ export function PageDirectory({
         </ul>
       </nav>
     </section>
-  );
-}
-
-export function DirectoryArtwork({
-  icon,
-  word,
-}: {
-  icon: 'grid' | 'diamond' | 'leaf' | 'sun' | 'sprig' | 'plus';
-  word: string;
-}) {
-  return (
-    <div className="directory-artwork">
-      <Icon name={icon} />
-      <span className="serif">{word}</span>
-    </div>
   );
 }

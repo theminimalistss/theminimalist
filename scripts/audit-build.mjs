@@ -5,6 +5,7 @@ const root = resolve('dist');
 const { pages } = JSON.parse(await readFile('src/router/pageMeta.json', 'utf8'));
 let checked = 0;
 const failures = [];
+const legacyRoutes = ['/inquiries', '/inquiries/quote', '/inquiries/appointment'];
 
 async function inspectAsset(url, source) {
   if (!url.startsWith('/') || url.startsWith('//')) return;
@@ -22,7 +23,7 @@ async function inspectAsset(url, source) {
   }
 }
 
-for (const route of [...Object.keys(pages), '/404']) {
+for (const route of [...Object.keys(pages), ...legacyRoutes, '/404']) {
   const file =
     route === '/404' ? '404.html' : `${route.slice(1)}${route === '/' ? '' : '/'}index.html`;
   try {
@@ -60,6 +61,6 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.info(
-    `Production output verified: ${Object.keys(pages).length} routes, 404 fallback, ${checked} asset references.`,
+    `Production output verified: ${Object.keys(pages).length} routes, ${legacyRoutes.length} legacy aliases, 404 fallback, ${checked} asset references.`,
   );
 }

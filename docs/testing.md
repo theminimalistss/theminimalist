@@ -20,6 +20,9 @@ Run `npm run test:e2e` after interaction or layout changes.
   keyboard foregrounding, live reduced-motion changes, overflow, 404, axe scans.
 - Products: expanding panels on hover/focus, keyboard navigation, two-step touch
   navigation, accessibility, template filtering, and category availability labels.
+- Contact: kind-specific fields and validation, legacy route HTML/redirects,
+  missing/denied/successful clipboard access, manual copying, interrupted resizing,
+  reduced motion, and collapsed channel tab order without native `inert`.
 
 Playwright runs Chromium desktop, WebKit desktop, and WebKit mobile against a
 production build; CI adds Firefox (set `E2E_FIREFOX=1` to include it locally).
@@ -31,6 +34,10 @@ remembered sound toggle. Failures retain screenshots and traces in ignored outpu
 Use `E2E_PORT=4210 npm run test:e2e` when the default port is occupied. Each port
 uses an isolated production build in `.cache/e2e/<port>` and separate reports in
 `test-results/<port>` and `playwright-report/<port>`.
+
+Browser syntax targets are separate from verified support. See
+[browser support](browser-support.md); local Firefox cannot currently launch on
+this macOS version and remains enabled in the Linux CI matrix.
 
 ## Visual and performance review
 

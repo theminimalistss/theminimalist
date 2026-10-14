@@ -219,10 +219,23 @@ of the drawing part by part over the fading wireframe. Website templates are the
 one available category: `templates.json` → `templates.service` (validation,
 categories) → `useTemplates` → `TemplateCatalog`, a filterable grid with
 schematic `TemplatePreview` layouts. Software and hardware read "Coming soon".
-Contact's directory
-items reuse navigation constants; Contact retains its shared JSON and social
-disclosure. Longer overview titles use a smaller responsive scale. Desktop uses a directory beside the intro;
-phones/tablets put all three links in a row directly beneath it.
+Contact is a single page: `InquiryForm` → `useInquiryForm` (kind from
+`?inquiry=`, field state, a smooth height animation, mail-app hand-off and copy
+fallback) → `inquiry.service` (validation and email composition). `ContactDirect`
+shows the shared contact JSON and `ContactChannels` (main channels plus a
+height-animated More); `ContactEnvelope` animates from
+the form's focus and status. Old `/inquiries/*` routes redirect via
+`LEGACY_INQUIRY_PATHS`, and `CONTACT_LINKS` are the quote and appointment link
+targets. Longer overview titles use a smaller responsive scale.
+Legacy HTML shells are emitted by `socialMeta` with Contact metadata, so static
+hosts do not need to recover an absent inquiry file before the client redirect.
+Clipboard access is feature-checked; denial exposes a read-only composed message
+for manual copying. No submission backend or delivery receipt is implied.
+Resize transitions measure the current animated pose, cancel the previous
+animation, and measure the natural destination before animating again. Hooks
+pause the envelope before entry, when hidden/offscreen, or under reduced motion.
+Contact option styling uses selected-state attributes and native focus; collapsed
+social links explicitly leave the tab order and accessibility tree.
 The overview keeps presentation copy in the UI, with no new domain rules.
 Founder previews reuse shared constants; Works artwork follows the existing
 `useHeroWorks` → service → repository pipeline and uses `WorkImage` for lazy,

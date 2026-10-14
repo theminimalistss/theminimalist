@@ -1,6 +1,6 @@
-import { ROUTES, type RoutePath } from '@/router/paths';
+import { CONTACT_LINKS, ROUTES, type LinkTarget } from '@/router/paths';
 
-export type NavItem = { label: string; to: RoutePath; description: string };
+export type NavItem = { label: string; to: LinkTarget; description: string };
 export type NavGroup = NavItem & { children: readonly NavItem[] };
 
 export const STUDIO_PAGES: readonly NavItem[] = [
@@ -49,20 +49,15 @@ export const PRODUCT_PAGES: readonly NavItem[] = [
   },
 ];
 
-export const INQUIRY_PAGES: readonly NavItem[] = [
-  {
-    label: 'General inquiry',
-    to: ROUTES.inquiries,
-    description: 'Questions, ideas, and introductions.',
-  },
+export const INQUIRY_LINKS: readonly NavItem[] = [
   {
     label: 'Request a quote',
-    to: ROUTES.quote,
+    to: CONTACT_LINKS.quote,
     description: 'Scope and pricing for a project or product.',
   },
   {
     label: 'Book an appointment',
-    to: ROUTES.appointment,
+    to: CONTACT_LINKS.appointment,
     description: 'A conversation with the studio.',
   },
 ];
@@ -86,10 +81,7 @@ export const PRIMARY_NAVIGATION: readonly NavGroup[] = [
     label: 'Contact',
     to: ROUTES.contact,
     description: 'Start a conversation.',
-    children: [
-      { label: 'Contact', to: ROUTES.contact, description: 'How to reach the studio.' },
-      ...INQUIRY_PAGES,
-    ],
+    children: [],
   },
 ];
 

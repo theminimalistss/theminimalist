@@ -1,6 +1,6 @@
 import { SERVICE_COPY, SERVICE_PROCESS, type ServiceKey } from '@/constants/pages';
 import { SERVICE_PAGES } from '@/router/navigation';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS, ROUTES } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
 import { Breadcrumbs } from '@/ui/sections/Page/Breadcrumbs';
 import { Checklist } from '@/ui/sections/Page/Checklist';
@@ -12,7 +12,7 @@ import { SectionTabs } from '@/ui/sections/Page/SectionTabs';
 const NEXT = [
   { label: 'Works', to: ROUTES.works, description: 'Concept studies from the studio.' },
   { label: 'Testimonials', to: ROUTES.testimonials, description: 'What our clients say.' },
-  { label: 'Request a quote', to: ROUTES.quote, description: 'Start a project with us.' },
+  { label: 'Request a quote', to: CONTACT_LINKS.quote, description: 'Start a project with us.' },
 ] as const;
 
 export default function ServicePage({ service }: { service: ServiceKey }) {
@@ -22,10 +22,10 @@ export default function ServicePage({ service }: { service: ServiceKey }) {
       <Breadcrumbs trail={[{ label: 'Services', to: ROUTES.services }, { label: copy.title }]} />
       <SectionTabs items={SERVICE_PAGES} label="Services" />
       <PageIntro eyebrow="Services" title={copy.title} accent={copy.accent} lead={copy.lead}>
-        <PageLink className="text-button" to={ROUTES.quote}>
+        <PageLink className="text-button" to={CONTACT_LINKS.quote}>
           Request a quote <span aria-hidden="true">↗</span>
         </PageLink>
-        <PageLink className="text-button" to={ROUTES.appointment}>
+        <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
           Book an appointment <span aria-hidden="true">↗</span>
         </PageLink>
       </PageIntro>

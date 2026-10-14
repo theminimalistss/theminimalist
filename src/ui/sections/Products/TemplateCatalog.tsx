@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTemplates } from '@/hooks/useTemplates';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
 import { TemplatePreview } from './TemplatePreview';
 
@@ -54,7 +54,7 @@ export function TemplateCatalog() {
                   <li key={feature}>{feature}</li>
                 ))}
               </ul>
-              <PageLink className="text-button" to={ROUTES.quote}>
+              <PageLink className="text-button" to={CONTACT_LINKS.quote}>
                 Ask about {template.name} <span aria-hidden="true">↗</span>
               </PageLink>
             </div>

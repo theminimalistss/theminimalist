@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.24.0 · Immersive studio portfolio**
+**Design studio · v0.25.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -16,8 +16,9 @@ before a public studio launch.
 
 Spatial spiral and gallery with morphing transitions, a WebGL lotus intro and
 menu, page transitions, scroll reveals, and quiet interface sound with a
-generative ambient bed (toggle “Sound” in the header). Built for Chrome/Edge 90+,
-Firefox 90+, and Safari/iOS 15+, with fallbacks for older features.
+generative ambient bed (toggle “Sound” in the header). Supports current Chrome,
+Edge, Firefox, and Safari/iOS with feature fallbacks; see
+[browser support](docs/browser-support.md) for tested coverage and limits.
 
 Works fills the viewport with an interactive WebGL tesseract on the ivory canvas.
 It traces itself in, wanders slowly with a heartbeat at its centre, and shows the
@@ -36,18 +37,19 @@ coming soon; approved template files, previews, and pricing remain pending.
 
 ## Site map
 
-| Section  | Pages                                                                          |
-| -------- | ------------------------------------------------------------------------------ |
-| Home     | `/` — the collection in motion (spiral ↔ gallery)                              |
-| Works    | `/works`                                                                       |
-| Services | `/services`, `/services/software`, `/services/websites`, `/services/branding`  |
-| Studio   | `/about`, `/founders`, `/testimonials`                                         |
-| Products | `/products`, `/products/software`, `/products/templates`, `/products/hardware` |
-| Contact  | `/contact`, `/inquiries`, `/inquiries/quote`, `/inquiries/appointment`         |
+| Section  | Pages                                                                              |
+| -------- | ---------------------------------------------------------------------------------- |
+| Home     | `/` — the collection in motion (spiral ↔ gallery)                                  |
+| Works    | `/works`                                                                           |
+| Services | `/services`, `/services/software`, `/services/websites`, `/services/branding`      |
+| Studio   | `/about`, `/founders`, `/testimonials`                                             |
+| Products | `/products`, `/products/software`, `/products/templates`, `/products/hardware`     |
+| Contact  | `/contact` (`?inquiry=quote` or `appointment` preselects; `/inquiries/*` redirect) |
 
 Every page is reachable from the header (desktop), the menu, and the footer
 sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home, Works,
-Founders, and Contact hold clearly marked placeholder content; inquiry forms are not live yet.
+Founders, and Contact hold clearly marked placeholder content. Contact's form composes an
+email in the visitor's mail app; there is no submission backend yet.
 
 ## Run locally
 
@@ -132,7 +134,7 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning (currently `0.24.0`). Keep `package.json`, `package-lock.json`,
+Semantic Versioning (currently `0.25.0`). Keep `package.json`, `package-lock.json`,
 `.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 

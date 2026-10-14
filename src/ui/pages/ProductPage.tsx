@@ -1,6 +1,6 @@
 import { PRODUCT_COPY, type ProductKey } from '@/constants/pages';
 import { PRODUCT_PAGES } from '@/router/navigation';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS, ROUTES } from '@/router/paths';
 import { Breadcrumbs } from '@/ui/sections/Page/Breadcrumbs';
 import { Checklist } from '@/ui/sections/Page/Checklist';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
@@ -23,11 +23,11 @@ export default function ProductPage({ product }: { product: ProductKey }) {
         accent={copy.accent}
         lead={copy.lead}
       >
-        <PageLink className="text-button" to={ROUTES.quote}>
+        <PageLink className="text-button" to={CONTACT_LINKS.quote}>
           {copy.status === 'available' ? 'Request a quote' : 'Ask to be notified'}{' '}
           <span aria-hidden="true">↗</span>
         </PageLink>
-        <PageLink className="text-button" to={ROUTES.appointment}>
+        <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
           Book an appointment <span aria-hidden="true">↗</span>
         </PageLink>
       </PageIntro>

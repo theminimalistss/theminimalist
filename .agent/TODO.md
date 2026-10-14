@@ -2,10 +2,10 @@
 
 - Review direction and replace stock concepts with approved portfolio work.
 - Supply final logo, copy, project metadata, and production domain before launch.
-- Replace placeholder copy on About, Testimonials, Products, and Inquiries.
+- Replace provisional copy and catalog entries on About and Products.
 - Add short founder biographies when the partners supply them.
-- Define submission requirements, then build inquiry, quote, and appointment
-  forms through hooks, service validation, and a repository. Email is available now.
+- Define delivery requirements before adding an inquiry backend/repository;
+  the unified Contact form currently validates and composes an email only.
 - Replace the six provisional template entries with approved catalog data,
   live previews, template files, and pricing; the validated repository flow exists.
 - Supply software/hardware catalog content before changing their coming-soon status.

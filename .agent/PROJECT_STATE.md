@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.24.0
+VERSION: 0.25.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.24.0 release (interactive Products panels and provisional template catalog). Deployment remains pending.
+CURRENT TASK: 0.25.0 release (unified Contact and browser resilience). Deployment remains pending.
 
 ## Completed
 
@@ -72,8 +72,29 @@ CURRENT TASK: 0.24.0 release (interactive Products panels and provisional templa
   assembling layered isometric drawings into textured objects. Touch opens a
   panel before following its link. Website templates has a filterable, validated
   provisional catalog; software and hardware remain coming soon.
+- 0.25.0: One Contact form for hello, quotes, and meetings, with local validation,
+  email-app hand-off, manual copy fallback, interrupted resize handling, and
+  visible-only envelope motion. Legacy inquiry HTML/redirects remain available;
+  selected options and collapsed channels have explicit accessibility fallbacks.
 
 ## Latest verification — 2026-10-14
+
+- `npm run check`: passed with 136 unit tests, formatting, lint, strict types,
+  production build, version consistency, and local media audit (10.96 MiB).
+- `npm run deploy:check`: verified 14 current routes, three legacy aliases,
+  the 404 fallback, and 126 asset references. Shared CSS: 20.51 KB gzip.
+- Full isolated production browser suite: 190 passed, 17 configured skips across
+  desktop Chromium and desktop/mobile WebKit. Covers clipboard failures/manual
+  copying, legacy shells/redirects, rapid form switching, reduced motion,
+  collapsed-channel navigation, accessibility, and all existing scene regressions.
+- Contact was checked at 320, 390, 768, and 1440 px in both engines with no
+  horizontal overflow, correct selected colours, and offscreen motion suspension.
+- Firefox launch limitation reproduced locally, including an alternate temporary
+  directory. The Linux CI project remains enabled; real-device/browser-version
+  coverage is documented in `docs/browser-support.md`. No hosting publication
+  performed. Set the final `VITE_SITE_URL` before the production hosting build.
+
+## Previous verification — 0.24.0, 2026-10-14
 
 - `npm run check`: passed with 132 unit tests, formatting, lint, strict types,
   production build, version consistency, and local media audit (10.96 MiB).
@@ -142,8 +163,9 @@ CURRENT TASK: 0.24.0 release (interactive Products panels and provisional templa
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
 - Concepts and provisional copy need approved replacements before launch.
-- About, Products, and Inquiries hold placeholder
-  content; inquiry forms are not live (they point to the studio email).
+- About and Products hold placeholder content. Contact's one form has no
+  backend: sending opens the visitor's email app with the message composed (with a
+  copy fallback); `/inquiries/*` links redirect to `/contact?inquiry=…`.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;
   listen on real speakers/headphones and adjust `SOUNDS`/`AMBIENT` levels.
@@ -164,11 +186,11 @@ CURRENT TASK: 0.24.0 release (interactive Products panels and provisional templa
 `src/router/pageModules.ts`, `src/shaders/`,
 `src/constants/brand.ts`, `src/constants/founders.json`,
 `src/constants/contact.json`, `src/constants/social.json`, `src/constants/social.ts`,
-`src/ui/sections/Page/SocialLinks.tsx`, `scripts/socialMeta.ts`,
+`src/ui/sections/Contact/ContactChannels.tsx`, `scripts/socialMeta.ts`,
 `src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`, `src/audio/`,
 `src/constants/sounds.ts`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
-NEXT RECOMMENDED TASK: Supply approved content for the remaining provisional pages
-and define inquiry requirements before building forms
-(form → hook → service validation → repository).
+NEXT RECOMMENDED TASK: Supply approved catalog/portfolio content and a production
+origin. If direct inquiry delivery is required, define the backend contract before
+adding a repository; the current form only composes mail and never confirms delivery.

@@ -5,9 +5,14 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Content: local media and replaceable concept data.
 - Studio details: `src/constants/founders.json`, `contact.json`, and `social.json`
   feed page content and build-time structured data. Social channels use `primary`
-  to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
+  to select the main tiles; `ContactChannels` owns the remaining channels' disclosure.
 - Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
-  `EditorialList` share the Studio layout with Contact.
+  `EditorialList` compose Studio.
+- Contact: `InquiryForm` → `useInquiryForm` → `inquiry.service`; one page with a
+  mail-app hand-off. `CONTACT_LINKS` replace the old inquiry routes, which redirect.
+  The static build preserves their HTML shells. `useCopyText` reports clipboard
+  failure; the form exposes manual-copy text. Resize animations cancel/re-measure
+  on interruption. Envelope CSS pauses via hook-managed visibility/entry/motion.
 - Products: `ProductPanels` + `useProductPanels` with `productArt` drawings that
   assemble into solid objects when opened; templates flow `templates.json` →
   `templates.service` → `useTemplates` → `TemplateCatalog`.

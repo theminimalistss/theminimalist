@@ -37,3 +37,10 @@ Interface text uses Moss Ink on Soft Ivory. Media has restrained contrast scrims
 and project-specific dark text for light studies. Automated axe scans run on both
 browser projects; they do not replace screen-reader and image-contrast review
 after content changes.
+
+Contact uses native radio groups with legends, associated labels and field
+errors, focus on the first invalid control, and a polite status region. Selected
+options have explicit state attributes for styling without `:has()`. Collapsed
+social channels have ARIA/tab-order state as well as `inert`. When automatic
+copying is unavailable, the composed message remains selectable in a labelled
+read-only field. The mail-app hand-off never announces confirmed delivery.

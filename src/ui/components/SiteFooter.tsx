@@ -1,4 +1,4 @@
-import { INQUIRY_PAGES, PRODUCT_PAGES, SERVICE_PAGES, STUDIO_PAGES } from '@/router/navigation';
+import { INQUIRY_LINKS, PRODUCT_PAGES, SERVICE_PAGES, STUDIO_PAGES } from '@/router/navigation';
 import { ROUTES } from '@/router/paths';
 import { LotusMark } from '@/ui/components/LotusMark';
 import { PageLink } from '@/ui/components/PageLink';
@@ -14,7 +14,7 @@ const COLUMNS = [
     ],
   },
   { title: 'Products', links: PRODUCT_PAGES },
-  { title: 'Inquiries', links: [{ label: 'Contact', to: ROUTES.contact }, ...INQUIRY_PAGES] },
+  { title: 'Contact', links: [{ label: 'Contact', to: ROUTES.contact }, ...INQUIRY_LINKS] },
 ];
 
 export function SiteFooter() {

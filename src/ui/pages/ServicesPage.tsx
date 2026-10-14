@@ -1,4 +1,4 @@
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
 import { ServiceProcess } from '@/ui/sections/Services/ServiceProcess';
@@ -15,10 +15,10 @@ export default function ServicesPage() {
           accent="and brands with feeling."
           lead="Three ways we help: we engineer software, build websites, and shape brand identities, each with the same calm, considered craft."
         >
-          <PageLink className="text-button" to={ROUTES.quote}>
+          <PageLink className="text-button" to={CONTACT_LINKS.quote}>
             Start a project <span aria-hidden="true">↗</span>
           </PageLink>
-          <PageLink className="text-button" to={ROUTES.appointment}>
+          <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
             Let’s talk <span aria-hidden="true">↗</span>
           </PageLink>
         </PageIntro>

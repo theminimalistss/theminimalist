@@ -1,12 +1,12 @@
 import { FOUNDERS } from '@/constants/founders';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS, ROUTES } from '@/router/paths';
 import { FounderShowcase } from '@/ui/sections/Founders/FounderShowcase';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageSection } from '@/ui/sections/Page/PageSection';
 
 const NEXT = [
   { label: 'About', to: ROUTES.about, description: 'Who we are and how we work.' },
-  { label: 'Book an appointment', to: ROUTES.appointment, description: 'Meet the studio.' },
+  { label: 'Book an appointment', to: CONTACT_LINKS.appointment, description: 'Meet the studio.' },
 ] as const;
 
 export default function FoundersPage() {

@@ -5,7 +5,7 @@ import { useTestimonials } from '@/hooks/useTestimonials';
 import { useTestimonialView } from '@/hooks/useTestimonialView';
 import type { Testimonial } from '@/types/testimonial';
 import { useTestimonialReader } from '@/hooks/useTestimonialReader';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS, ROUTES } from '@/router/paths';
 import { Icon } from '@/ui/components/Icon';
 import { LinkCards } from '@/ui/sections/Page/LinkCards';
 import { PageSection } from '@/ui/sections/Page/PageSection';
@@ -16,7 +16,7 @@ import '@/ui/styles/testimonials.css';
 
 const NEXT = [
   { label: 'Works', to: ROUTES.works, description: 'Selected studies from the studio.' },
-  { label: 'Request a quote', to: ROUTES.quote, description: 'Start a project with us.' },
+  { label: 'Request a quote', to: CONTACT_LINKS.quote, description: 'Start a project with us.' },
 ] as const;
 
 const NO_TESTIMONIALS: Testimonial[] = [];

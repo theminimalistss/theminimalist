@@ -7,7 +7,7 @@ import { useSoundScene } from '@/hooks/useSound';
 import { useWorkPreview } from '@/hooks/useWorkPreview';
 import { useSiteMenu } from '@/hooks/useSiteMenu';
 import { useWorksView } from '@/hooks/useWorksView';
-import { ROUTES } from '@/router/paths';
+import { CONTACT_LINKS } from '@/router/paths';
 import { CollectionStatus } from '@/ui/components/CollectionStatus';
 import { WorkDialog } from '@/ui/components/WorkDialog';
 import { WorkCollection } from '@/ui/sections/Hero/WorkCollection';
@@ -50,7 +50,7 @@ export default function WorksPage() {
             A meeting of brand, digital, and experience. <br />
             Different perspectives. One considered whole.
           </p>
-          <PageLink className="text-button" to={ROUTES.quote}>
+          <PageLink className="text-button" to={CONTACT_LINKS.quote}>
             Start a project <span aria-hidden="true">↗</span>
           </PageLink>
         </div>
