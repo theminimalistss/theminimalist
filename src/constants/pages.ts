@@ -59,11 +59,14 @@ export const SERVICE_PROCESS = [
   { title: 'Launch', text: 'Files, handover, and support once it goes live.' },
 ] as const;
 
+export type ProductCopy = PageCopy & { status: 'available' | 'soon' };
+
 export const PRODUCT_COPY = {
   software: {
+    status: 'soon',
     title: 'Software solutions',
     accent: 'built to feel calm.',
-    lead: 'Digital tools and platforms shaped with the same restraint as our identities. The catalog is being prepared.',
+    lead: 'Digital tools and platforms shaped with the same restraint as our identities, now in development.',
     checklist: [
       'Product overviews and walkthroughs',
       'Plans, licensing, and support',
@@ -71,6 +74,7 @@ export const PRODUCT_COPY = {
     ],
   },
   templates: {
+    status: 'available',
     title: 'Website templates',
     accent: 'considered starting points.',
     lead: 'Editorial website templates for studios, brands, and makers who value quiet, purposeful design.',
@@ -81,6 +85,7 @@ export const PRODUCT_COPY = {
     ],
   },
   hardware: {
+    status: 'soon',
     title: 'Hardware products',
     accent: 'specified with intention.',
     lead: 'Physical products selected and specified with the same attention to material and detail.',
@@ -90,7 +95,7 @@ export const PRODUCT_COPY = {
       'Installation and care guidance',
     ],
   },
-} as const satisfies Record<string, PageCopy>;
+} as const satisfies Record<string, ProductCopy>;
 
 export const INQUIRY_COPY = {
   general: {

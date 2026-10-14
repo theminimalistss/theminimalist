@@ -7,8 +7,11 @@ UI → hooks → services → repositories. Static presentation is the exception
   feed page content and build-time structured data. Social channels use `primary`
   to select the main tiles; `SocialLinks` owns the remaining channels' disclosure.
 - Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
-  `EditorialList` share the Studio layout with Products and Contact.
-  `StudioPortals` uses unique visual artwork; presentational `StudioApproach` follows. Works posters use
+  `EditorialList` share the Studio layout with Contact.
+- Products: `ProductPanels` + `useProductPanels` with `productArt` drawings that
+  assemble into solid objects when opened; templates flow `templates.json` →
+  `templates.service` → `useTemplates` → `TemplateCatalog`.
+- Studio: `StudioPortals` uses unique visual artwork; presentational `StudioApproach` follows. Works posters use
   `useHeroWorks` → service → repository;
   portraits reuse shared founder constants. Source CSS is imported by the composed
   sections; production styles share the HTML-linked bundle. `useStudioSprig` owns
@@ -18,12 +21,12 @@ UI → hooks → services → repositories. Static presentation is the exception
   focus/visibility) and `useServiceDrawing` (WebGL timing/lifecycle). Pure stroke
   geometry and trace scheduling live in `serviceDrawing`; `serviceScene` reuses the
   tesseract line shaders.
-  Steady stages have no RAF; transition drawing is capped at 30 fps. Static SVG
+  Idle drawing runs at 20 fps; transition drawing is capped at 30 fps. Static SVG
   uses the same geometry under reduced motion or unavailable/lost WebGL.
-  Native CSS floats the current label/caption within the drawing panel and pauses
-  their drift on hover/focus. The header/footer bars are removed; the illustration
-  itself supports click/tap and arrow-key stage browsing. Shared SVG faces supply
-  matte gradients, shaded facets, thickness, and ground shadows below the GL strokes.
+  The current label/caption floats within the drawing panel. The header/footer
+  bars are removed; the illustration supports click/tap and arrow-key browsing.
+  Triangulated faint faces render with their strokes in WebGL, sharing each part's
+  idle pose. SVG faces supply the static fallback. Offscreen/hidden scenes stop.
   `ServiceDirectory` pairs each service with a local stock image from
   `SERVICE_IMAGES`; it makes no commissioned-work claims.
 - Founders: shared studio constants; `useFounderShowcase` owns timed selection,

@@ -6,7 +6,9 @@
 - Add short founder biographies when the partners supply them.
 - Define submission requirements, then build inquiry, quote, and appointment
   forms through hooks, service validation, and a repository. Email is available now.
-- Add product data behind a repository once a catalog exists.
+- Replace the six provisional template entries with approved catalog data,
+  live previews, template files, and pricing; the validated repository flow exists.
+- Supply software/hardware catalog content before changing their coming-soon status.
 - Check WebGL loader/menu morph frame pacing on real phones and Safari.
 - Check the Works tesseract, particle assembly, and touch dragging on real phones;
   automated Chromium/WebKit checks do not replace GPU and touch-device review.

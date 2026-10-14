@@ -1,0 +1,56 @@
+[
+  {
+    "id": "atelier",
+    "name": "Atelier",
+    "category": "Studio portfolio",
+    "description": "A quiet editorial portfolio for designers, architects, and makers.",
+    "pages": 6,
+    "layout": "portfolio",
+    "features": ["Project case studies", "Studio and contact pages", "Image-led grid"]
+  },
+  {
+    "id": "mercer",
+    "name": "Mercer",
+    "category": "Online shop",
+    "description": "A calm storefront for small product brands, with room for the story behind each piece.",
+    "pages": 8,
+    "layout": "shop",
+    "features": ["Product and collection pages", "Cart-ready layout", "Brand story section"]
+  },
+  {
+    "id": "hearth",
+    "name": "Hearth",
+    "category": "Restaurant & café",
+    "description": "Menus, hours, and reservations, set with the warmth of a good table.",
+    "pages": 5,
+    "layout": "menu",
+    "features": ["Menu layouts", "Hours and location", "Reservation call to action"]
+  },
+  {
+    "id": "quill",
+    "name": "Quill",
+    "category": "Journal & writing",
+    "description": "A reading-first journal for writers, newsletters, and long-form essays.",
+    "pages": 5,
+    "layout": "journal",
+    "features": ["Article and archive pages", "Newsletter sign-up block", "Readable typography"]
+  },
+  {
+    "id": "meridian",
+    "name": "Meridian",
+    "category": "Professional services",
+    "description": "A clear, trustworthy site for consultancies, clinics, and practices.",
+    "pages": 7,
+    "layout": "services",
+    "features": ["Service detail pages", "Team and credentials", "Booking call to action"]
+  },
+  {
+    "id": "linen",
+    "name": "Linen",
+    "category": "Brand landing",
+    "description": "A single editorial landing page to launch a brand, product, or event.",
+    "pages": 1,
+    "layout": "editorial",
+    "features": ["One-page story", "Gallery and highlights", "Contact and sign-up"]
+  }
+]

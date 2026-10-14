@@ -14,8 +14,12 @@ Run `npm run test:e2e` after interaction or layout changes.
 - Spatial math: depth, periodicity, compact geometry, finite values, and recycling
   entirely outside the clipping region.
 - UI: meaningful names, metadata, selection, failed-image fallback.
+- Templates: known layouts, page counts, required content, duplicate identities,
+  and category derivation through the repository/service boundary.
 - Browser: production page, console errors, motion/pause, menu, dialogs/focus,
   keyboard foregrounding, live reduced-motion changes, overflow, 404, axe scans.
+- Products: expanding panels on hover/focus, keyboard navigation, two-step touch
+  navigation, accessibility, template filtering, and category availability labels.
 
 Playwright runs Chromium desktop, WebKit desktop, and WebKit mobile against a
 production build; CI adds Firefox (set `E2E_FIREFOX=1` to include it locally).
@@ -23,6 +27,10 @@ Install browsers with `npx playwright install chromium firefox webkit`; add
 `--with-deps` on Linux. Browser tests also cover link-preview HTML fetched
 without JavaScript, campaign links, real sound playback (Chromium), and the
 remembered sound toggle. Failures retain screenshots and traces in ignored output folders.
+
+Use `E2E_PORT=4210 npm run test:e2e` when the default port is occupied. Each port
+uses an isolated production build in `.cache/e2e/<port>` and separate reports in
+`test-results/<port>` and `playwright-report/<port>`.
 
 ## Visual and performance review
 

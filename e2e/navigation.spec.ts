@@ -128,10 +128,7 @@ test('the studio sprig waves, responds to the pointer, and respects reduced moti
 
 test('overview directories are visible and navigate to each destination', async ({ page }) => {
   test.slow();
-  for (const [path, name] of [
-    ['/products', 'Product categories'],
-    ['/contact', 'Ways to get in touch'],
-  ] as const) {
+  for (const [path, name] of [['/contact', 'Ways to get in touch']] as const) {
     await openPage(page, path);
     const directory = page
       .locator('.page-directory')
@@ -331,7 +328,15 @@ test('founder portraits swap with their scrolling names and playback can pause',
     .not.toBe(initial);
   await showcase.getByRole('button', { name: 'Pause founder slideshow' }).click();
   await expect(showcase).not.toHaveAttribute('data-playing', '');
-  const pausedPosition = await track.evaluate((element) => getComputedStyle(element).transform);
+  const position = () => track.evaluate((element) => getComputedStyle(element).transform);
+  await expect
+    .poll(async () => {
+      const before = await position();
+      await page.waitForTimeout(200);
+      return before === (await position());
+    })
+    .toBe(true);
+  const pausedPosition = await position();
   await page.waitForTimeout(7_300);
   await expect(showcase.getByRole('heading', { level: 2 })).toHaveText('Rex Pinili');
   expect(await track.evaluate((element) => getComputedStyle(element).transform)).toBe(

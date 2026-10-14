@@ -1,5 +1,19 @@
 # Architecture decisions
 
+## 2026-10-14 — Product panels and validated template catalog
+
+Decision: Use layered native SVG artwork and CSS assembly for the three Product
+panels. Keep pointer/touch/focus selection in `useProductPanels`. Load template
+data through repository → validation service → hook → catalog; template previews
+are schematic vectors, and the entries remain provisional.
+
+Reason: The Products redesign needs responsive, keyboard/touch-accessible artwork
+without introducing a GPU scene or media download for each category.
+
+Impact: No runtime dependency or new media. Reduced motion shows assembled art
+without transitions. Software/hardware remain coming soon; approved template
+content, pricing, and live previews are still required before launch.
+
 ## 2026-10-14 — Services process symbols and HTML-linked production styles
 
 Decision: Use native WebGL point strokes for four original process symbols, with

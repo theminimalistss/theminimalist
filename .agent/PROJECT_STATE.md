@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.23.0
+VERSION: 0.24.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.23.0 released (Services drawing line style and motion, service images, fourteenth testimonial). Deployment remains pending.
+CURRENT TASK: 0.24.0 release (interactive Products panels and provisional template catalog). Deployment remains pending.
 
 ## Completed
 
@@ -68,8 +68,31 @@ CURRENT TASK: 0.23.0 released (Services drawing line style and motion, service i
   WebGL faces, per-drawing idle motion, sound waves tucked behind the bubbles);
   clicks keep the cycle running; professional local Unsplash images per service;
   Branding add-ons item; fourteenth testimonial (Cebu Social Club).
+- 0.24.0: Products opens with three numbered panels that expand on hover/focus,
+  assembling layered isometric drawings into textured objects. Touch opens a
+  panel before following its link. Website templates has a filterable, validated
+  provisional catalog; software and hardware remain coming soon.
 
 ## Latest verification — 2026-10-14
+
+- `npm run check`: passed with 132 unit tests, formatting, lint, strict types,
+  production build, version consistency, and local media audit (10.96 MiB).
+- `npm run deploy:check`: verified 17 routes, the 404 fallback, and 126 asset
+  references. `VITE_SITE_URL` still needs the final production origin.
+- Full isolated production browser suite: 169 passed, 17 configured skips across
+  desktop Chromium and desktop/mobile WebKit. Products hover/focus, keyboard
+  navigation, two-step touch navigation, template filtering, and accessibility
+  passed alongside the existing motion and WebGL regression checks.
+- Package/lockfile, README, changelog, state, architecture, testing/deployment
+  docs, and catalog follow-up tasks aligned at 0.24.0. No hosting publication
+  performed; Firefox remains covered in CI.
+
+## Previous verification — 0.23.0, 2026-10-14
+
+- `npm run check`: passed with 130 unit tests; full browser suite: 160 passed,
+  14 configured skips across Chromium and desktop/mobile WebKit.
+
+## Previous verification — 0.22.0, 2026-10-14
 
 - `npm run check`: passed with 126 unit tests, strict types/lint/format, build,
   version consistency, and local media audit. `deploy:check` verified 17 routes,
@@ -113,6 +136,9 @@ CURRENT TASK: 0.23.0 released (Services drawing line style and motion, service i
 
 ## Known issues / limits
 
+- The six website templates (Atelier, Mercer, Hearth, Quill, Meridian, Linen) are
+  provisional catalog entries with schematic previews until real templates,
+  previews, and pricing are supplied; software and hardware are marked coming soon.
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
 - Concepts and provisional copy need approved replacements before launch.

@@ -45,6 +45,9 @@ After a deployment, verify:
 - Check Works, Testimonials view switching, Founders depth, the flower hover/tap,
   menu, and loader on desktop Chrome and real iOS Safari. Repeat with reduced
   motion, a hidden tab, slow networking, and WebGL disabled.
+- Check Products panel expansion with mouse/keyboard and two-step navigation
+  on touch. Confirm template filters and coming-soon category pages work after
+  a direct load and browser refresh.
 - Check HTML revalidation and immutable caching for hashed `/assets/` files;
   public icons, manifests, and route HTML must update after a new release.
 

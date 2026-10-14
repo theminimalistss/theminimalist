@@ -180,9 +180,9 @@ The process label and description float inside the artwork's panel as annotation
 with native CSS drift paused alongside playback. The current symbol, label, and
 caption change together. The heading/footer bars are removed; clicking/tapping the
 illustration advances a stage, and arrow/Home/End keys offer direct browsing.
-Hover/focus holds the cycle for reading. Matte gradients, shaded facets, thickness,
-and ground shadows use shared SVG faces beneath the GL strokes, assembling with
-native CSS. Reduced motion presents the finished material illustration immediately.
+Hover/focus holds the cycle for reading. Faint triangulated faces render with
+the strokes in WebGL and share each part's idle pose. Reduced motion presents
+the finished static SVG illustration immediately.
 
 Services uses a dedicated intro/process composition. `ServiceProcess` combines
 the existing `SERVICE_PROCESS` copy with four original line drawings. The cycle
@@ -210,7 +210,16 @@ generated HTML-linked CSS for Works and Services selectors before JavaScript.
 
 `AboutPage` pairs the existing intro with `StudioPortals` in `PageOverview`,
 followed by `StudioApproach`. `PageDirectory`, `EditorialSection`, and
-`EditorialList` also compose Products and Contact. Their directory
+`EditorialList` also compose Contact. Products uses `ProductPanels`: three
+numbered panels (`useProductPanels` opens one on hover or keyboard focus, and on
+touch the first tap opens and the second follows the link). Each panel draws an
+isometric x-ray drawing from `productArt` (depth-ordered layers with fold poses);
+opening a panel turns it forest green and assembles a solid, grain-textured copy
+of the drawing part by part over the fading wireframe. Website templates are the
+one available category: `templates.json` → `templates.service` (validation,
+categories) → `useTemplates` → `TemplateCatalog`, a filterable grid with
+schematic `TemplatePreview` layouts. Software and hardware read "Coming soon".
+Contact's directory
 items reuse navigation constants; Contact retains its shared JSON and social
 disclosure. Longer overview titles use a smaller responsive scale. Desktop uses a directory beside the intro;
 phones/tablets put all three links in a row directly beneath it.

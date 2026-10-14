@@ -5,6 +5,44 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.24.0] — 2026-10-14
+
+### Changed
+
+- Products opens with three numbered panels in place of the directory and the
+  catalog section. Hovering or focusing a panel expands it in forest green and
+  assembles its isometric x-ray drawing into a solid, textured object part by
+  part, like a transformer (panes swing in, modules slot into the page, the
+  speaker telescopes up and its cap spins down). On touch, the first tap opens a
+  panel and the second follows it.
+- Software solutions and Hardware products are marked coming soon; Website
+  templates is available and lists a filterable grid of templates with schematic
+  layout previews (provisional entries until real templates are supplied).
+
+### Fixed
+
+- The Products page no longer leaves a blank band above the footer on tall
+  screens; the overview fills the viewport.
+- The Founders pause test waits for the name track to settle before comparing.
+
+### AI session
+
+Changed: Products overview and category pages, layered isometric SVG artwork,
+panel interaction hook, template repository and validation service, loading hook,
+filterable catalog, browser/unit coverage, and release documentation.
+
+Reason: Release the accumulated Products redesign with the existing palette,
+typography, native motion, and repository → service → hook → UI data flow.
+No new runtime dependency or media; six catalog entries remain provisional.
+
+Verification: `npm run check` passed (132 unit tests, formatting, lint, strict
+types, production build, version consistency, and media audit). `deploy:check`
+verified 17 routes, the 404 fallback, and 126 asset references. Full production
+browser suite: 169 passed, 17 configured skips across Chromium and desktop/mobile
+WebKit, including panel hover/focus, keyboard/touch navigation, template filters,
+accessibility, and existing Works/Services/Founders/Testimonials regressions.
+Hosting publication remains pending.
+
 ## [0.23.0] — 2026-10-14
 
 ### Changed
