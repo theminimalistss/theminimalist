@@ -1,12 +1,27 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
 import { INQUIRY_INTENTS, INQUIRY_OPTIONS } from '@/constants/inquiry';
-import { useInquiryForm } from '@/hooks/useInquiryForm';
+import { useInquiryForm, type InquiryStatus } from '@/hooks/useInquiryForm';
 import type { InquiryField } from '@/types/inquiry';
 import { ContactEnvelope } from './ContactEnvelope';
 import { InquiryDatePicker } from './InquiryDatePicker';
 import { Icon } from '@/ui/components/Icon';
 
 const STABLE = new Set<InquiryField>(['name', 'email', 'organisation', 'message']);
+
+const SEND_LABELS: Partial<Record<InquiryStatus, string>> = {
+  editing: 'Send message',
+  sending: 'Sending…',
+  delivered: 'Send another',
+};
+
+const STATUS_MESSAGES: Partial<Record<InquiryStatus, string>> = {
+  sending: 'Sending your message to the studio…',
+  delivered: 'Thank you. Your message is with the studio, and we will reply by email.',
+  failed: 'Your message could not be sent just now.',
+  limited: 'Too many messages were sent from here in a short time.',
+  sent: 'Your email app should open with the message ready to send.',
+  'copy-error': 'Automatic copying is unavailable. Select and copy your message below.',
+};
 
 export function InquiryForm() {
   const id = useId();
@@ -20,10 +35,12 @@ export function InquiryForm() {
     emailText,
     today,
     email,
+    delivers,
     setKind,
     setField,
     submit,
     copy,
+    openEmailApp,
   } = useInquiryForm();
   const intent = INQUIRY_INTENTS.find((item) => item.kind === draft.kind) ?? INQUIRY_INTENTS[0]!;
   let order = 0;
@@ -79,6 +96,7 @@ export function InquiryForm() {
       data-engaged={engaged ? '' : undefined}
       noValidate
       aria-labelledby={`${id}-title`}
+      aria-busy={status === 'sending' || undefined}
       onSubmit={submit}
     >
       <div className="inquiry-head">
@@ -194,28 +212,46 @@ export function InquiryForm() {
           )}
         </div>
       </div>
+      {delivers && (
+        <div className="inquiry-trap" aria-hidden="true">
+          <label>
+            Leave this empty
+            <input name="website" tabIndex={-1} autoComplete="off" defaultValue="" />
+          </label>
+        </div>
+      )}
       <div className="inquiry-actions">
-        <button type="submit" className="inquiry-send">
-          <span>{status === 'editing' ? 'Send message' : 'Send again'}</span>
+        <button type="submit" className="inquiry-send" disabled={status === 'sending'}>
+          <span>{SEND_LABELS[status] ?? 'Send again'}</span>
           <Icon name="arrow" className="inline-icon inquiry-send-arrow" />
         </button>
         <p className="inquiry-note">
-          Opens your email app with everything filled in, addressed to{' '}
+          {delivers
+            ? 'Goes straight to the studio. Prefer your own email? Write to '
+            : 'Opens your email app with everything filled in, addressed to '}
           <a href={`mailto:${email}`}>{email}</a>.
         </p>
       </div>
       <div className="inquiry-status" role="status">
         {status !== 'editing' && (
           <p>
-            {status === 'copied'
-              ? `Copied. Paste it into a new email to ${email}.`
-              : status === 'copy-error'
-                ? 'Automatic copying is unavailable. Select and copy your message below.'
-                : 'Your email app should open with the message ready to send.'}{' '}
+            {STATUS_MESSAGES[status] ?? `Copied. Paste it into a new email to ${email}.`}{' '}
             {status === 'sent' && (
               <button type="button" className="inquiry-copy" onClick={() => void copy()}>
                 Didn’t open? Copy the message
               </button>
+            )}
+            {(status === 'failed' || status === 'limited') && (
+              <>
+                <button type="button" className="inquiry-copy" onClick={openEmailApp}>
+                  Open your email app
+                </button>{' '}
+                or{' '}
+                <button type="button" className="inquiry-copy" onClick={() => void copy()}>
+                  copy the message
+                </button>
+                .
+              </>
             )}
           </p>
         )}

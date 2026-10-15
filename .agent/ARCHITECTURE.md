@@ -8,8 +8,10 @@ UI → hooks → services → repositories. Static presentation is the exception
   to select the main tiles; `ContactChannels` owns the remaining channels' disclosure.
 - Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
   `EditorialList` compose Studio.
-- Contact: `InquiryForm` → `useInquiryForm` → `inquiry.service`; one page with a
-  mail-app hand-off. `CONTACT_LINKS` replace the old inquiry routes, which redirect.
+- Contact: `InquiryForm` → `useInquiryForm` → `inquiry.service` →
+  `inquiry.repository` (POST to `VITE_CONTACT_ENDPOINT`, the separately deployed
+  `server/`); without an endpoint, or
+  after a failed send, the mail-app hand-off. `CONTACT_LINKS` replace the old inquiry routes, which redirect.
   The static build preserves their HTML shells. `useCopyText` reports clipboard
   failure; the form exposes manual-copy text. Resize animations cancel/re-measure
   on interruption. Envelope CSS pauses via hook-managed visibility/entry/motion.

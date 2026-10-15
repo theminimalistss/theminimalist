@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-api
 coverage
 package-lock.json
 docs/briefs
@@ -7,3 +8,6 @@ artifacts
 test-results
 playwright-report
 .cache
+# Email HTML is hand-tuned for mail clients; storage holds runtime data.
+server/app/Views/templates
+server/storage

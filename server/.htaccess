@@ -1,0 +1,10 @@
+Options -Indexes
+
+<FilesMatch "^\.|\.(md|txt|json|lock|log)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^ public/index.php [L]
+</IfModule>

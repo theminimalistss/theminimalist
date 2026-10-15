@@ -1,10 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   composeInquiry,
+  deliverInquiry,
   emptyInquiry,
+  readInquiryReply,
   toInquiryKind,
+  toInquiryPayload,
   validateInquiry,
 } from '@/services/inquiry.service';
+import type { InquiryRepository } from '@/types/inquiry';
 
 const filled = {
   ...emptyInquiry('quote'),
@@ -57,5 +61,34 @@ describe('inquiries', () => {
     }
     expect(validateInquiry({ ...draft, date: '2028-02-29' }, '2026-01-01')).toEqual({});
     expect(validateInquiry({ ...draft, date: '2026-01-01' }, '2026-01-01')).toEqual({});
+  });
+
+  it('sends trimmed fields with the spam trap value', () => {
+    const payload = toInquiryPayload({ ...filled, name: '  Ana Cruz ' }, 'bot');
+    expect(payload).toMatchObject({ kind: 'quote', name: 'Ana Cruz', website: 'bot' });
+  });
+
+  it('reads the studio server reply', () => {
+    expect(readInquiryReply({ status: 202, body: { ok: true } })).toEqual({ outcome: 'delivered' });
+    expect(readInquiryReply({ status: 429, body: null })).toEqual({ outcome: 'limited' });
+    expect(
+      readInquiryReply({
+        status: 422,
+        body: { errors: { email: 'Please check your email address.', admin: 'x', name: 3 } },
+      }),
+    ).toEqual({ outcome: 'invalid', errors: { email: 'Please check your email address.' } });
+    expect(readInquiryReply({ status: 422, body: 'oops' })).toEqual({ outcome: 'failed' });
+    expect(readInquiryReply({ status: 502, body: null })).toEqual({ outcome: 'failed' });
+  });
+
+  it('treats network errors as failures but lets cancellations through', async () => {
+    const offline: InquiryRepository = {
+      available: true,
+      send: vi.fn().mockRejectedValue(new TypeError('Failed to fetch')),
+    };
+    await expect(deliverInquiry(offline, filled, '')).resolves.toEqual({ outcome: 'failed' });
+    const controller = new AbortController();
+    controller.abort();
+    await expect(deliverInquiry(offline, filled, '', controller.signal)).rejects.toThrow();
   });
 });

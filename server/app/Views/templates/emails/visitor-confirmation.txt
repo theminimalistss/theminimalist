@@ -1,0 +1,14 @@
+Thank you, {{ first_name }}. Your message is with the studio.
+
+{{ next_step }} We reply during studio hours, {{ studio_hours }}.
+
+What you sent
+—
+{{ message }}
+
+{{ details_text }}
+
+Need to add something? Simply reply to this email.
+
+Less, but with feeling.
+{{ studio_name }} · {{ site_url }}

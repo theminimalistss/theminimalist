@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
 import contact from '@/constants/contact.json';
+import { inquiryRepository } from '@/repositories/inquiry.repository';
 import {
   composeInquiry,
+  deliverInquiry,
   emptyInquiry,
   toInquiryKind,
   validateInquiry,
@@ -13,7 +15,8 @@ import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useAppEntered } from '@/hooks/useAppEntered';
 
-type Status = 'editing' | 'sent' | 'copied' | 'copy-error';
+export type InquiryStatus =
+  'editing' | 'sending' | 'delivered' | 'failed' | 'limited' | 'sent' | 'copied' | 'copy-error';
 
 const today = () => {
   const now = new Date();
@@ -26,7 +29,7 @@ export function useInquiryForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const [draft, setDraft] = useState(() => emptyInquiry(toInquiryKind(requested)));
   const [errors, setErrors] = useState<InquiryErrors>({});
-  const [status, setStatus] = useState<Status>('editing');
+  const [status, setStatus] = useState<InquiryStatus>('editing');
   const [kindFromLink, setKindFromLink] = useState(requested);
   const [engaged, setEngaged] = useState(false);
   const visible = usePageVisibility();
@@ -38,6 +41,7 @@ export function useInquiryForm() {
   const composed = composeInquiry(draft, contact.email);
   const emailText = `To: ${contact.email}\nSubject: ${composed.subject}\n\n${composed.body}`;
   const { copy: copyText } = useCopyText(emailText);
+  const request = useRef<AbortController | null>(null);
 
   if (requested !== kindFromLink) {
     setKindFromLink(requested);
@@ -45,6 +49,8 @@ export function useInquiryForm() {
     setErrors({});
     setStatus('editing');
   }
+
+  useEffect(() => () => request.current?.abort(), []);
 
   useEffect(() => {
     const interaction = (event: Event) => {
@@ -113,25 +119,55 @@ export function useInquiryForm() {
       delete next[field];
       return next;
     });
-    setStatus('editing');
+    setStatus((current) => (current === 'sending' ? current : 'editing'));
   }, []);
+
+  const focusFirstError = useCallback((found: InquiryErrors) => {
+    const first = Object.keys(found)[0];
+    formRef.current?.querySelector<HTMLElement>(`[name="${first}"]:not([type="hidden"])`)?.focus();
+    return !!first;
+  }, []);
+
+  const openEmailApp = useCallback(() => {
+    window.location.href = composeInquiry(draft, contact.email).href;
+    setStatus('sent');
+  }, [draft]);
 
   const submit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      if (status === 'sending') return;
       const found = validateInquiry(draft, today());
       setErrors(found);
-      const first = Object.keys(found)[0];
-      if (first) {
-        formRef.current
-          ?.querySelector<HTMLElement>(`[name="${first}"]:not([type="hidden"])`)
-          ?.focus();
+      if (focusFirstError(found)) return;
+      if (!inquiryRepository.available) {
+        openEmailApp();
         return;
       }
-      window.location.href = composeInquiry(draft, contact.email).href;
-      setStatus('sent');
+      const website = new FormData(event.currentTarget).get('website');
+      const controller = new AbortController();
+      request.current = controller;
+      setStatus('sending');
+      deliverInquiry(
+        inquiryRepository,
+        draft,
+        typeof website === 'string' ? website : '',
+        controller.signal,
+      ).then(
+        (result) => {
+          if (result.outcome === 'delivered') setDraft(emptyInquiry(draft.kind));
+          if (result.outcome === 'invalid') {
+            setErrors(result.errors);
+            setStatus('editing');
+            focusFirstError(result.errors);
+            return;
+          }
+          setStatus(result.outcome);
+        },
+        () => undefined,
+      );
     },
-    [draft],
+    [draft, status, openEmailApp, focusFirstError],
   );
 
   const copy = useCallback(async () => {
@@ -148,9 +184,11 @@ export function useInquiryForm() {
     emailText,
     today: today(),
     email: contact.email,
+    delivers: inquiryRepository.available,
     setKind,
     setField,
     submit,
     copy,
+    openEmailApp,
   };
 }

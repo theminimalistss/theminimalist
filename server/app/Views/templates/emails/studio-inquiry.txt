@@ -1,0 +1,12 @@
+New message · {{ kind_label }}
+
+{{ name }} {{ headline }}
+
+{{ message }}
+
+—
+{{ details_text }}
+
+Reply to this email to answer {{ first_name }} at {{ email }}.
+
+The Minimalist — Design Studio · {{ site_url }}

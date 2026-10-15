@@ -49,8 +49,9 @@ coming soon; approved template files, previews, and pricing remain pending.
 
 Every page is reachable from the header (desktop), the menu, and the footer
 sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home, Works,
-Founders, and Contact hold clearly marked placeholder content. Contact's form composes an
-email in the visitor's mail app; there is no submission backend yet.
+Founders, and Contact hold clearly marked placeholder content. Contact's form sends
+through the PHP Brevo service in `server/` when `VITE_CONTACT_ENDPOINT` is set, and
+otherwise composes an email in the visitor's mail app.
 
 ## Run locally
 
@@ -84,7 +85,8 @@ do not require data-layer indirection.
 .agent/              AI state, decisions, tasks, and session history
 docs/                Engineering docs, media sources, original briefs
 scripts/             Media processing and consistency checks
-src/repositories/    Local collection and future CMS boundary
+src/repositories/    Local collection, contact endpoint, and future CMS boundary
+server/              PHP contact mail service (Brevo); see server/README.md
 src/services/        React-independent validation and selection
 src/hooks/           Loading, motion, observers, dialogs
 src/types/           Work domain model
@@ -118,6 +120,9 @@ e2e/                 Browser acceptance tests
 | `npm run media:founders`                  | Crop and encode founder portraits from `.cache/founders/`    |
 | `npm run media:audit`                     | Image, video, and sound budgets and format checks            |
 | `npm run version:check`                   | Synchronized Semantic Version records                        |
+| `npm run media:email-logo`                | Render the lotus PNG used in emails                          |
+| `npm run api:dev` / `npm run test:php`    | Run the PHP contact service locally / its tests (PHP 8.1+)   |
+| `npm run build:api`                       | Write `dist-api/` for upload to the PHP subdomain            |
 
 First install browsers with `npx playwright install chromium firefox webkit`. On Linux,
 add `--with-deps`. FFmpeg/ffprobe are required for media commands and `check`.

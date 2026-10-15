@@ -232,8 +232,13 @@ one available category: `templates.json` → `templates.service` (validation,
 categories) → `useTemplates` → `TemplateCatalog`, a filterable grid with
 schematic `TemplatePreview` layouts. Software and hardware read "Coming soon".
 Contact is a single page: `InquiryForm` → `useInquiryForm` (kind from
-`?inquiry=`, field state, a smooth height animation, mail-app hand-off and copy
-fallback) → `inquiry.service` (validation and email composition). `ContactDirect`
+`?inquiry=`, field state, a smooth height animation, sending states, mail-app
+hand-off and copy fallback) → `inquiry.service` (validation, email composition,
+payload and reply mapping) → `inquiry.repository` (JSON POST to
+`VITE_CONTACT_ENDPOINT`). The endpoint is the PHP service in `server/`:
+front controller → `ContactController` → `Inquiry`/`InquiryValidator` models →
+`InquiryNotifier` → `BrevoMailer`, rendering `InquiryEmailView` from separate
+HTML/text templates (see `server/README.md`). `ContactDirect`
 shows the shared contact JSON and `ContactChannels` (main channels plus a
 height-animated More); `ContactEnvelope` animates from
 the form's focus and status. Old `/inquiries/*` routes redirect via

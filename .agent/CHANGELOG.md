@@ -5,6 +5,52 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.27.0] — 2026-10-16
+
+### Added
+
+- `server/`: a dependency-free PHP 8.1+ MVC service that delivers Contact messages
+  through Brevo's transactional API. The studio receives each message with
+  Reply-To set to the visitor; the visitor receives a branded confirmation.
+  It checks origin, JSON body size, a hidden spam trap, the same field rules as
+  the website, and a per-IP rate limit, then logs Brevo failures without
+  exposing them.
+- Email designs live in separate `.html` templates (plus plain-text versions)
+  using the site's palette, Inter Tight with Instrument Serif accents, the lotus
+  logo (`public/email/lotus.png`, `npm run media:email-logo`), and the wordmark.
+- Settings come from `.env`, read from the service folder or up to two folders
+  above it (the root `.env` locally; beside `public_html` on a host, so redeploys
+  keep it). Host variables take precedence. `server/README.md` covers Brevo,
+  Hostinger, and GoDaddy setup.
+- `npm run build:api` writes `dist-api/`, the service's runtime files for upload to
+  a separate PHP subdomain, without tests or secrets.
+- Contact sends directly when `VITE_CONTACT_ENDPOINT` is set at build time. The
+  form shows sending, sent, failed, and too-many-attempts states, maps server
+  field errors, and offers the email app or copying after a failure. Without the
+  variable, the email-app hand-off is unchanged.
+
+### AI session
+
+Changed: new `server/` (front controller, controller, models, views, services,
+config, tests), inquiry repository/service/hook/form states, envelope status
+selectors, email logo script, `build-api` script, npm scripts (`api:dev`, `build:api`,
+`test:php`, `media:email-logo`), CI PHP tests, env examples, Prettier ignores, and docs.
+
+Reason: The user asked for MVC PHP email delivery through Brevo with designed
+HTML email templates showing the logo, configured by `.env` for Hostinger or
+GoDaddy hosting.
+
+Verification: `npm run check` passed with 150 unit tests, lint, strict types,
+formatting, production build, version alignment, and unchanged media budgets;
+`deploy:check` passed and ships `dist/email/lotus.png`. `npm run test:php` passed 16
+PHP tests (validation, `.env` parsing, escaping, template paths, Brevo payload and
+errors, rate limiting, controller responses, CORS). Contact browser suite: 36
+passed across Chromium and desktop/mobile WebKit (`--workers=1`). Emails were
+rendered and reviewed at desktop and mobile widths. Running the Vite dev server
+against `php -S` reached Brevo, which refused the key for an unrecognised IP; the
+form showed the failure fallback, and a stubbed `202` showed the sent state. No real
+email was delivered and nothing was deployed.
+
 ## [0.26.2] — 2026-10-15
 
 ### Fixed

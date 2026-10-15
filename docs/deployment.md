@@ -50,8 +50,9 @@ After a deployment, verify:
   on touch. Confirm template filters and coming-soon category pages work after
   a direct load and browser refresh.
 - Check all three legacy inquiry URLs with direct refresh, including their
-  generated HTML shells. Confirm Contact's mail-app hand-off and the manual-copy
-  fallback with blocked clipboard access; the form has no submission backend.
+  generated HTML shells. With `VITE_CONTACT_ENDPOINT`, send a real message and
+  confirm the studio email and visitor confirmation arrive with the logo; without
+  it, confirm the mail-app hand-off and the manual-copy fallback.
 - Check HTML revalidation and immutable caching for hashed `/assets/` files;
   public icons, manifests, and route HTML must update after a new release.
 
@@ -91,16 +92,26 @@ without authentication, cookies, or bot blocking. Campaign parameters (`utm_*`,
 `fbclid`, `gclid`, …) are ignored by routing and shorten the intro. Regenerate
 images with `npm run media:social` after changing `pageMeta.json`.
 
-Use `npm run preview` locally, not as a public production server. `VITE_SITE_URL`
-is the only environment variable; no API keys, contact endpoints, or analytics
-are required. `VITE_` values
-are public bundle content and must never contain secrets.
+Use `npm run preview` locally, not as a public production server. Build-time
+variables are `VITE_SITE_URL` and the optional `VITE_CONTACT_ENDPOINT`. `VITE_`
+values are public bundle content and must never contain secrets; the Brevo key
+belongs only in the PHP host's `server/.env`.
+
+## Contact mail service
+
+`server/` is a PHP 8.1+ service deployed separately from the static site, on a
+PHP subdomain such as `api.example.com` (Hostinger subdomain or GoDaddy cPanel).
+`npm run build:api` writes the upload folder `dist-api/`. Put its `.env` above the
+subdomain's `public_html`, authorise the host's IP in Brevo, then set
+`VITE_CONTACT_ENDPOINT=https://api.example.com/` in the Web App build environment
+and redeploy the site. The CSP's `connect-src` must allow that origin. Full steps
+are in `server/README.md`.
 
 Before launch, replace concepts/provisional copy/logo with approved content,
 run quality gates, set `VITE_SITE_URL`, and configure HTTPS, immutable caching for hashed assets, and HTML revalidation.
 Verify MIME types, video range requests, SPA fallback, and security headers.
 
 Suggested starting CSP:
-`default-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`.
+`default-src 'self'; connect-src 'self' https://api.example.com; img-src 'self' data:; media-src 'self'; font-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`.
 Inline style allowance supports calculated transforms. Configure headers at the
 host. The local workflow performs no deployment, remote push, or release.

@@ -1,4 +1,13 @@
-import type { InquiryDraft, InquiryErrors, InquiryKind } from '@/types/inquiry';
+import type {
+  InquiryDelivery,
+  InquiryDraft,
+  InquiryErrors,
+  InquiryField,
+  InquiryKind,
+  InquiryPayload,
+  InquiryReply,
+  InquiryRepository,
+} from '@/types/inquiry';
 import { INQUIRY_KINDS } from '@/types/inquiry';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u;
@@ -84,4 +93,43 @@ export function composeInquiry(draft: InquiryDraft, recipient: string) {
   const body = `${draft.message.trim()}\n\n—\n${details}`;
   const href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   return { subject, body, href };
+}
+
+export function toInquiryPayload(draft: InquiryDraft, website = ''): InquiryPayload {
+  const trimmed = Object.fromEntries(
+    Object.entries(draft).map(([key, value]) => [key, value.trim()]),
+  ) as InquiryDraft;
+  return { ...trimmed, kind: draft.kind, website };
+}
+
+function fieldErrors(body: unknown): InquiryErrors {
+  const reported = (body as { errors?: unknown } | null)?.errors;
+  if (!reported || typeof reported !== 'object') return {};
+  const fields = Object.keys(emptyInquiry()).filter((key) => key !== 'kind') as InquiryField[];
+  return Object.fromEntries(
+    fields
+      .map((field) => [field, (reported as Record<string, unknown>)[field]] as const)
+      .filter((entry): entry is [InquiryField, string] => typeof entry[1] === 'string'),
+  );
+}
+
+export function readInquiryReply({ status, body }: InquiryReply): InquiryDelivery {
+  if (status >= 200 && status < 300) return { outcome: 'delivered' };
+  if (status === 429) return { outcome: 'limited' };
+  const errors = status === 422 ? fieldErrors(body) : {};
+  return Object.keys(errors).length ? { outcome: 'invalid', errors } : { outcome: 'failed' };
+}
+
+export async function deliverInquiry(
+  repository: InquiryRepository,
+  draft: InquiryDraft,
+  website: string,
+  signal?: AbortSignal,
+): Promise<InquiryDelivery> {
+  try {
+    return readInquiryReply(await repository.send(toInquiryPayload(draft, website), signal));
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return { outcome: 'failed' };
+  }
 }

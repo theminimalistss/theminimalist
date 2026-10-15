@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.26.2
+VERSION: 0.27.0
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.26.2 release (consistent SVG icons across devices). Deployment remains pending.
+CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployment remains pending.
 
 ## Completed
 
@@ -76,13 +76,28 @@ CURRENT TASK: 0.26.2 release (consistent SVG icons across devices). Deployment r
   email-app hand-off, manual copy fallback, interrupted resize handling, and
   visible-only envelope motion. Legacy inquiry HTML/redirects remain available;
   selected options and collapsed channels have explicit accessibility fallbacks.
+- 0.27.0: Brevo contact mail service (`server/`, PHP MVC, branded HTML emails,
+  `.env` config) and direct sending from Contact with an email-app fallback.
 - 0.26.0: Stable page entry without shell transforms or route snapshots; modules
   resolve before navigation commits and scroll/focus reset before paint. Loader
   progress includes downloaded/decoded audio, with strict completion and retry.
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 0.26.2, 2026-10-15
+## Latest verification — 0.27.0, 2026-10-16
+
+- `npm run check` passed with 150 unit tests, lint, strict types,
+  formatting, production build, version alignment, and unchanged media budgets;
+  `deploy:check` passed and ships `dist/email/lotus.png`. `npm run test:php` passed 16
+  PHP tests (validation, `.env` parsing, escaping, template paths, Brevo payload and
+  errors, rate limiting, controller responses, CORS). Contact browser suite: 36
+  passed across Chromium and desktop/mobile WebKit (`--workers=1`). Emails were
+  rendered and reviewed at desktop and mobile widths. Running the Vite dev server
+  against `php -S` reached Brevo, which refused the key for an unrecognised IP; the
+  form showed the failure fallback, and a stubbed `202` showed the sent state. No real
+  email was delivered and nothing was deployed.
+
+## Previous verification — 0.26.2, 2026-10-15
 
 - Replaced UI arrow glyphs and testimonial rating stars with shared SVGs, including
   page actions, work cards, Contact sending, and founder/testimonial navigation.
@@ -216,16 +231,22 @@ CURRENT TASK: 0.26.2 release (consistent SVG icons across devices). Deployment r
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
 - Concepts and provisional copy need approved replacements before launch.
-- About and Products hold placeholder content. Contact's one form has no
-  backend: sending opens the visitor's email app with the message composed (with a
-  copy fallback); `/inquiries/*` links redirect to `/contact?inquiry=…`.
+- About and Products hold placeholder content. Contact posts to the PHP Brevo
+  service in `server/` when `VITE_CONTACT_ENDPOINT` is set at build time; otherwise,
+  or after a failed send, it opens the visitor's email app (with a copy fallback).
+  `/inquiries/*` links redirect to `/contact?inquiry=…`.
+- The contact service is not deployed. It goes on a separate PHP 8.1+ subdomain
+  (`npm run build:api` → `dist-api/`), with `.env` above that `public_html`, a
+  verified Brevo sender/domain, the host's IP in Brevo's authorised IPs, and the
+  site rebuilt with `VITE_CONTACT_ENDPOINT` (see `server/README.md`). The local key
+  was rejected for an unrecognised IP, so no real email has been sent yet.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;
   listen on real speakers/headphones and adjust `SOUNDS`/`AMBIENT` levels.
 - Playwright Firefox cannot launch on macOS 27 locally; Firefox runs in CI.
 - “The full intro plays once per session” can fail in WebKit under parallel load
   (reload timing). It predates 0.10.0; consider timing with a single worker.
-- No production domain, commissioned portfolio content, or inquiry submission backend yet.
+- No production domain or commissioned portfolio content yet.
 - The temporary Hostinger deployment was inspected read-only. The CSS fix must
   be redeployed; live cache/headers and real-device GPU performance still need
   post-deployment verification. No hosting publication was performed.
@@ -239,11 +260,14 @@ CURRENT TASK: 0.26.2 release (consistent SVG icons across devices). Deployment r
 `src/router/pageModules.ts`, `src/shaders/`,
 `src/constants/brand.ts`, `src/constants/founders.json`,
 `src/constants/contact.json`, `src/constants/social.json`, `src/constants/social.ts`,
-`src/ui/sections/Contact/ContactChannels.tsx`, `scripts/socialMeta.ts`,
+`src/ui/sections/Contact/ContactChannels.tsx`, `src/repositories/inquiry.repository.ts`,
+`server/` (Brevo contact service), `scripts/socialMeta.ts`,
 `src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`, `src/audio/`,
 `src/constants/sounds.ts`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
-NEXT RECOMMENDED TASK: Supply approved catalog/portfolio content and a production
-origin. If direct inquiry delivery is required, define the backend contract before
-adding a repository; the current form only composes mail and never confirms delivery.
+NEXT RECOMMENDED TASK: Create the `api` subdomain, upload `dist-api/`, add `.env`
+above its `public_html`, confirm it returns 405 JSON, authorise the server IP in
+Brevo, verify a sender on the studio domain, rebuild the site with
+`VITE_CONTACT_ENDPOINT`, and send a real test message. Then supply approved
+catalog/portfolio content and a production origin.
