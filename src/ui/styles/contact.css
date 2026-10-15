@@ -323,40 +323,289 @@
   font-size: 12px;
   color: var(--contact-error);
 }
+/* Meeting choices retain native radio keyboard behavior. */
+.inquiry-form[data-kind='appointment'] [data-field='organisation'],
+.inquiry-format {
+  grid-column: 1 / -1;
+}
 .inquiry-format > div {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  margin-top: 8px;
 }
 .inquiry-format label {
   position: relative;
+  min-width: 0;
   cursor: pointer;
 }
 .inquiry-format input {
   position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
   opacity: 0;
 }
-.inquiry-format label span {
-  display: inline-flex;
+.inquiry-format-card {
+  display: flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0 16px;
+  gap: 12px;
+  min-height: 80px;
+  height: 100%;
+  padding: 14px;
   border: var(--border);
   border-radius: var(--radius);
-  font-size: 13px;
+  background: var(--color-canvas);
   transition:
-    background-color 300ms ease,
+    background-color 300ms var(--ease-editorial),
     color 300ms ease,
     border-color 300ms ease;
 }
-.inquiry-format input:checked + span {
+.inquiry-format label:hover .inquiry-format-card {
+  border-color: var(--color-brand);
+  background: var(--color-surface);
+}
+.inquiry-format-copy {
+  display: grid;
+  gap: 5px;
+}
+.inquiry-format-name {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.inquiry-format-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+.inquiry-format-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+.inquiry-format-check {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+}
+.inquiry-format-check svg {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.inquiry-format label[data-selected] .inquiry-format-card {
   border-color: var(--color-brand);
   color: var(--color-canvas);
   background: var(--color-brand);
 }
-.inquiry-format input:focus-visible + span {
+.inquiry-format label[data-selected] .inquiry-format-hint {
+  color: var(--color-canvas);
+}
+.inquiry-format label[data-selected] .inquiry-format-check {
+  border-color: currentColor;
+}
+.inquiry-format label[data-selected] .inquiry-format-check svg {
+  opacity: 1;
+}
+.inquiry-format input:focus-visible + .inquiry-format-card {
   outline: 2px solid var(--color-warm-accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+@media (max-width: 499px) {
+  .inquiry-format-card {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+  }
+  .inquiry-format-copy {
+    order: 1;
+    flex-basis: 100%;
+  }
+}
+
+.inquiry-date-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-line);
+  border-radius: 0;
+  text-align: left;
+  font-size: 15px;
+  transition: border-color var(--duration-fast) ease;
+}
+.inquiry-date-trigger > svg {
+  flex: none;
+  color: var(--color-brand);
+}
+.inquiry-date-trigger[data-placeholder] > span {
+  color: var(--color-muted);
+}
+.inquiry-date-trigger .inquiry-date-chevron {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  transform: rotate(90deg);
+  transition: transform 300ms var(--ease-editorial);
+}
+.inquiry-date-trigger[aria-expanded='true'] .inquiry-date-chevron {
+  transform: rotate(-90deg);
+}
+.inquiry-date-trigger:is(:hover, :focus-visible, [aria-expanded='true']) {
+  border-color: var(--color-brand);
+}
+.inquiry-field[data-invalid] .inquiry-date-trigger {
+  border-color: var(--contact-error);
+}
+.inquiry-calendar {
+  position: fixed;
+  z-index: var(--layer-skip);
+  inset: auto;
+  width: min(340px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  margin: 0;
+  padding: 20px;
+  overflow: auto;
+  border: var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-canvas);
+  box-shadow: 0 20px 60px -20px var(--color-scrim);
+}
+.inquiry-calendar::backdrop {
+  background: transparent;
+}
+.inquiry-calendar:not([open]) {
+  display: none;
+}
+.inquiry-calendar-eyebrow {
+  color: var(--color-muted);
+}
+.inquiry-calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 16px;
+}
+.inquiry-calendar-head h3 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.inquiry-calendar-head > div {
+  display: flex;
+  gap: 2px;
+}
+.inquiry-calendar-head button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: var(--border);
+}
+.inquiry-calendar-previous {
+  transform: rotate(180deg);
+}
+.inquiry-calendar table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.inquiry-calendar th {
+  height: 32px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+.inquiry-calendar td {
+  padding: 2px;
+  text-align: center;
+}
+.inquiry-calendar td button {
+  position: relative;
+  width: 100%;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  font-size: 13px;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+.inquiry-calendar button:disabled {
+  color: var(--color-muted);
+  opacity: 0.4;
+}
+.inquiry-calendar button:enabled:hover {
+  background: var(--color-surface);
+}
+.inquiry-calendar button:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 1px;
+}
+.inquiry-calendar td button[aria-current='date'] {
+  border-color: var(--color-line);
+}
+.inquiry-calendar td button[data-selected] {
+  border-color: var(--color-brand);
+  color: var(--color-canvas);
+  background: var(--color-brand);
+}
+.inquiry-calendar-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: var(--border);
+}
+.inquiry-calendar-foot > button {
+  min-height: 32px;
+  padding: 4px;
+  font-size: 12px;
+}
+.inquiry-calendar-foot > span {
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+.inquiry-calendar-foot > button:last-child {
+  margin-left: auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .inquiry-calendar[open] {
+    animation: inquiry-calendar-in 220ms var(--ease-editorial);
+  }
+}
+@keyframes inquiry-calendar-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inquiry-format-card,
+  .inquiry-format-check svg,
+  .inquiry-date-trigger,
+  .inquiry-date-chevron,
+  .inquiry-calendar td button {
+    transition: none;
+  }
 }
 
 .inquiry-actions {

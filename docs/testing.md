@@ -23,6 +23,10 @@ Run `npm run test:e2e` after interaction or layout changes.
 - Contact: kind-specific fields and validation, legacy route HTML/redirects,
   missing/denied/successful clipboard access, manual copying, interrupted resizing,
   reduced motion, and collapsed channel tab order without native `inert`.
+- Appointment controls: native radio arrow-key selection, date validation focus,
+  calendar arrows/month navigation, disabled past dates, selection persistence,
+  Escape/outside dismissal, modal fallback focus trapping, calendar accessibility,
+  and narrow-screen bounds. Calendar service tests cover leap years and month ends.
 - Loader/audio: fixed progress totals, required initial-route mounting, downloaded
   and decoded samples, shared preparation, alternate-format fallback, retryable
   failures, and pending audio/page modules beyond the visual readiness timeout.

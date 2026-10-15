@@ -15,6 +15,10 @@ UI → hooks → services → repositories. Static presentation is the exception
   on interruption. Envelope CSS pauses via hook-managed visibility/entry/motion.
   Explicit interaction state drives flap/letter opening; `useEnvelopeMotion`
   animates persistent SVG attributes on inquiry changes with a finite 30 fps loop.
+  Meeting choices remain native radios with explicit selected styling. The date
+  picker flows through `useDatePicker` to the pure `calendar.service`; the hook
+  owns modal positioning, keyboard navigation, focus, and outside dismissal.
+  It reuses `useDialog`, with focus trapping and dismissal for older engines.
 - Products: `ProductPanels` + `useProductPanels` with `productArt` drawings that
   assemble into solid objects when opened; templates flow `templates.json` →
   `templates.service` → `useTemplates` → `TemplateCatalog`.

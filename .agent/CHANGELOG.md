@@ -5,6 +5,39 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.26.1] — 2026-10-15
+
+### Changed
+
+- Meeting choices are full-width paired cards with original line icons, brief
+  descriptions, native radio keyboard behavior, and explicit selection marks.
+- Preferred date opens an ivory calendar with a serif month heading, forest
+  selection, today marker, clear month navigation, and responsive positioning.
+  Past dates remain disabled; the selected date is preserved across opening.
+  Arrow/Page/Home/End keys, Escape, outside dismissal, and focus return work with
+  native dialogs and the older-browser fallback. Reduced motion stays static.
+
+### AI session
+
+Changed: Contact appointment layout, meeting cards, shared vector icons,
+`InquiryDatePicker` → `useDatePicker` → pure calendar service, validation focus,
+and service/browser regression checks. No dependency or media added.
+
+Reason: Replace cramped options and inconsistent browser date popups with the
+studio's existing palette, typography, and accessible interaction patterns.
+The preferred date remains an inquiry detail; selecting it does not book a meeting.
+
+Verification: `npm run check` passed (145 unit tests, formatting, lint, strict
+types, production build, version alignment, and unchanged 10.96 MiB media).
+Deployment audit passed for 14 routes, three aliases, the 404 fallback, and 126
+asset references. All 36 Contact browser checks verified across Chromium and
+desktop/mobile WebKit: 32 passed in the final serial run; four existing
+loading/clipboard/envelope timing failures passed on isolated rerun. Long local
+host/startup stalls also affected earlier runs; no loader timeout was relaxed.
+All six new calendar/control checks passed, including an axe calendar scan and
+native-dialog fallback. Visual checks at 320/390/768/1440 px found no overflow in
+either engine. Prepared as 0.26.1; no hosting deployment performed.
+
 ## [0.26.0] — 2026-10-15
 
 ### Changed

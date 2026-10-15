@@ -123,7 +123,9 @@ export function useInquiryForm() {
       setErrors(found);
       const first = Object.keys(found)[0];
       if (first) {
-        formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
+        formRef.current
+          ?.querySelector<HTMLElement>(`[name="${first}"]:not([type="hidden"])`)
+          ?.focus();
         return;
       }
       window.location.href = composeInquiry(draft, contact.email).href;

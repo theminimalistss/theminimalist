@@ -1,5 +1,103 @@
 import { expect, test } from '@playwright/test';
 import { openPage } from './helpers';
+import AxeBuilder from '@axe-core/playwright';
+
+test('meeting cards and the calendar work with pointer, keyboard, and validation', async ({
+  page,
+}) => {
+  await openPage(page, '/contact?inquiry=appointment');
+  const form = page.locator('.inquiry-form');
+  const online = form.getByRole('radio', { name: 'Online', exact: true });
+  const inPerson = form.getByRole('radio', { name: 'In person', exact: true });
+  await form.getByText('Online', { exact: true }).click();
+  await expect(online).toBeChecked();
+  await expect(form.locator('.inquiry-format label[data-selected]')).toContainText('Online');
+  await online.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(inPerson).toBeChecked();
+  await expect(form.locator('.inquiry-format label[data-selected]')).toContainText('In person');
+  await form.getByLabel('Name', { exact: true }).fill('Ana Cruz');
+  await form.getByLabel('Email', { exact: true }).fill('ana@example.com');
+  await form.getByLabel('Your message').fill('Let’s discuss a website for our studio.');
+  await form.getByRole('button', { name: 'Send message', exact: true }).click();
+  const trigger = form.getByLabel('Preferred date');
+  await expect(trigger).toBeFocused();
+  await expect(trigger).toHaveAttribute('aria-invalid', 'true');
+  await trigger.press('Enter');
+  const calendar = page.getByRole('dialog', { name: 'Choose a day' });
+  await expect(calendar).toBeVisible();
+  const today = calendar.locator('[aria-current="date"]');
+  await expect(today).toBeFocused();
+  const min = await today.getAttribute('data-date');
+  for (const button of await calendar.locator('[data-date]').all()) {
+    if ((await button.getAttribute('data-date'))! < min!) await expect(button).toBeDisabled();
+  }
+  await expect(calendar.getByRole('button', { name: 'Previous month' })).toBeDisabled();
+  await page.keyboard.press('ArrowRight');
+  const picked = await page.locator('[data-date]:focus').getAttribute('data-date');
+  expect(picked).not.toBe(min);
+  await page.keyboard.press('Enter');
+  await expect(calendar).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  await expect(form.locator('input[type="hidden"][name="date"]')).toHaveValue(picked!);
+  await expect(trigger).not.toHaveAttribute('aria-invalid', 'true');
+  await trigger.click();
+  await expect(calendar.locator('[data-selected]')).toBeFocused();
+  const originalMonth = await calendar.locator('h3').textContent();
+  await page.keyboard.press('PageDown');
+  await expect(calendar.getByRole('button', { name: 'Previous month' })).toBeEnabled();
+  await page.keyboard.press('PageUp');
+  await expect(calendar.locator('h3')).toHaveText(originalMonth!);
+  await expect
+    .poll(() =>
+      calendar.evaluate(
+        (element) =>
+          element.getAnimations().filter((animation) => animation.playState === 'running').length,
+      ),
+    )
+    .toBe(0);
+  expect(
+    (await new AxeBuilder({ page }).include('.inquiry-calendar').analyze()).violations,
+  ).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(calendar).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await calendar.getByRole('button', { name: 'Today', exact: true }).click();
+  await expect(form.locator('input[type="hidden"][name="date"]')).toHaveValue(min!);
+  await form.getByRole('button', { name: 'Send message', exact: true }).click();
+  await expect(form.getByRole('status')).toContainText('Your email app should open');
+});
+
+test('calendar stays inside narrow screens and closes outside without native dialog support', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    delete (HTMLDialogElement.prototype as { showModal?: unknown }).showModal;
+    delete (HTMLDialogElement.prototype as { close?: unknown }).close;
+  });
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openPage(page, '/contact?inquiry=appointment');
+  const trigger = page.getByLabel('Preferred date');
+  await trigger.click();
+  const calendar = page.getByRole('dialog', { name: 'Choose a day' });
+  await expect(calendar).toBeVisible();
+  const bounds = await calendar.boundingBox();
+  expect(bounds!.x).toBeGreaterThanOrEqual(15);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(305);
+  expect(bounds!.y).toBeGreaterThanOrEqual(15);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(625);
+  await calendar.getByRole('button', { name: 'Close calendar' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(calendar.getByRole('button', { name: 'Next month' })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
+  await expect(calendar.getByRole('button', { name: 'Close calendar' })).toBeFocused();
+  await page.mouse.click(4, 4);
+  await expect(calendar).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
 
 test('legacy inquiry URLs have deployable HTML shells with Contact metadata', async ({
   request,

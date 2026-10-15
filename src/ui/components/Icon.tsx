@@ -12,6 +12,11 @@ type Props = {
     | 'diamond'
     | 'sprig'
     | 'plus'
+    | 'calendar'
+    | 'video'
+    | 'pin'
+    | 'check'
+    | 'chevron'
     | 'facebook'
     | 'instagram'
     | 'linkedin'
@@ -42,6 +47,21 @@ const paths = {
   ),
   menu: <path d="M3 8h18M9 16h12" />,
   plus: <path d="M12 5v14M5 12h14" />,
+  calendar: (
+    <>
+      <rect x="4" y="5" width="16" height="16" rx="1" />
+      <path d="M8 3v4m8-4v4M4 11h16m-12 4h3m2 0h3m-8 3h3" />
+    </>
+  ),
+  video: <path d="M3 7h12v10H3Zm12 3 6-3v10l-6-3" />,
+  pin: (
+    <>
+      <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </>
+  ),
+  check: <path d="m5 12 4 4L19 6" />,
+  chevron: <path d="m9 5 7 7-7 7" />,
   facebook: (
     <>
       <circle cx="12" cy="12" r="9" />

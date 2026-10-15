@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.26.0
+VERSION: 0.26.1
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.26.0 release (Safari entry/envelope fixes, audio-gated loading, and shared soothing ambient). Deployment remains pending.
+CURRENT TASK: 0.26.1 release (Contact meeting cards and calendar). Deployment remains pending.
 
 ## Completed
 
@@ -82,7 +82,22 @@ CURRENT TASK: 0.26.0 release (Safari entry/envelope fixes, audio-gated loading, 
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 2026-10-15
+## Latest verification — 0.26.1, 2026-10-15
+
+- Meeting radios now use paired cards with icons, descriptions, and clear checks.
+  Appointment fields align into organisation, date/time, and full-width meeting rows.
+- A locally styled date calendar replaces the browser popup, with keyboard
+  navigation, disabled past dates, selection persistence, responsive positioning,
+  dialog fallback, and focus return. UI → hook → calendar service stays intact.
+- `npm run check` passed with 145 unit tests; deployment audit passed. All 36
+  Contact checks verified across Chromium and desktop/mobile WebKit: 32 passed
+  in the final serial run, four existing timing failures passed on rerun. Earlier
+  runs also had long local host/startup stalls; no loading deadline was relaxed.
+  All six new control checks passed, including calendar axe/fallback coverage.
+- Visual checks at 320/390/768/1440 px in both engines found no overflow. No
+  dependency/media added. Release records aligned at 0.26.1; no hosting deployment.
+
+## Latest release verification — 0.26.0, 2026-10-15
 
 - `npm run check`: passed with 142 unit tests, formatting, lint, strict types,
   production build, version consistency, and media audit (10.96 MiB).

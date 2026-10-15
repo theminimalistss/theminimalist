@@ -3,6 +3,8 @@ import { INQUIRY_INTENTS, INQUIRY_OPTIONS } from '@/constants/inquiry';
 import { useInquiryForm } from '@/hooks/useInquiryForm';
 import type { InquiryField } from '@/types/inquiry';
 import { ContactEnvelope } from './ContactEnvelope';
+import { InquiryDatePicker } from './InquiryDatePicker';
+import { Icon } from '@/ui/components/Icon';
 
 const STABLE = new Set<InquiryField>(['name', 'email', 'organisation', 'message']);
 
@@ -30,6 +32,7 @@ export function InquiryForm() {
     <div
       key={STABLE.has(name) ? name : `${draft.kind}-${name}`}
       className="inquiry-field"
+      data-field={name}
       data-invalid={errors[name] ? '' : undefined}
       style={{ '--i': order++ } as CSSProperties}
     >
@@ -127,7 +130,18 @@ export function InquiryForm() {
           field('budget', 'Budget', <input {...props('budget')} />, true),
         ]}
         {draft.kind === 'appointment' && [
-          field('date', 'Preferred date', <input {...props('date')} type="date" min={today} />),
+          field(
+            'date',
+            'Preferred date',
+            <InquiryDatePicker
+              id={`${id}-date`}
+              value={draft.date}
+              min={today}
+              invalid={!!errors.date}
+              describedBy={errors.date ? `${id}-date-error` : undefined}
+              onChange={(value) => setField('date', value)}
+            />,
+          ),
           choose('time', 'Preferred time', INQUIRY_OPTIONS.times),
           <fieldset
             key="appointment-format"
@@ -139,7 +153,7 @@ export function InquiryForm() {
             <legend>Meeting</legend>
             <div>
               {INQUIRY_OPTIONS.formats.map((format) => (
-                <label key={format}>
+                <label key={format} data-selected={draft.format === format ? '' : undefined}>
                   <input
                     type="radio"
                     name="format"
@@ -147,7 +161,21 @@ export function InquiryForm() {
                     checked={draft.format === format}
                     onChange={() => setField('format', format)}
                   />
-                  <span>{format}</span>
+                  <span className="inquiry-format-card">
+                    <Icon
+                      name={format === 'Online' ? 'video' : 'pin'}
+                      className="inquiry-format-icon"
+                    />
+                    <span className="inquiry-format-copy">
+                      <span className="inquiry-format-name">{format}</span>
+                      <span className="inquiry-format-hint" aria-hidden="true">
+                        {format === 'Online' ? 'A video conversation' : 'Meet face to face'}
+                      </span>
+                    </span>
+                    <span className="inquiry-format-check" aria-hidden="true">
+                      <Icon name="check" />
+                    </span>
+                  </span>
                 </label>
               ))}
             </div>
