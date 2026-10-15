@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { PRODUCT_COPY, type ProductKey } from '@/constants/pages';
 import { PRODUCT_PAGES } from '@/router/navigation';
 import { CONTACT_LINKS, ROUTES } from '@/router/paths';
@@ -25,10 +26,10 @@ export default function ProductPage({ product }: { product: ProductKey }) {
       >
         <PageLink className="text-button" to={CONTACT_LINKS.quote}>
           {copy.status === 'available' ? 'Request a quote' : 'Ask to be notified'}{' '}
-          <span aria-hidden="true">↗</span>
+          <Icon name="arrow" className="inline-icon" />
         </PageLink>
         <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
-          Book an appointment <span aria-hidden="true">↗</span>
+          Book an appointment <Icon name="arrow" className="inline-icon" />
         </PageLink>
       </PageIntro>
       {copy.status === 'available' ? (

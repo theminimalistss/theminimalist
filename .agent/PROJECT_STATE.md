@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.26.1
+VERSION: 0.26.2
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.26.1 release (Contact meeting cards and calendar). Deployment remains pending.
+CURRENT TASK: 0.26.2 release (consistent SVG icons across devices). Deployment remains pending.
 
 ## Completed
 
@@ -82,7 +82,20 @@ CURRENT TASK: 0.26.1 release (Contact meeting cards and calendar). Deployment re
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 0.26.1, 2026-10-15
+## Latest verification — 0.26.2, 2026-10-15
+
+- Replaced UI arrow glyphs and testimonial rating stars with shared SVGs, including
+  page actions, work cards, Contact sending, and founder/testimonial navigation.
+  Inline sizing, colour inheritance, accessibility, and hover motion are retained.
+- Browser guidance now requires vector symbols for consistent mobile rendering.
+- `npm run check`: 145 unit tests passed. Focused production browser suite:
+  29 passed, one configured mobile-hover skip across Chromium and desktop/mobile
+  WebKit, including accessibility and existing controls/previews.
+- An 11-route desktop/mobile audit found no icon text or horizontal overflow;
+  forced emoji fonts did not change SVG geometry. WebKit arrow hover motion and
+  deployment audit passed. No dependency/media added; release records aligned at 0.26.2.
+
+## Previous verification — 0.26.1, 2026-10-15
 
 - Meeting radios now use paired cards with icons, descriptions, and clear checks.
   Appointment fields align into organisation, date/time, and full-width meeting rows.

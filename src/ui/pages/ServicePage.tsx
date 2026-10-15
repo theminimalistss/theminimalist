@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { SERVICE_COPY, SERVICE_PROCESS, type ServiceKey } from '@/constants/pages';
 import { SERVICE_PAGES } from '@/router/navigation';
 import { CONTACT_LINKS, ROUTES } from '@/router/paths';
@@ -23,10 +24,10 @@ export default function ServicePage({ service }: { service: ServiceKey }) {
       <SectionTabs items={SERVICE_PAGES} label="Services" />
       <PageIntro eyebrow="Services" title={copy.title} accent={copy.accent} lead={copy.lead}>
         <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-          Request a quote <span aria-hidden="true">↗</span>
+          Request a quote <Icon name="arrow" className="inline-icon" />
         </PageLink>
         <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
-          Book an appointment <span aria-hidden="true">↗</span>
+          Book an appointment <Icon name="arrow" className="inline-icon" />
         </PageLink>
       </PageIntro>
       <PageSection eyebrow="What’s included" title="Everything it needs.">

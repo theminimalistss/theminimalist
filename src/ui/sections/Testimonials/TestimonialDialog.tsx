@@ -1,3 +1,4 @@
+import { RatingStars } from '@/ui/components/RatingStars';
 import { useDialog } from '@/hooks/useDialog';
 import type { Testimonial } from '@/types/testimonial';
 import { Icon } from '@/ui/components/Icon';
@@ -81,16 +82,16 @@ export function TestimonialDialog({
             </blockquote>
             {testimonial.rating && (
               <p className="testimonial-dialog-rating">
-                <span aria-hidden="true">{'★'.repeat(Math.round(testimonial.rating))}</span>{' '}
-                <span className="sr-only">Rated</span> {testimonial.rating.toFixed(1)}/5
+                <RatingStars rating={testimonial.rating} /> <span className="sr-only">Rated</span>{' '}
+                {testimonial.rating.toFixed(1)}/5
               </p>
             )}
             <nav className="testimonial-dialog-steps" aria-label="More testimonials">
               <button onClick={() => onStep(-1)} aria-label="Previous testimonial">
-                <span aria-hidden="true">←</span> Previous
+                <Icon name="arrow-left" className="inline-icon" /> Previous
               </button>
               <button onClick={() => onStep(1)} aria-label="Next testimonial">
-                Next <span aria-hidden="true">→</span>
+                Next <Icon name="arrow-right" className="inline-icon" />
               </button>
             </nav>
           </div>

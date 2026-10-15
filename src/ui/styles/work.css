@@ -98,6 +98,12 @@
   font-size: 8px;
   letter-spacing: 0.06em;
 }
+.work-meta-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
 .work-artwork {
   position: absolute;
   left: 20px;

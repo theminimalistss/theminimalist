@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import type { Work } from '@/types/work';
 import { WorkImage } from '@/ui/components/WorkImage';
 
@@ -26,7 +27,7 @@ export function FocusStepper({ works, index, onStep, onOpen, showThumbnail }: Pr
         disabled={count < 2}
         onClick={() => onStep(-1)}
       >
-        <span aria-hidden="true">←</span>
+        <Icon name="arrow-left" className="inline-icon" />
       </button>
       <button
         className="focus-current"
@@ -56,7 +57,7 @@ export function FocusStepper({ works, index, onStep, onOpen, showThumbnail }: Pr
         disabled={count < 2}
         onClick={() => onStep(1)}
       >
-        <span aria-hidden="true">→</span>
+        <Icon name="arrow-right" className="inline-icon" />
       </button>
     </div>
   );

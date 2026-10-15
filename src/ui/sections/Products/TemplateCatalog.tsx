@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { useMemo, useState } from 'react';
 import { useTemplates } from '@/hooks/useTemplates';
 import { CONTACT_LINKS } from '@/router/paths';
@@ -55,7 +56,7 @@ export function TemplateCatalog() {
                 ))}
               </ul>
               <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-                Ask about {template.name} <span aria-hidden="true">↗</span>
+                Ask about {template.name} <Icon name="arrow" className="inline-icon" />
               </PageLink>
             </div>
           </li>

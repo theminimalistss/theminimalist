@@ -5,6 +5,37 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.26.2] — 2026-10-15
+
+### Fixed
+
+- Text arrows across page actions, portfolio cards/previews, Contact sending,
+  and founder/testimonial navigation now use shared SVGs. Testimonial rating
+  stars also use vectors. Symbols keep their ink colour and shape on mobile
+  without relying on emoji/font fallback; existing motion targets are preserved.
+- Shared inline sizing follows each control's type size. Decorative symbols stay
+  out of the accessibility tree and legacy SVG focus order; text labels remain.
+
+### AI session
+
+Changed: shared directional/star paths, inline/rating layout, text-icon consumers,
+hover selectors, and browser guidance. No runtime dependency or media added.
+
+Reason: Keep the screenshot's plain diagonal arrow and the rest of the interface
+consistent across mobile and desktop devices.
+
+Verification: `npm run check` passed with 145 unit tests, lint, strict types,
+formatting, production build, version alignment, and unchanged 10.96 MiB media.
+Focused production browser suite: 29 passed, one configured mobile-hover skip
+across Chromium and desktop/mobile WebKit. Covers page accessibility, founder
+arrows, work selection/previews, testimonial dialogs/ratings, products, Contact,
+and the 404 return. The desktop/mobile audit checked 11 representative routes:
+no remaining icon text, horizontal overflow, or geometry changes under forced
+emoji fonts. WebKit hover checks confirmed Contact's (3, -3) px arrow travel and
+the study stepper's -2 px travel. Deployment audit passed for 14 routes, three
+aliases, the 404 fallback, and 126 asset references. No hosting deployment;
+Release records aligned at 0.26.2.
+
 ## [0.26.1] — 2026-10-15
 
 ### Changed

@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { CONTACT_LINKS } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
 import { PageIntro } from '@/ui/sections/Page/PageIntro';
@@ -16,10 +17,10 @@ export default function ServicesPage() {
           lead="Three ways we help: we engineer software, build websites, and shape brand identities, each with the same calm, considered craft."
         >
           <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-            Start a project <span aria-hidden="true">↗</span>
+            Start a project <Icon name="arrow" className="inline-icon" />
           </PageLink>
           <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
-            Let’s talk <span aria-hidden="true">↗</span>
+            Let’s talk <Icon name="arrow" className="inline-icon" />
           </PageLink>
         </PageIntro>
         <ServiceProcess />

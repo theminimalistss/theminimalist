@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import type { Work } from '@/types/work';
 
 export function WorkMeta({ work, index }: { work: Work; index: number }) {
@@ -20,7 +21,10 @@ export function WorkMeta({ work, index }: { work: Work; index: number }) {
           {String(index + 1).padStart(2, '0')} /{' '}
           {work.isConcept ? 'CONCEPT STUDY' : 'SELECTED WORK'}
         </span>
-        <span>{work.mediaType === 'video' ? 'MOTION ↗' : 'EXPLORE ↗'}</span>
+        <span className="work-meta-action">
+          {work.mediaType === 'video' ? 'MOTION' : 'EXPLORE'}{' '}
+          <Icon name="arrow" className="inline-icon" />
+        </span>
       </span>
     </div>
   );

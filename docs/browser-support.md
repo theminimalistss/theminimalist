@@ -16,6 +16,11 @@ Emulated iPhone tests do not replace checks on real iOS hardware or in-app brows
 
 ## Progressive behavior
 
+- Interface symbols use the shared SVG `Icon` set, including inline arrows and
+  decorative rating stars. Use vectors rather than Unicode icon characters so
+  device emoji/font fallback cannot change their shape or colour. Decorative
+  SVGs are hidden from assistive technology and excluded from legacy focus order;
+  the surrounding control retains its text or accessible label.
 - Missing/lost WebGL retains static illustrations or native portfolio media.
 - Ordinary page navigation uses a live reveal without View Transition snapshots;
   in-page previews/gallery morphs retain the API and their existing fallbacks.

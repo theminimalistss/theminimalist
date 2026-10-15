@@ -1,5 +1,18 @@
 # Architecture decisions
 
+## 2026-10-15 — Vector interface symbols
+
+Decision: Use the shared SVG `Icon` set for interface symbols, including inline
+arrows and decorative rating stars. Size inline symbols relative to surrounding
+type, inherit ink colour, and retain accessible text on their controls.
+
+Reason: Mobile emoji/font fallback changed the appearance of text icon glyphs.
+Vector paths keep their shape and colour independent of the device's fonts.
+
+Impact: No icon font, dependency, or media download. Decorative SVGs are hidden
+from assistive technology and excluded from legacy focus order. Existing hover
+and send-animation targets remain; `RatingStars` shares the same vector set.
+
 ## 2026-10-15 — Stable page layers and audio-gated entry
 
 The same release also uses one uninterrupted warm ambient across every page,

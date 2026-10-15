@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { PRODUCT_COPY } from '@/constants/pages';
 import { useProductPanels } from '@/hooks/useProductPanels';
 import { PRODUCT_PAGES } from '@/router/navigation';
@@ -44,7 +45,7 @@ export function ProductPanels() {
                       {LEADS[index]?.lead}
                     </span>
                     <span className="text-button product-panel-cta" aria-hidden="true">
-                      Explore <span>↗</span>
+                      Explore <Icon name="arrow" className="inline-icon" />
                     </span>
                   </span>
                 </span>

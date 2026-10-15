@@ -101,7 +101,7 @@ export function ParticlePreview({
           </span>
           <h2>
             {study.title}
-            <span aria-hidden="true">↗</span>
+            <Icon name="arrow" className="inline-icon" />
           </h2>
           <p className="serif">{study.tagline}</p>
         </div>

@@ -94,6 +94,8 @@ UI → hooks → services → repositories. Static presentation is the exception
   build-time per-route HTML (`scripts/socialMeta.ts`); images via `media:social`.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.
 - UI: composed components, native buttons/dialogs, centralized design tokens.
+  Interface symbols use the shared SVG `Icon` set, including inline arrows and
+  `RatingStars`; avoid Unicode icon glyphs that can become device emoji.
 - Routes: `SiteLayout` (header, menu, route focus) wraps every page; `PageLayout`
   adds main + footer for inner pages. Home is eager; other pages are lazy.
 - Navigation: `src/router/navigation.ts` is the single source for header, menu,

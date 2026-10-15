@@ -365,6 +365,9 @@
   white-space: nowrap;
 }
 .testimonial-frame-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   opacity: 0;
   transform: translateX(-6px);
   transition:
@@ -470,7 +473,6 @@
   color: var(--color-muted);
 }
 .testimonial-dialog-rating > span:first-child {
-  letter-spacing: 0.16em;
   color: var(--color-warm-accent);
 }
 .testimonial-dialog-steps {
@@ -481,6 +483,9 @@
   border-top: var(--border);
 }
 .testimonial-dialog-steps button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   min-height: 44px;
   font-size: 12px;
 }

@@ -55,7 +55,7 @@ export function WorkDialog({ work, onClose }: { work: Work | null; onClose: () =
               </p>
             )}
             <button className="text-button" data-sound="off" onClick={onClose}>
-              Back to the collection <span aria-hidden="true">↗</span>
+              Back to the collection <Icon name="arrow" className="inline-icon" />
             </button>
           </div>
         </div>

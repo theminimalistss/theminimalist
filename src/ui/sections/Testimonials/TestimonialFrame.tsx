@@ -1,3 +1,5 @@
+import { RatingStars } from '@/ui/components/RatingStars';
+import { Icon } from '@/ui/components/Icon';
 import type { Testimonial } from '@/types/testimonial';
 import { TestimonialMediaView } from './TestimonialMediaView';
 
@@ -31,7 +33,7 @@ export function TestimonialFrame({
       </span>
       <span className="testimonial-frame-top" aria-hidden="true">
         <span data-work-part="category">{testimonial.business}</span>
-        {testimonial.rating && <span>{'★'.repeat(Math.round(testimonial.rating))}</span>}
+        {testimonial.rating && <RatingStars rating={testimonial.rating} />}
       </span>
       <span className="testimonial-frame-body" aria-hidden="true">
         <span className="testimonial-frame-glyph">“</span>
@@ -42,7 +44,10 @@ export function TestimonialFrame({
           {testimonial.client}
         </span>
         <span className="testimonial-frame-index">
-          {String(number).padStart(2, '0')} <span className="testimonial-frame-read">Read ↗</span>
+          {String(number).padStart(2, '0')}{' '}
+          <span className="testimonial-frame-read">
+            Read <Icon name="arrow" className="inline-icon" />
+          </span>
         </span>
       </span>
     </button>

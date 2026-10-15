@@ -1,6 +1,6 @@
 # The Minimalist
 
-**Design studio · v0.26.1 · Immersive studio portfolio**
+**Design studio · v0.26.2 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
@@ -135,7 +135,7 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning (currently `0.26.1`). Keep `package.json`, `package-lock.json`,
+Semantic Versioning (currently `0.26.2`). Keep `package.json`, `package-lock.json`,
 `.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 

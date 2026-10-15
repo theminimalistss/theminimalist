@@ -406,13 +406,13 @@
 .focus-step:hover {
   background: var(--color-surface);
 }
-.focus-step:first-child:hover span {
+.focus-step:first-child:hover svg {
   transform: translateX(-2px);
 }
-.focus-step:last-child:hover span {
+.focus-step:last-child:hover svg {
   transform: translateX(2px);
 }
-.focus-step span {
+.focus-step svg {
   transition: transform var(--duration-fast) ease;
 }
 .focus-step:disabled {
@@ -546,8 +546,9 @@
   letter-spacing: -0.04em;
   margin-top: 4px;
 }
-.particle-copy h2 span {
+.particle-copy h2 .inline-icon {
   font-size: 18px;
+  align-self: center;
 }
 .particle-copy p {
   margin-top: 4px;

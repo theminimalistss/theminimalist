@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { MAIN_CONTENT_ID } from '@/hooks/useRouteFocus';
 
@@ -8,7 +9,7 @@ export function ErrorFallback() {
       <h1>A moment of pause.</h1>
       <p>Something didn’t load as expected.</p>
       <button className="text-button" onClick={() => window.location.reload()}>
-        Reload the page ↗
+        Reload the page <Icon name="arrow" className="inline-icon" />
       </button>
     </main>
   );

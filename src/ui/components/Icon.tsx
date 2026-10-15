@@ -1,6 +1,9 @@
 type Props = {
   name:
     | 'arrow'
+    | 'arrow-left'
+    | 'arrow-right'
+    | 'star'
     | 'close'
     | 'pause'
     | 'play'
@@ -27,6 +30,15 @@ type Props = {
 
 const paths = {
   arrow: <path d="M5 19 19 5M5 5h14v14" />,
+  'arrow-left': <path d="M20 12H4m7-7-7 7 7 7" />,
+  'arrow-right': <path d="M4 12h16m-7-7 7 7-7 7" />,
+  star: (
+    <path
+      d="m12 2.5 2.9 5.9 6.5 1-4.7 4.5 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.4l6.5-1Z"
+      fill="currentColor"
+      stroke="none"
+    />
+  ),
   close: <path d="m6 6 12 12M6 18 18 6" />,
   pause: (
     <>
@@ -109,6 +121,7 @@ export function Icon({ name, className }: Props) {
       stroke="currentColor"
       strokeWidth="1.4"
       aria-hidden="true"
+      focusable="false"
     >
       {paths[name]}
     </svg>

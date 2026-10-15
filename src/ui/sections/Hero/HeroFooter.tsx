@@ -16,7 +16,7 @@ export function HeroFooter({ paused, onToggle, reducedMotion, gallery, onBrowse 
       </span>
       {!gallery && (
         <button className="browse-button" onClick={onBrowse} data-morph-chrome="browse">
-          Explore the collection <span aria-hidden="true">↗</span>
+          Explore the collection <Icon name="arrow" className="inline-icon" />
         </button>
       )}
       {reducedMotion ? (

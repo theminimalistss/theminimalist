@@ -197,9 +197,7 @@ export function InquiryForm() {
       <div className="inquiry-actions">
         <button type="submit" className="inquiry-send">
           <span>{status === 'editing' ? 'Send message' : 'Send again'}</span>
-          <span className="inquiry-send-arrow" aria-hidden="true">
-            ↗
-          </span>
+          <Icon name="arrow" className="inline-icon inquiry-send-arrow" />
         </button>
         <p className="inquiry-note">
           Opens your email app with everything filled in, addressed to{' '}

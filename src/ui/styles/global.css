@@ -120,6 +120,20 @@ video {
   display: grid;
   place-items: center;
 }
+.inline-icon {
+  display: inline-block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+}
+.rating-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 .not-found {
   min-height: 100vh;
   min-height: 100svh;

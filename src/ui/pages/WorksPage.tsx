@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import { useCollectionWorks } from '@/hooks/useHeroWorks';
 import { useLayoutGlide } from '@/hooks/useLayoutGlide';
 import type { Work } from '@/types/work';
@@ -51,7 +52,7 @@ export default function WorksPage() {
             Different perspectives. One considered whole.
           </p>
           <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-            Start a project <span aria-hidden="true">↗</span>
+            Start a project <Icon name="arrow" className="inline-icon" />
           </PageLink>
         </div>
       </header>

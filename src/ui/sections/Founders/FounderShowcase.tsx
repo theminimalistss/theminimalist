@@ -61,7 +61,7 @@ export function FounderShowcase({ founders, intro }: Props) {
                   onClick={() => go(step)}
                 >
                   <span className="founder-step-icon" aria-hidden="true">
-                    {step > 0 ? '→' : '←'}
+                    <Icon name={step > 0 ? 'arrow-right' : 'arrow-left'} className="inline-icon" />
                   </span>
                   <span className="founder-step-label" aria-hidden="true">
                     <span className="founder-step-text" key={target?.slug}>

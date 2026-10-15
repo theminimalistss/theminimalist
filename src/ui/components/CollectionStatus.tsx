@@ -1,3 +1,4 @@
+import { Icon } from '@/ui/components/Icon';
 import type { HeroWorks } from '@/hooks/useHeroWorks';
 
 export function CollectionStatus({ state, className }: { state: HeroWorks; className: string }) {
@@ -13,7 +14,7 @@ export function CollectionStatus({ state, className }: { state: HeroWorks; class
       <div className={className} role="alert">
         <p>{state.message}</p>
         <button className="text-button" onClick={state.retry}>
-          Try again ↗
+          Try again <Icon name="arrow" className="inline-icon" />
         </button>
       </div>
     );
