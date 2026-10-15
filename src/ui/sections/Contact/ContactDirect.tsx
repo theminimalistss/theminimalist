@@ -1,8 +1,9 @@
-import contact from '@/constants/contact.json';
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { useCopyText } from '@/hooks/useCopyText';
 import { ContactChannels } from './ContactChannels';
 
 export function ContactDirect() {
+  const contact = useSiteContent('contact');
   const { copied, failed, copy } = useCopyText(contact.email);
   return (
     <div className="contact-direct">
@@ -31,7 +32,7 @@ export function ContactDirect() {
         </div>
         <div>
           <dt>Replies</dt>
-          <dd>We read every message and reply during studio hours.</dd>
+          <dd>{contact.replies}</dd>
         </div>
       </dl>
       <ContactChannels />

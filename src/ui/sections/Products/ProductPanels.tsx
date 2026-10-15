@@ -1,14 +1,14 @@
 import { Icon } from '@/ui/components/Icon';
-import { PRODUCT_COPY } from '@/constants/pages';
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { useProductPanels } from '@/hooks/useProductPanels';
 import { PRODUCT_PAGES } from '@/router/navigation';
 import { PageLink } from '@/ui/components/PageLink';
 import { PRODUCT_ART } from '@/utils/productArt';
 import { ProductArtwork } from './ProductArtwork';
 
-const LEADS = [PRODUCT_COPY.software, PRODUCT_COPY.templates, PRODUCT_COPY.hardware] as const;
-
 export function ProductPanels() {
+  const copy = useSiteContent('products');
+  const leads = [copy.software, copy.templates, copy.hardware];
   const { active, setActive, enter, press, choose } = useProductPanels();
   return (
     <ul className="product-panels" aria-label="Product categories">
@@ -33,8 +33,8 @@ export function ProductPanels() {
                 <span className="product-panel-gap" />
                 <span className="product-panel-number">{String(index + 1).padStart(2, '0')}</span>
               </span>
-              <span className="product-panel-status" data-status={LEADS[index]?.status}>
-                {LEADS[index]?.status === 'available' ? 'Available' : 'Coming soon'}
+              <span className="product-panel-status" data-status={leads[index]?.status}>
+                {leads[index]?.status === 'available' ? 'Available' : 'Coming soon'}
               </span>
               {art && <ProductArtwork art={art} id={`product-art-${index}`} />}
               <span className="product-panel-copy">
@@ -42,7 +42,7 @@ export function ProductPanels() {
                 <span className="product-panel-more">
                   <span>
                     <span className="product-panel-lead" id={`product-panel-${index}`}>
-                      {LEADS[index]?.lead}
+                      {leads[index]?.lead}
                     </span>
                     <span className="text-button product-panel-cta" aria-hidden="true">
                       Explore <Icon name="arrow" className="inline-icon" />

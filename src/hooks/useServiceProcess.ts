@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { SERVICE_PROCESS } from '@/constants/pages';
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { SERVICE_PROCESS_MOTION } from '@/constants/motion';
 import { useAppEntered } from '@/hooks/useAppEntered';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export function useServiceProcess() {
+  const stages = useSiteContent('process');
   const ref = useRef<HTMLElement>(null);
   const [active, setActive] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -28,13 +29,14 @@ export function useServiceProcess() {
   useEffect(() => {
     if (!running) return;
     const timer = window.setTimeout(
-      () => setActive((value) => (value + 1) % SERVICE_PROCESS.length),
+      () => setActive((value) => (value + 1) % stages.length),
       SERVICE_PROCESS_MOTION.interval,
     );
     return () => window.clearTimeout(timer);
-  }, [active, running]);
+  }, [active, running, stages.length]);
   return {
     ref,
+    stages,
     active,
     running,
     reducedMotion,

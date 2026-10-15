@@ -2,7 +2,7 @@ import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, relative } from 'node:path';
 
 const root = resolve('dist');
-const { pages } = JSON.parse(await readFile('src/router/pageMeta.json', 'utf8'));
+const { pages } = JSON.parse(await readFile('src/data/page-meta.json', 'utf8'));
 let checked = 0;
 const failures = [];
 const legacyRoutes = ['/inquiries', '/inquiries/quote', '/inquiries/appointment'];

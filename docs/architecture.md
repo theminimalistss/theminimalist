@@ -3,9 +3,24 @@
 Selected work is a future CMS-backed feature and follows **UI → hooks → services
 → repositories**. Static presentation labels and tokens remain local constants.
 
+All application JSON lives in [`src/data/`](../src/data/README.md). Existing
+repository-backed catalogs keep their validation/loading boundaries. Editorial
+copy (overview introductions, Studio, products, process captions, inquiry choices,
+and contact details) follows `siteContent.repository` → `siteContent.service` →
+`useSiteContent` → UI, synchronously because it is bundled. The repository's source
+shape is compile-checked and each read is isolated. The service narrows product
+availability and inquiry kinds, keeps four captions aligned with the drawings,
+and rejects blank text/empty lists. UI JSON imports are lint errors.
+
+Media remains in `src/assets/`, resolved by TypeScript adapters. Routes, interaction
+logic, shaders, geometry, and timing remain code. Static profile/brand/navigation
+adapters and build metadata are presentation/configuration exceptions, sharing
+the same central files. No content requests or new hosting requirements are added.
+
 `works.repository.ts` exposes `WorksRepository`, returning unknown data so future
 network content cannot bypass validation. The local adapter returns an isolated
-snapshot of `works.content.ts`; Vite resolves its local assets. `getHeroWorks`
+snapshot of `src/data/works.json`; `works.media.ts` resolves its semantic media
+keys to Vite-hashed local assets. `getHeroWorks`
 validates fields, forbids remote media URLs, requires video posters, rejects
 duplicate IDs/slugs, filters featured work, and sorts by order with an ID tie-break.
 Empty collections are valid.
@@ -102,7 +117,7 @@ directly. The preference flows `preferences.repository` → `sound.service` →
 
 ## Sharing and metadata
 
-`src/router/pageMeta.json` holds each route's title, description, share image,
+`src/data/page-meta.json` holds each route's title, description, share image,
 and the headline used on that image. `useDocumentMeta` applies the title and
 description at runtime. At build time `scripts/socialMeta.ts` writes the head
 (title, description, canonical, Open Graph, X card, image size/alt, structured
@@ -164,9 +179,57 @@ tabs, and tests all read that one structure. `SiteLayout` owns the fixed header,
 the site menu (state shared with the hero through `SiteMenuContext` so media
 pauses while it is open), and route focus: on navigation the page scrolls to the
 top and `#main-content` receives focus. `PageLayout` adds the main landmark and
-footer for inner pages. Inner pages are lazy-loaded and composed from small
-`src/ui/sections/Page/` blocks. Their copy is static presentation content; move
-it behind a repository when a CMS arrives.
+footer for inner pages. Inner pages are lazy-loaded and composed from section
+components. Some provisional presentation copy remains in constants; service
+details already use their own repository boundary.
+
+## Service details
+
+`ServicePage` → `useServiceDetail` → `getServiceDetail` → `serviceDetailsRepository`.
+`src/data/service-details.json` holds concise captions, examples, process steps,
+and handover notes. The repository returns isolated snapshots and maps the website
+sample to existing local AVIF/WebP variants. The service validates required text,
+nonempty lists, all five unique software platform ids (`web`, `mobile`, `desktop`,
+`api`, `embedded`), and optimised same-origin image paths. A discriminated union
+supplies each composition's preview contract. Loading failures expose Retry;
+cancellation and route identity prevent stale details after navigation.
+
+Software uses an interactive platform explorer with five original axonometric
+SVG drawings, symbolic capability tiles, and a forest system/process panel.
+Websites combines an editorial opening, manually resized sample browser, three
+symbolic chapters, and a launch timeline. Branding uses a floating identity board,
+a forest process strip, six paired disclosure cards, and a brand guide.
+Shared typography, actions, and navigation retain the site theme; `SERVICE_ROUTES`
+maps keys explicitly. Additional examples stay compact or behind disclosures.
+
+`useServicePreview` owns platform/device selection. `useServiceMotion` owns the
+page pause control and observers for `[data-service-scene]`. The hook combines
+entry, page visibility, reduced motion, and manual pause; CSS performs tracing,
+layer drift, symbol motion, and paper/browser movement. Offscreen scenes stop
+through `data-scene-active`. No per-frame JavaScript, WebGL scene, dependency, or
+new media download is needed. Reduced motion is fully static and retains every
+control. `useBrandDisclosure` manages six native buttons and three shared detail
+regions: opening content spans its paired row rather than increasing one card's
+height. Cancellable WAAPI height transitions handle open/close, rapid selection,
+and content resizing; `aria-expanded`, named regions, `aria-hidden`, and `inert`
+keep the state accessible. Reduced motion and unavailable WAAPI settle immediately.
+`cssTimeMs` handles both `600ms` and minified `.6s` tokens, preventing near-instant
+production animations. Samples remain explicit illustrations, with no
+commissioned-work claims.
+
+## Floating contact contrast
+
+`ContactFab` → `useContactContrast` → the pure `contactContrast.service`. The hook
+reads CSS backgrounds underneath the fixed anchor, excluding the button itself,
+and obtains the ivory/forest colours from existing tokens. The service composites
+transparent layers and chooses the face with stronger contrast. Scroll and resize
+are coalesced into one pending frame; route/layout mutations and finite transitions
+also remeasure. Resize observers cover the anchor and document; hidden tabs remove
+listeners/observers. There is no polling loop or image readback. A two-tone edge
+keeps the button distinct over images and boundaries, including a static fallback
+without hit-testing support. Face/mark colours swap atomically; focus and pulse
+colours follow the selected face. Hover expansion and the Contact destination stay
+unchanged. `PageLink` exposes the underlying Link's typed ref.
 
 ## Future integration
 
@@ -247,7 +310,9 @@ targets. Longer overview titles use a smaller responsive scale.
 Legacy HTML shells are emitted by `socialMeta` with Contact metadata, so static
 hosts do not need to recover an absent inquiry file before the client redirect.
 Clipboard access is feature-checked; denial exposes a read-only composed message
-for manual copying. No submission backend or delivery receipt is implied.
+for manual copying. The sent state confirms acceptance by the configured mail
+service; it does not establish inbox delivery. Without an endpoint, the visitor
+must send the composed message through their email app.
 Resize transitions measure the current animated pose, cancel the previous
 animation, and measure the natural destination before animating again. Hooks
 pause the envelope before entry, when hidden/offscreen, or under reduced motion.
@@ -259,7 +324,7 @@ envelope. `useEnvelopeMotion` uses explicit native SVG transforms/opacity on
 persistent envelope/stamp groups, avoiding remount-triggered CSS restart behavior.
 The tween is finite, capped at 30 fps, and cancelled on interruption/visibility
 loss/reduced motion; it introduces no per-frame React updates.
-The overview keeps presentation copy in the UI, with no new domain rules.
+Overview copy comes from `useSiteContent`; UI owns its composition and artwork.
 Founder previews reuse shared constants; Works artwork follows the existing
 `useHeroWorks` → service → repository pipeline and uses `WorkImage` for lazy,
 responsive AVIF/WebP posters. The current collection is described as concept

@@ -1,5 +1,6 @@
 import { Icon } from '@/ui/components/Icon';
-import { PRODUCT_COPY, type ProductKey } from '@/constants/pages';
+import { useSiteContent } from '@/hooks/useSiteContent';
+import type { ProductKey } from '@/types/content';
 import { PRODUCT_PAGES } from '@/router/navigation';
 import { CONTACT_LINKS, ROUTES } from '@/router/paths';
 import { Breadcrumbs } from '@/ui/sections/Page/Breadcrumbs';
@@ -13,7 +14,7 @@ import { TemplateCatalog } from '@/ui/sections/Products/TemplateCatalog';
 import '@/ui/styles/products.css';
 
 export default function ProductPage({ product }: { product: ProductKey }) {
-  const copy = PRODUCT_COPY[product];
+  const copy = useSiteContent('products')[product];
   return (
     <>
       <Breadcrumbs trail={[{ label: 'Products', to: ROUTES.products }, { label: copy.title }]} />

@@ -1,12 +1,11 @@
 import { useId } from 'react';
-import { SERVICE_PROCESS } from '@/constants/pages';
 import { useServiceProcess } from '@/hooks/useServiceProcess';
 import { useServiceDrawing } from '@/hooks/useServiceDrawing';
 import { SERVICE_DRAWINGS, SERVICE_FACES } from '@/utils/serviceDrawing';
 
 export function ServiceProcess() {
   const id = useId();
-  const { ref, active, running, animate, reducedMotion, choose, setFocused, setHovered } =
+  const { ref, stages, active, running, animate, reducedMotion, choose, setFocused, setHovered } =
     useServiceProcess();
   const drawingRef = useServiceDrawing(active, animate, reducedMotion);
   return (
@@ -37,7 +36,7 @@ export function ServiceProcess() {
         onClick={(event) => {
           event.currentTarget.focus({ preventScroll: true });
           setHovered(false);
-          choose((active + 1) % SERVICE_PROCESS.length);
+          choose((active + 1) % stages.length);
         }}
         onKeyDown={(event) => {
           if (!['Enter', ' ', 'ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
@@ -46,9 +45,8 @@ export function ServiceProcess() {
             event.key === 'Home'
               ? 0
               : event.key === 'End'
-                ? SERVICE_PROCESS.length - 1
-                : (active + (event.key === 'ArrowLeft' ? SERVICE_PROCESS.length - 1 : 1)) %
-                  SERVICE_PROCESS.length,
+                ? stages.length - 1
+                : (active + (event.key === 'ArrowLeft' ? stages.length - 1 : 1)) % stages.length,
           );
         }}
       >
@@ -118,7 +116,7 @@ export function ServiceProcess() {
           <div className="service-process-annotation-content">
             <span className="eyebrow">0{active + 1} / 04</span>
             <h3 id={`${id}-stage-label`} className="serif">
-              {SERVICE_PROCESS[active]!.title}.
+              {stages[active]!.title}.
             </h3>
           </div>
         </div>
@@ -128,7 +126,7 @@ export function ServiceProcess() {
         >
           <div className="service-process-annotation-content">
             <span className="service-process-caption-rule" aria-hidden="true" />
-            <p id={`${id}-stage-copy`}>{SERVICE_PROCESS[active]!.text}</p>
+            <p id={`${id}-stage-copy`}>{stages[active]!.text}</p>
           </div>
         </div>
         <span id={`${id}-action`} className="sr-only">

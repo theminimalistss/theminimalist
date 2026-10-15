@@ -1,11 +1,11 @@
 # The Minimalist
 
-**Design studio · v0.26.2 · Immersive studio portfolio**
+**Design studio · v0.28.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
-experience, Works explorer, Founders, and Contact are implemented; remaining
-pages contain provisional content.
+experience, Works explorer, Founders, Contact, and service pages are implemented.
+Studio copy and the product catalog remain provisional.
 
 The twelve projects (six featured on Home, all twelve on Works) are **independent
 concept studies with licensed stock media**,
@@ -36,6 +36,13 @@ tap once to open and again to navigate. Website templates has a filterable grid
 of six provisional entries with schematic previews. Software and hardware are
 coming soon; approved template files, previews, and pricing remain pending.
 
+Services has three distinct visual pages. Software covers web, mobile, desktop,
+APIs, and embedded systems through selectable vector drawings. Websites has a
+responsive browser preview; Branding pairs an original illustrative identity
+board with aligned animated detail panels. Illustrations pause offscreen, in
+hidden tabs, or with reduced motion, and each page has a pause control. The
+floating Contact button adapts its colours to the surface beneath it.
+
 ## Site map
 
 | Section  | Pages                                                                              |
@@ -48,8 +55,9 @@ coming soon; approved template files, previews, and pricing remain pending.
 | Contact  | `/contact` (`?inquiry=quote` or `appointment` preselects; `/inquiries/*` redirect) |
 
 Every page is reachable from the header (desktop), the menu, and the footer
-sitemap. Sub-pages add breadcrumbs and section tabs. Pages other than Home, Works,
-Founders, and Contact hold clearly marked placeholder content. Contact's form sends
+sitemap. Sub-pages add breadcrumbs and section tabs. Service illustrations are
+examples; Works contains concept studies and Products has a provisional catalog.
+Contact's form sends
 through the PHP Brevo service in `server/` when `VITE_CONTACT_ENDPOINT` is set, and
 otherwise composes an email in the visitor's mail app.
 
@@ -81,15 +89,20 @@ Hooks own loading, browser subscriptions, animation, and media lifecycles.
 UI composes typed media and accessible controls. Static design tokens/copy
 do not require data-layer indirection.
 
+Editable JSON lives in [`src/data/`](src/data/README.md). Collections and shared
+editorial copy follow the repository/service/hook boundary; static profile,
+brand, navigation, and build metadata adapters retain presentation exceptions.
+
 ```text
 .agent/              AI state, decisions, tasks, and session history
 docs/                Engineering docs, media sources, original briefs
 scripts/             Media processing and consistency checks
+src/data/            Central application JSON and editing index
 src/repositories/    Local collection, contact endpoint, and future CMS boundary
 server/              PHP contact mail service (Brevo); see server/README.md
 src/services/        React-independent validation and selection
 src/hooks/           Loading, motion, observers, dialogs
-src/types/           Work domain model
+src/types/           Work, service, content, and inquiry contracts
 src/utils/           Pure spatial math, WebGL and morph helpers
 src/shaders/         GLSL for the loader and menu morph
 src/router/          Routes, navigation structure, lazy pages
@@ -140,7 +153,7 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning (currently `0.26.2`). Keep `package.json`, `package-lock.json`,
+Semantic Versioning (currently `0.28.0`). Keep `package.json`, `package-lock.json`,
 `.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 

@@ -1,0 +1,26 @@
+{
+  "about": {
+    "eyebrow": "About the studio",
+    "title": "The Minimalist",
+    "accent": "Design Studio.",
+    "lead": "We shape identities and digital experiences with clarity, character, and care. Less, but with feeling. Our full studio story is being written; here is where we begin."
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Software, websites,",
+    "accent": "and brands with feeling.",
+    "lead": "Three ways we help: we engineer software, build websites, and shape brand identities, each with the same calm, considered craft."
+  },
+  "products": {
+    "eyebrow": "Products",
+    "title": "Made by the studio,",
+    "accent": "made to last.",
+    "lead": "Software, website templates, and hardware, designed and selected with the same care as our identities."
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let’s talk.",
+    "accent": "Good work starts with a conversation.",
+    "lead": "Say hello, ask for a quote, or book a meeting, all from here. Or reach the studio directly."
+  }
+}

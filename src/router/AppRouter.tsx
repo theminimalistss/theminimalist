@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
-import type { ProductKey, ServiceKey } from '@/constants/pages';
+import type { ProductKey } from '@/types/content';
+import type { ServiceKey } from '@/types/service';
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { PAGE_MODULES } from '@/router/pageModules';

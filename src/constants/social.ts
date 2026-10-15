@@ -1,4 +1,4 @@
-import social from '@/constants/social.json';
+import social from '@/data/social.json';
 
 export type SocialPlatform = 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'behance';
 export type SocialLink = {

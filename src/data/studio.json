@@ -1,0 +1,48 @@
+{
+  "approach": {
+    "eyebrow": "Our point of view",
+    "statement": "Less,",
+    "accent": "but with feeling.",
+    "footer": "Brand · Digital · Experience",
+    "title": "Thoughtfully made.",
+    "titleAccent": "Naturally felt.",
+    "lead": "We bring together brand, digital, and experience with a warm, editorial sensibility. Clear identities, considered websites, and details that make the whole feel personal.",
+    "linkLabel": "Discover our services"
+  },
+  "principles": [
+    {
+      "title": "Clarity",
+      "text": "Focus on what matters. Let the rest breathe."
+    },
+    {
+      "title": "Warmth",
+      "text": "An inviting presence. A human touch."
+    },
+    {
+      "title": "Character",
+      "text": "Distinct identities, shaped with intention."
+    },
+    {
+      "title": "Care",
+      "text": "The small details that make the whole feel right."
+    }
+  ],
+  "directoryTitle": "Explore the studio",
+  "portals": {
+    "founders": {
+      "label": "Founders",
+      "category": "The people",
+      "description": "A partnership between design and engineering."
+    },
+    "testimonials": {
+      "label": "Testimonials",
+      "category": "The perspectives",
+      "description": "Words from the people we work with."
+    },
+    "works": {
+      "label": "Works",
+      "category": "The work",
+      "description": "Independent concept studies from the studio."
+    }
+  }
+}

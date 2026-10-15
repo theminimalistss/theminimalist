@@ -3,7 +3,15 @@
 UI → hooks → services → repositories. Static presentation is the exception.
 
 - Content: local media and replaceable concept data.
-- Studio details: `src/constants/founders.json`, `contact.json`, and `social.json`
+- JSON: `src/data/` is the application content directory (editing index in its
+  README). `siteContent.repository` supplies compile-checked isolated snapshots;
+  `siteContent.service` validates editable choices/text, and `useSiteContent`
+  exposes synchronous copy without a loading frame. UI must not import JSON.
+  Work metadata lives in `works.json`; `works.media.ts` owns hashed local assets.
+  Route definitions, media adapters, motion configuration, and build/tool manifests
+  remain code/configuration. Profile/brand/navigation and build metadata adapters
+  retain their static presentation exception.
+- Studio details: `src/data/founders.json`, `contact.json`, and `social.json`
   feed page content and build-time structured data. Social channels use `primary`
   to select the main tiles; `ContactChannels` owns the remaining channels' disclosure.
 - Overview pages: `PageOverview`, `PageDirectory`, `EditorialSection`, and
@@ -42,6 +50,19 @@ UI → hooks → services → repositories. Static presentation is the exception
   idle pose. SVG faces supply the static fallback. Offscreen/hidden scenes stop.
   `ServiceDirectory` pairs each service with a local stock image from
   `SERVICE_IMAGES`; it makes no commissioned-work claims.
+- Service detail pages: `src/data/service-details.json` →
+  `serviceDetails.repository` → `serviceDetails.service` → `useServiceDetail` →
+  distinct Software, Website, and Branding compositions. The service validates
+  required text/lists, all five unique software platform ids, and local optimised
+  illustration sources. Snapshots are isolated; requests cancel on navigation.
+  `useServicePreview` owns platform/device selection. `ServiceArtwork` owns native
+  vector geometry; `useServiceMotion` owns page playback and scene observers.
+  CSS draws/floats the illustrations only when entered, visible, in view, and
+  unpaused; reduced motion is static. One pause control per page. Copy is concise,
+  with short example tags. `useBrandDisclosure` keeps six cards in aligned pairs
+  with one shared drawer per row, cancellable height motion, resize handling, and
+  reduced-motion fallback. `cssTimeMs` reads source and minified CSS time units.
+  No new media or library.
 - Founders: shared studio constants; `useFounderShowcase` owns timed selection,
   the WAAPI name marquee, and pause/visibility/reduced-motion lifecycle.
   `useFounderDepth` coalesces pointer input for portrait perspective and lift.
@@ -92,9 +113,14 @@ UI → hooks → services → repositories. Static presentation is the exception
   crossfaded harmonies and soft key tones; no page-specific music/audio heartbeat.
 - Sound: `soundEngine` (Web Audio, samples + synthesis + ambient) driven by
   `useSound`/`useInteractionSounds`; preference via repository → service.
-- Sharing: `src/router/pageMeta.json` → runtime titles (`useDocumentMeta`) and
+- Sharing: `src/data/page-meta.json` → runtime titles (`useDocumentMeta`) and
   build-time per-route HTML (`scripts/socialMeta.ts`); images via `media:social`.
 - Reduced motion: normal scrolling gallery, posters, no automatic video, static loader.
+- Floating contact: `useContactContrast` samples the painted CSS surface beneath
+  the anchor on route/layout/resize/scroll changes, coalesced to one scheduled frame.
+  `contactContrast.service` composites transparent backgrounds and selects the
+  higher-contrast forest/ivory face from CSS tokens. Hidden tabs stop observation.
+  A two-tone edge covers images and boundaries; focus and pulse colours adapt too.
 - UI: composed components, native buttons/dialogs, centralized design tokens.
   Interface symbols use the shared SVG `Icon` set, including inline arrows and
   `RatingStars`; avoid Unicode icon glyphs that can become device emoji.
@@ -103,5 +129,6 @@ UI → hooks → services → repositories. Static presentation is the exception
 - Navigation: `src/router/navigation.ts` is the single source for header, menu,
   footer, tabs, and tests.
 
-No global store, animation dependency, runtime API, hotlinks, or secrets.
+No global store, animation dependency, runtime content API, hotlinks, or committed
+secrets. Contact optionally uses the separate PHP mail service described above.
 See `DECISIONS.md` and `docs/architecture.md` for rationale.

@@ -1,5 +1,76 @@
 # Architecture decisions
 
+## 2026-10-16 — Aligned animated brand drawers and adaptive Contact
+
+Decision: Six branding cards stay in equal-height pairs. A shared detail region
+opens below the chosen pair. `useBrandDisclosure` measures and animates height,
+retains content while closing, cancels interrupted transitions, observes resizing,
+and respects reduced motion. Native buttons name/control the detail regions.
+Symbols trace on hover, focus, and selection.
+
+Reason: The previous independent expanding grid cards left gaps and only faded
+text. Production tests also exposed CSS minification changing `600ms` to `.6s`;
+`cssTimeMs` normalises both, with a regression test.
+
+Impact: No grid holes, focus loss, continuous frame loop, or new dependency.
+The floating Contact anchor separately samples the CSS surface below it through
+`useContactContrast` → a pure contrast service. It switches between existing ivory
+and forest colours, with a two-tone edge for images/boundaries and matching focus/
+pulse colours. Measurements are event-driven, coalesced, and suspended while
+hidden. No pixel sampling, polling, media download, or change to the destination.
+
+## 2026-10-16 — Visual service stories with controlled native motion
+
+Decision: Cut service copy by roughly half and explain each offering through
+original vector artwork, compact examples, and distinct compositions. Software
+explicitly covers web, mobile, desktop, APIs, and embedded systems, with a
+selectable drawing and caption for each. Keep content in central JSON and require
+all five unique platform identifiers at the service boundary.
+
+Reason: The user wants concise pages with illustrations and animation throughout,
+while retaining the studio's typography, palette, architecture, and browser support.
+
+Impact: `ServiceArtwork` supplies native SVG geometry. `useServicePreview` owns
+selection; `useServiceMotion` owns observers/playback. CSS handles tracing, layers,
+subtle drift, symbol motion, and paper/browser movement. A per-page pause control,
+offscreen/hidden suspension, and reduced-motion static state bound the loops.
+Text/actions retain finite scroll reveals. No new library, image/video, WebGL
+scene, or JavaScript frame loop. Software sharing and directory descriptions also
+reflect the full scope. Earlier workflow-only previews are superseded.
+
+## 2026-10-16 — Central application JSON with code-owned behavior
+
+Decision: Keep application JSON in `src/data/`, including existing catalogs,
+public studio details, metadata, and shared logo geometry. Extract works metadata,
+product copy, process captions, inquiry choices, overview introductions, and Studio
+copy from TypeScript. Keep asset resolution, route definitions, controls, and
+animation behavior in code.
+
+Reason: The user wants one discoverable editing location without weakening the
+repository → service → hook → UI architecture or complicating static deployment.
+
+Impact: Editorial copy uses compile-checked isolated repository snapshots, a
+synchronous validation service, and `useSiteContent`. Collection validation and
+cancellation remain unchanged. Services keep their lazy detail payload. Build-time
+sharing/artwork scripts consume the new paths. The data README lists every file,
+stable keys, and editing constraints; lint prevents direct UI JSON imports. Tool
+manifests and backend runtime data keep their conventional locations.
+
+## 2026-10-16 — Distinct service narratives through a validated content boundary
+
+Decision: Replace the generic service-detail template with separate Software,
+Website, and Branding compositions. Fetch local repository snapshots through a
+validation service and hook; retain route names and the shared typography/palette.
+
+Reason: The user wants each service to explain its purpose and scope through its
+own layout and content structure, while preserving repository → service → hooks → UI.
+
+Impact: Software shows a manually selected workflow and delivery rail; Websites
+has a responsive sample layout and editorial chapters; Branding pairs an original
+identity board with native deliverable disclosures and a brand guide. Samples are
+explicit illustrations. CSS motion is finite and respects reduced motion; no new
+dependency/media, automatic loop, or GPU scene. Existing local photography is reused.
+
 ## 2026-10-15 — Vector interface symbols
 
 Decision: Use the shared SVG `Icon` set for interface symbols, including inline

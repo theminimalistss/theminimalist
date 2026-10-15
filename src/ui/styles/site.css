@@ -322,6 +322,8 @@
 }
 
 .contact-fab {
+  --fab-background: var(--color-brand);
+  --fab-ink: var(--color-canvas);
   position: fixed;
   z-index: var(--layer-shell);
   right: var(--page-gutter);
@@ -332,23 +334,29 @@
   height: 52px;
   padding: 0 18px 0 15px;
   border-radius: 26px;
-  color: var(--color-canvas);
-  background: var(--color-brand);
-  box-shadow: 0 14px 30px -16px var(--color-scrim);
+  color: var(--fab-ink);
+  background: var(--fab-background);
+  box-shadow:
+    0 0 0 1px var(--color-canvas),
+    0 0 0 2px #1a31224d,
+    0 14px 30px -16px var(--color-scrim);
   transition:
     border-radius var(--duration-reveal) var(--ease-editorial),
     padding var(--duration-reveal) var(--ease-editorial),
     gap var(--duration-reveal) var(--ease-editorial),
     transform var(--duration-reveal) var(--ease-editorial),
     box-shadow var(--duration-reveal) var(--ease-editorial),
-    background-color var(--duration-fast) ease,
     opacity var(--duration-fast) ease;
+}
+.contact-fab[data-surface='dark'] {
+  --fab-background: var(--color-canvas);
+  --fab-ink: var(--color-brand);
 }
 body:has(.hero--spiral) .contact-fab {
   bottom: 82px;
 }
 .contact-fab:focus-visible {
-  outline: 2px solid var(--color-brand);
+  outline: 2px solid var(--fab-background);
   outline-offset: 4px;
 }
 .contact-fab-mark {
@@ -376,7 +384,7 @@ body:has(.hero--spiral) .contact-fab {
 .contact-fab-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--color-brand);
+  border: 1px solid var(--fab-background);
   border-radius: inherit;
   pointer-events: none;
   opacity: 0;
@@ -397,7 +405,10 @@ body:has(.hero--spiral) .contact-fab {
     padding: 0 20px 0 17px;
     border-radius: var(--radius);
     transform: translateY(-3px);
-    box-shadow: 0 22px 38px -18px var(--color-scrim);
+    box-shadow:
+      0 0 0 1px var(--color-canvas),
+      0 0 0 2px #1a31224d,
+      0 22px 38px -18px var(--color-scrim);
   }
   .contact-fab:is(:hover, :focus-visible) .contact-fab-label {
     max-width: 120px;

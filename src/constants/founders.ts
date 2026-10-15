@@ -6,7 +6,7 @@ import rexAvif480 from '@/assets/images/founders/rex-pinili-480.avif';
 import rexWebp480 from '@/assets/images/founders/rex-pinili-480.webp';
 import rexAvif960 from '@/assets/images/founders/rex-pinili-960.avif';
 import rexWebp960 from '@/assets/images/founders/rex-pinili-960.webp';
-import founders from '@/constants/founders.json';
+import founders from '@/data/founders.json';
 
 export type FounderPortrait = { avif: string; webp: string; avifSmall: string; webpSmall: string };
 export type Founder = {

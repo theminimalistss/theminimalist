@@ -1,8 +1,8 @@
 import type { Plugin } from 'vite';
 import packageJson from '../package.json' with { type: 'json' };
-import founders from '../src/constants/founders.json' with { type: 'json' };
-import social from '../src/constants/social.json' with { type: 'json' };
-import contact from '../src/constants/contact.json' with { type: 'json' };
+import founders from '../src/data/founders.json' with { type: 'json' };
+import social from '../src/data/social.json' with { type: 'json' };
+import contact from '../src/data/contact.json' with { type: 'json' };
 import { LEGACY_INQUIRY_PATHS } from '../src/router/paths.ts';
 import {
   formatPageTitle,

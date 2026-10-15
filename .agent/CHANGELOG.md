@@ -3,7 +3,65 @@
 The single changelog for releases and AI implementation sessions. Versions follow
 Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
-## [Unreleased]
+## [0.28.0] — 2026-10-16
+
+### Changed
+
+- Application JSON is consolidated in `src/data/`, with a file index and editing
+  guidance. Works metadata, product descriptions, process captions, inquiry
+  choices, overview introductions, and Studio copy now live beside the existing
+  service, testimonial, template, and public studio data.
+- Editable copy follows repository → service → hook → UI; the service checks
+  availability, inquiry kinds, process length, and nonempty copy. Media imports,
+  routes, animation settings, and outcome-specific control messages remain code.
+  Sharing, artwork, and deployment scripts use the same central source files.
+- Service pages are shorter and more visual, with roughly half the copy. Software
+  covers web, mobile, desktop, APIs, and embedded systems through five selectable
+  original SVG drawings and captions, capability symbols, and a forest system panel.
+- Websites pairs a responsive browser illustration with symbolic chapters and a
+  launch timeline. Branding uses a floating original identity board, a process strip,
+  six aligned paired cards with shared animated detail panels, and a brand guide. No fabricated client work.
+- Brand disclosure cards now stay aligned while a full-width panel opens below
+  each pair. Height animation handles opening, closing, rapid switches, and resizing;
+  symbols trace on interaction. Source and minified CSS time units are normalised
+  so deployed animations retain their duration.
+- Floating Contact switches between forest and ivory against the underlying CSS
+  surface. Focus/pulse colours adapt too; a two-tone edge preserves its silhouette
+  over images/boundaries. Measurements are event-driven and suspend in hidden tabs.
+- Traced drawings, drifting layers, paper/browser motion, symbols, and content
+  reveals animate each composition. `useServiceMotion` owns visibility/entry/
+  intersection/pause/reduced-motion lifecycle; CSS owns playback. Each page has
+  a pause control. Software directory/sharing descriptions reflect all platforms.
+
+### AI session
+
+Changed: central data directory, site content contracts/repository/service/hook,
+content extraction, build-script paths, UI import guard, content docs and checks;
+service content/types/repository/validation/hook, three page compositions,
+five-platform drawings/symbols, manual preview state, motion lifecycle, shared
+animated brand drawers, CSS time normalisation, adaptive Contact contrast, scoped styles,
+explicit service route mapping, domain/browser
+checks, and architecture documentation. Existing palette, type, icons, overview
+process, and optimised media remain authoritative.
+
+Reason: Give the three offerings distinct narratives and visual structures, and
+make editable application content discoverable in one folder while preserving
+architecture and browser/performance safeguards.
+
+Verification: 27 service/Contact browser cases verified across Chromium and
+desktop/mobile WebKit: 24 passed, three drawer timing failures corrected and passed
+on rerun. Covers five platforms, device preview, aligned/animated/interruptible
+brand drawers, keyboard interaction, accessibility/reduced motion, illustration
+play/pause and visibility, and adaptive Contact/focus/navigation. Nine existing
+navigation/overview/accessibility cases also passed. All layouts and open drawer
+rows reviewed at 320/768/1440 px in both engines: no overflow, paired cards aligned.
+The production timing issue (600ms minified to .6s) has a unit regression.
+`npm run check` passed with 170 unit tests, strict types, lint, formatting, production
+build, version alignment, and media audit. Deployment audit passed: 14 routes,
+three aliases, 404, 126 asset references. Lazy service module: 10.13 KB gzip; shared
+CSS: 25.99 KB gzip; media unchanged at 10.96 MiB.
+No new runtime dependency, media, content request, or hosting publication.
+Package/lockfile, README, state, and release records are aligned at 0.28.0.
 
 ## [0.27.1] — 2026-10-16
 

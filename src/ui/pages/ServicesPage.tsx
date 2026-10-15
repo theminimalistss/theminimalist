@@ -1,3 +1,4 @@
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { Icon } from '@/ui/components/Icon';
 import { CONTACT_LINKS } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
@@ -7,15 +8,11 @@ import { ServiceDirectory } from '@/ui/sections/Services/ServiceDirectory';
 import '@/ui/styles/services.css';
 
 export default function ServicesPage() {
+  const copy = useSiteContent('pages').services;
   return (
     <>
       <div className="services-overview">
-        <PageIntro
-          eyebrow="Services"
-          title="Software, websites,"
-          accent="and brands with feeling."
-          lead="Three ways we help: we engineer software, build websites, and shape brand identities, each with the same calm, considered craft."
-        >
+        <PageIntro {...copy}>
           <PageLink className="text-button" to={CONTACT_LINKS.quote}>
             Start a project <Icon name="arrow" className="inline-icon" />
           </PageLink>

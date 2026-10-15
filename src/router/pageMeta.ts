@@ -1,4 +1,4 @@
-import meta from './pageMeta.json' with { type: 'json' };
+import meta from '../data/page-meta.json' with { type: 'json' };
 
 export type PageMeta = {
   title: string;

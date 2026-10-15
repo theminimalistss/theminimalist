@@ -17,7 +17,7 @@ export const SERVICE_PAGES: readonly NavItem[] = [
   {
     label: 'Software development',
     to: ROUTES.softwareDevelopment,
-    description: 'Custom software and web apps.',
+    description: 'Web, mobile, desktop, APIs, and embedded systems.',
   },
   {
     label: 'Website development',

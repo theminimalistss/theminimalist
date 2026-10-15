@@ -1,3 +1,4 @@
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { FOUNDERS } from '@/constants/founders';
 import { useHeroWorks } from '@/hooks/useHeroWorks';
 import { ROUTES } from '@/router/paths';
@@ -64,23 +65,20 @@ function WorksArtwork() {
 }
 
 export function StudioPortals() {
+  const { directoryTitle, portals } = useSiteContent('studio');
   return (
     <PageDirectory
-      title="Explore the studio"
+      title={directoryTitle}
       label="Studio destinations"
       items={[
         {
           to: ROUTES.founders,
-          label: 'Founders',
-          category: 'The people',
-          description: 'A partnership between design and engineering.',
+          ...portals.founders,
           artwork: <FoundersArtwork />,
         },
         {
           to: ROUTES.testimonials,
-          label: 'Testimonials',
-          category: 'The perspectives',
-          description: 'Words from the people we work with.',
+          ...portals.testimonials,
           dark: true,
           artwork: (
             <div className="studio-words">
@@ -94,9 +92,7 @@ export function StudioPortals() {
         },
         {
           to: ROUTES.works,
-          label: 'Works',
-          category: 'The work',
-          description: 'Independent concept studies from the studio.',
+          ...portals.works,
           artwork: <WorksArtwork />,
         },
       ]}

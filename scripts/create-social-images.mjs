@@ -1,8 +1,8 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
-const meta = JSON.parse(await readFile('src/router/pageMeta.json', 'utf8'));
-const lotus = JSON.parse(await readFile('src/constants/lotus.json', 'utf8'));
+const meta = JSON.parse(await readFile('src/data/page-meta.json', 'utf8'));
+const lotus = JSON.parse(await readFile('src/data/lotus.json', 'utf8'));
 const { site } = meta;
 const INK = '#1a3122';
 const ACCENT = '#726b4e';

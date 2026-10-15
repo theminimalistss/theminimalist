@@ -1,4 +1,4 @@
-import templates from '@/repositories/templates.json';
+import templates from '@/data/templates.json';
 import type { TemplatesRepository } from '@/types/template';
 
 export const templatesRepository: TemplatesRepository = {

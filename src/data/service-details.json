@@ -1,0 +1,245 @@
+{
+  "software": {
+    "title": "Software development",
+    "accent": "from screen to system.",
+    "discipline": "01 / Thoughtful engineering",
+    "lead": "Web, mobile, desktop, APIs, and embedded systems. Thoughtful software, built around you.",
+    "fit": "New products. Better tools. Connected systems.",
+    "preview": {
+      "name": "One idea. Many forms.",
+      "caption": "Illustrative systems / Choose a platform to explore.",
+      "platforms": [
+        {
+          "id": "web",
+          "title": "Web",
+          "text": "Useful applications, right in the browser.",
+          "items": ["Customer portals", "Business platforms"]
+        },
+        {
+          "id": "mobile",
+          "title": "Mobile",
+          "text": "Everyday tools, made for life on the move.",
+          "items": ["iOS & Android", "Connected experiences"]
+        },
+        {
+          "id": "desktop",
+          "title": "Desktop",
+          "text": "Focused tools for the work in front of you.",
+          "items": ["Desktop applications", "Specialist workspaces"]
+        },
+        {
+          "id": "api",
+          "title": "API",
+          "text": "Make your systems speak the same language.",
+          "items": ["Custom APIs", "Third-party integrations"]
+        },
+        {
+          "id": "embedded",
+          "title": "Embedded",
+          "text": "Software that brings physical products to life.",
+          "items": ["Device firmware", "Sensors & connected devices"]
+        }
+      ]
+    },
+    "capabilities": {
+      "title": "The whole product.",
+      "accent": "Considered together.",
+      "text": "Interfaces, logic, and the connections between them.",
+      "items": [
+        {
+          "title": "Products",
+          "text": "From a useful first version to what comes next.",
+          "items": ["Interface design", "Application development"]
+        },
+        {
+          "title": "Connections",
+          "text": "Less repeat work. More things working together.",
+          "items": ["APIs & integrations", "Data & automation"]
+        },
+        {
+          "title": "Operations",
+          "text": "Clearer tools for people doing the work.",
+          "items": ["Internal tools", "Dashboards & reporting"]
+        }
+      ]
+    },
+    "process": {
+      "title": "An idea,",
+      "accent": "made useful.",
+      "steps": [
+        {
+          "title": "Discover",
+          "text": "Find the problem worth solving."
+        },
+        {
+          "title": "Prototype",
+          "text": "Try the important interactions."
+        },
+        {
+          "title": "Develop",
+          "text": "Build, test, and refine together."
+        },
+        {
+          "title": "Release",
+          "text": "Launch with a clear next step."
+        }
+      ]
+    },
+    "handover": {
+      "title": "Ready for what’s next.",
+      "text": "The product, the knowledge, and a clear handover.",
+      "items": ["Tested code", "Deployment guidance", "Team walkthrough", "Support options"]
+    },
+    "closing": {
+      "title": "What could work",
+      "accent": "a little better?",
+      "text": "Let’s make it useful."
+    }
+  },
+  "websites": {
+    "title": "Website development",
+    "accent": "a place to belong.",
+    "discipline": "02 / Considered digital places",
+    "lead": "Distinctive websites and online stores. Easy to explore, a pleasure to use.",
+    "fit": "For studios, brands, and independent businesses.",
+    "preview": {
+      "name": "Everyday objects",
+      "headline": "Space for the everyday.",
+      "text": "Considered objects. A quieter kind of home.",
+      "caption": "Responsive illustration / Original sample with licensed photography."
+    },
+    "capabilities": {
+      "title": "A good first impression.",
+      "accent": "And everything after.",
+      "text": "Clear journeys. Considered details.",
+      "items": [
+        {
+          "title": "Your own place",
+          "text": "A website with the character of your business.",
+          "items": ["Brand & studio sites", "Content-led websites"]
+        },
+        {
+          "title": "Room to grow",
+          "text": "Turn interest into a booking or a purchase.",
+          "items": ["Online stores", "Bookings & enquiries"]
+        },
+        {
+          "title": "Care underneath",
+          "text": "Fast, accessible, and simple to keep current.",
+          "items": ["Responsive development", "CMS & search foundations"]
+        }
+      ]
+    },
+    "process": {
+      "title": "From first sketch",
+      "accent": "to a live website.",
+      "steps": [
+        {
+          "title": "Plan",
+          "text": "Audience. Content. A clear path."
+        },
+        {
+          "title": "Design",
+          "text": "Your identity, on every screen."
+        },
+        {
+          "title": "Build",
+          "text": "Develop, test, and refine."
+        },
+        {
+          "title": "Launch",
+          "text": "Go live. Make it yours."
+        }
+      ]
+    },
+    "handover": {
+      "title": "Yours to grow.",
+      "text": "A considered launch. A practical handover.",
+      "items": ["Tested website", "Editing guidance", "Hosting handover", "Support options"]
+    },
+    "closing": {
+      "title": "Your corner",
+      "accent": "of the internet.",
+      "text": "Let’s give it some character."
+    }
+  },
+  "branding": {
+    "title": "Branding identity",
+    "accent": "character, made visible.",
+    "discipline": "03 / Clarity & character",
+    "lead": "Marks, colour, type, and everyday details. A visual language that feels like you.",
+    "fit": "New beginnings. Fresh perspectives.",
+    "preview": {
+      "name": "morrow",
+      "monogram": "m",
+      "tagline": "A little more everyday.",
+      "note": "Made with intention.",
+      "caption": "Illustrative identity / An original exercise, not a commissioned brand."
+    },
+    "capabilities": {
+      "title": "Small parts.",
+      "accent": "One identity.",
+      "text": "Explore what your brand can become.",
+      "items": [
+        {
+          "title": "Logo & marks",
+          "text": "A signature with character.",
+          "items": ["Primary & secondary logos", "Submarks & monograms"]
+        },
+        {
+          "title": "Colour & typography",
+          "text": "A recognisable tone, everywhere.",
+          "items": ["Colour palette", "Type system"]
+        },
+        {
+          "title": "Packaging & details",
+          "text": "Identity you can hold.",
+          "items": ["Packaging design", "Labels and hang tags"]
+        },
+        {
+          "title": "Digital & social",
+          "text": "A familiar presence on screen.",
+          "items": ["Social assets", "Editable templates"]
+        },
+        {
+          "title": "Print & add-ons",
+          "text": "The pieces your business needs.",
+          "items": ["Business cards and stationery", "Menus & collateral"]
+        },
+        {
+          "title": "Guidelines & files",
+          "text": "Consistency in everyone’s hands.",
+          "items": ["Print & digital files", "Practical brand guide"]
+        }
+      ]
+    },
+    "process": {
+      "title": "Find the character.",
+      "accent": "Make it yours.",
+      "steps": [
+        {
+          "title": "Discover",
+          "text": "Your story. Your point of view."
+        },
+        {
+          "title": "Shape",
+          "text": "Explore, refine, and connect the details."
+        },
+        {
+          "title": "Express",
+          "text": "Bring the identity into everyday life."
+        }
+      ]
+    },
+    "handover": {
+      "title": "A shared language.",
+      "text": "Everything in its place. Ready to use.",
+      "items": ["Organised files", "Clear guidelines", "Application templates", "Team walkthrough"]
+    },
+    "closing": {
+      "title": "Something",
+      "accent": "distinctly you.",
+      "text": "Tell us your story."
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { mkdir, readFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
-const lotus = JSON.parse(await readFile('src/constants/lotus.json', 'utf8'));
+const lotus = JSON.parse(await readFile('src/data/lotus.json', 'utf8'));
 const INK = '#1a3122';
 const WIDTH = 46;
 const SCALE = 3;

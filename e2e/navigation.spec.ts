@@ -453,3 +453,44 @@ test('contact shows main social channels and reveals the rest under More', async
   await expect(page.getByText('7:00 AM – 11:00 AM')).toBeVisible();
   await expect(page.locator('.contact-details dt')).toHaveText(['Email', 'Hours', 'Replies']);
 });
+
+test('the floating contact button adapts to light and dark surfaces without losing its focus ring', async ({
+  page,
+}) => {
+  await openPage(page, '/services/software');
+  const fab = page.getByRole('link', { name: 'Let’s talk with the studio' });
+  await expect(fab).toHaveAttribute('data-surface', 'light');
+  await expect(fab).toHaveCSS('background-color', 'rgb(26, 49, 34)');
+  const putBehindButton = async (selector: string) => {
+    await page.evaluate((selector) => {
+      const button = document.querySelector('.contact-fab')!.getBoundingClientRect();
+      const panel = document.querySelector(selector)!.getBoundingClientRect();
+      window.scrollTo(
+        0,
+        scrollY + panel.top + Math.min(140, panel.height / 2) - button.y - button.height / 2,
+      );
+    }, selector);
+  };
+  await putBehindButton('.sd-software-system');
+  await expect(fab).toHaveAttribute('data-surface', 'dark');
+  await expect(fab).toHaveCSS('background-color', 'rgb(244, 238, 229)');
+  await expect(fab).toHaveCSS('color', 'rgb(26, 49, 34)');
+  expect(await fab.evaluate((button) => getComputedStyle(button).boxShadow)).toContain(
+    'rgb(244, 238, 229)',
+  );
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(fab).toHaveAttribute('data-surface', 'light');
+  await page
+    .getByRole('navigation', { name: 'Services', exact: true })
+    .getByRole('link', { name: 'Branding identity', exact: true })
+    .click();
+  await expect(page.locator('.sd-brand-process')).toBeAttached();
+  await expect(fab).toHaveAttribute('data-surface', 'light');
+  await putBehindButton('.sd-brand-process');
+  await expect(fab).toHaveAttribute('data-surface', 'dark');
+  await page.keyboard.press('Tab');
+  await putBehindButton('.sd-brand-process');
+  await expect(fab).toHaveAttribute('data-surface', 'dark');
+  await fab.evaluate((button: HTMLElement) => button.focus({ preventScroll: true }));
+  await expect(fab).toHaveCSS('outline-color', 'rgb(244, 238, 229)');
+});

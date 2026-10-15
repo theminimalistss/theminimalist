@@ -16,6 +16,11 @@ export const ROUTES = {
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
+export const SERVICE_ROUTES = {
+  software: ROUTES.softwareDevelopment,
+  websites: ROUTES.websiteDevelopment,
+  branding: ROUTES.branding,
+} as const;
 export type LinkTarget = RoutePath | `${RoutePath}?${string}`;
 
 export const CONTACT_LINKS = {

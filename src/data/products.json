@@ -1,0 +1,35 @@
+{
+  "software": {
+    "status": "soon",
+    "title": "Software solutions",
+    "accent": "built to feel calm.",
+    "lead": "Digital tools and platforms shaped with the same restraint as our identities, now in development.",
+    "checklist": [
+      "Product overviews and walkthroughs",
+      "Plans, licensing, and support",
+      "Integration and onboarding notes"
+    ]
+  },
+  "templates": {
+    "status": "available",
+    "title": "Website templates",
+    "accent": "considered starting points.",
+    "lead": "Editorial website templates for studios, brands, and makers who value quiet, purposeful design.",
+    "checklist": [
+      "Live previews of each template",
+      "What’s included and how to make it yours",
+      "Licensing and updates"
+    ]
+  },
+  "hardware": {
+    "status": "soon",
+    "title": "Hardware products",
+    "accent": "specified with intention.",
+    "lead": "Physical products selected and specified with the same attention to material and detail.",
+    "checklist": [
+      "Specifications and finishes",
+      "Availability and lead times",
+      "Installation and care guidance"
+    ]
+  }
+}

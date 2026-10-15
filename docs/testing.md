@@ -6,6 +6,23 @@ Run `npm run test:e2e` after interaction or layout changes.
 
 ## Coverage boundaries
 
+Editable site content is checked by `siteContent.service.test.ts`: product status,
+four-stage drawing alignment, inquiry kind completeness/uniqueness, blank copy,
+empty options, and isolated snapshots. Existing repository tests validate local
+work media and featured/full collections after the JSON extraction. UI JSON imports
+are blocked by lint. `npm run check` also builds shared metadata from `src/data/`;
+`npm run deploy:check` verifies the emitted route shells and asset references.
+
+- Service detail content: complete distinct narratives, malformed/empty content,
+  isolated snapshots, complete/unique software platform ids, local media validation, cancellation,
+  and repository errors. Browser tests cover all five platform choices, responsive preview
+  switching, inquiry/cross-service routes, aligned branding drawers, accessibility,
+  reduced motion, and page containment across Chromium and desktop/mobile WebKit.
+  Drawers are checked for running open/close motion, equal card heights, rapid
+  switching, and keyboard interaction. The CSS time utility covers source and
+  minified units (`600ms` / `.6s`). Each page’s illustration is checked for actual motion, manual pause/resume,
+  hidden-tab suspension, and offscreen suspension. Static reviews cover
+  320/768/1440 px and all five device drawings in Chromium and WebKit.
 - Repository: valid collection, isolated snapshots, cancellation.
 - Service: unknown input, media types, text, local URLs, posters, dimensions/flags,
   duplicate identity, empty data, featured selection, ordering, failures.
@@ -30,6 +47,9 @@ Run `npm run test:e2e` after interaction or layout changes.
 - Loader/audio: fixed progress totals, required initial-route mounting, downloaded
   and decoded samples, shared preparation, alternate-format fallback, retryable
   failures, and pending audio/page modules beyond the visual readiness timeout.
+- Floating contact: composited RGB/hex/transparent backgrounds, forest/ivory
+  switching while scrolling and navigating, a persistent contrast edge, keyboard
+  focus colours, and the existing Contact destination.
 - Navigation: cold route modules retain the current page, scroll/focus reset
   before paint, no route snapshots, and stable fixed-header entry geometry.
 - Contact animation: inquiry label clicks open the envelope without requiring

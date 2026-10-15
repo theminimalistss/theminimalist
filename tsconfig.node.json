@@ -21,11 +21,11 @@
     "scripts/**/*.ts",
     "src/router/pageMeta.ts",
     "src/router/paths.ts",
-    "src/router/pageMeta.json",
+    "src/data/page-meta.json",
     "package.json",
-    "src/constants/founders.json",
-    "src/constants/social.json",
-    "src/constants/contact.json",
+    "src/data/founders.json",
+    "src/data/social.json",
+    "src/data/contact.json",
     "src/constants/motion.ts"
   ]
 }

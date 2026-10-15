@@ -1,52 +1,59 @@
+import { useServiceDetail } from '@/hooks/useServiceDetail';
+import { useServiceMotion } from '@/hooks/useServiceMotion';
 import { Icon } from '@/ui/components/Icon';
-import { SERVICE_COPY, SERVICE_PROCESS, type ServiceKey } from '@/constants/pages';
 import { SERVICE_PAGES } from '@/router/navigation';
-import { CONTACT_LINKS, ROUTES } from '@/router/paths';
-import { PageLink } from '@/ui/components/PageLink';
+import { ROUTES, SERVICE_ROUTES } from '@/router/paths';
+import type { ServiceKey } from '@/types/service';
 import { Breadcrumbs } from '@/ui/sections/Page/Breadcrumbs';
-import { Checklist } from '@/ui/sections/Page/Checklist';
-import { LinkCards } from '@/ui/sections/Page/LinkCards';
-import { PageIntro } from '@/ui/sections/Page/PageIntro';
-import { PageSection } from '@/ui/sections/Page/PageSection';
 import { SectionTabs } from '@/ui/sections/Page/SectionTabs';
-
-const NEXT = [
-  { label: 'Works', to: ROUTES.works, description: 'Concept studies from the studio.' },
-  { label: 'Testimonials', to: ROUTES.testimonials, description: 'What our clients say.' },
-  { label: 'Request a quote', to: CONTACT_LINKS.quote, description: 'Start a project with us.' },
-] as const;
+import { SoftwareDetail } from '@/ui/sections/ServiceDetail/SoftwareDetail';
+import { WebsiteDetail } from '@/ui/sections/ServiceDetail/WebsiteDetail';
+import { BrandingDetail } from '@/ui/sections/ServiceDetail/BrandingDetail';
+import { ServiceClosing } from '@/ui/sections/ServiceDetail/ServicePrimitives';
+import '@/ui/styles/service-detail.css';
 
 export default function ServicePage({ service }: { service: ServiceKey }) {
-  const copy = SERVICE_COPY[service];
+  const { state, retry } = useServiceDetail(service);
+  const { ref, paused, reduced, running, toggle } = useServiceMotion(state.status === 'ready');
+  const title = SERVICE_PAGES.find((item) => item.to === SERVICE_ROUTES[service])!.label;
   return (
-    <>
-      <Breadcrumbs trail={[{ label: 'Services', to: ROUTES.services }, { label: copy.title }]} />
+    <div
+      ref={ref}
+      className={`service-detail service-detail--${service}`}
+      data-motion={running ? 'running' : 'paused'}
+    >
+      <Breadcrumbs trail={[{ label: 'Services', to: ROUTES.services }, { label: title }]} />
       <SectionTabs items={SERVICE_PAGES} label="Services" />
-      <PageIntro eyebrow="Services" title={copy.title} accent={copy.accent} lead={copy.lead}>
-        <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-          Request a quote <Icon name="arrow" className="inline-icon" />
-        </PageLink>
-        <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
-          Book an appointment <Icon name="arrow" className="inline-icon" />
-        </PageLink>
-      </PageIntro>
-      <PageSection eyebrow="What’s included" title="Everything it needs.">
-        <Checklist items={copy.checklist} label={`${copy.title} includes`} />
-      </PageSection>
-      <PageSection eyebrow="How we work" title="Listen, shape, build, launch.">
-        <ol className="service-list" data-reveal="stagger">
-          {SERVICE_PROCESS.map((step) => (
-            <li key={step.title}>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </PageSection>
-      <PageSection eyebrow="Continue" title="See it in practice.">
-        <p className="page-lead">{copy.works}</p>
-        <LinkCards items={NEXT} label="Next steps" />
-      </PageSection>
-    </>
+      {state.status === 'ready' && !reduced && (
+        <div className="sd-motion-tools sd-pad">
+          <button type="button" aria-pressed={paused} onClick={toggle}>
+            <Icon name={paused ? 'play' : 'pause'} />
+            {paused ? 'Play' : 'Pause'} illustrations
+          </button>
+        </div>
+      )}
+      {state.status === 'loading' && (
+        <p className="sd-status" role="status">
+          Gathering the details…
+        </p>
+      )}
+      {state.status === 'error' && (
+        <div className="sd-status" role="alert">
+          <h1>{title}</h1>
+          <p>The service details couldn’t be loaded.</p>
+          <button type="button" className="text-button" onClick={retry}>
+            Try again
+          </button>
+        </div>
+      )}
+      {state.status === 'ready' && (
+        <>
+          {state.detail.key === 'software' && <SoftwareDetail detail={state.detail} />}
+          {state.detail.key === 'websites' && <WebsiteDetail detail={state.detail} />}
+          {state.detail.key === 'branding' && <BrandingDetail detail={state.detail} />}
+          <ServiceClosing detail={state.detail} />
+        </>
+      )}
+    </div>
   );
 }

@@ -1,5 +1,4 @@
 import { useId, type CSSProperties, type ReactNode } from 'react';
-import { INQUIRY_INTENTS, INQUIRY_OPTIONS } from '@/constants/inquiry';
 import { useInquiryForm, type InquiryStatus } from '@/hooks/useInquiryForm';
 import type { InquiryField } from '@/types/inquiry';
 import { ContactEnvelope } from './ContactEnvelope';
@@ -27,6 +26,7 @@ export function InquiryForm() {
   const id = useId();
   const {
     formRef,
+    content: { intents, options },
     draft,
     errors,
     status,
@@ -42,7 +42,7 @@ export function InquiryForm() {
     copy,
     openEmailApp,
   } = useInquiryForm();
-  const intent = INQUIRY_INTENTS.find((item) => item.kind === draft.kind) ?? INQUIRY_INTENTS[0]!;
+  const intent = intents.find((item) => item.kind === draft.kind) ?? intents[0]!;
   let order = 0;
 
   const field = (name: InquiryField, label: string, control: ReactNode, optional = false) => (
@@ -112,7 +112,7 @@ export function InquiryForm() {
       </div>
       <fieldset className="inquiry-intents">
         <legend className="sr-only">Kind of message</legend>
-        {INQUIRY_INTENTS.map((item, index) => (
+        {intents.map((item, index) => (
           <label
             key={item.kind}
             className="inquiry-intent"
@@ -143,8 +143,8 @@ export function InquiryForm() {
           true,
         )}
         {draft.kind === 'quote' && [
-          choose('service', 'Service', INQUIRY_OPTIONS.services),
-          choose('timeline', 'Timeline', INQUIRY_OPTIONS.timelines),
+          choose('service', 'Service', options.services),
+          choose('timeline', 'Timeline', options.timelines),
           field('budget', 'Budget', <input {...props('budget')} />, true),
         ]}
         {draft.kind === 'appointment' && [
@@ -160,7 +160,7 @@ export function InquiryForm() {
               onChange={(value) => setField('date', value)}
             />,
           ),
-          choose('time', 'Preferred time', INQUIRY_OPTIONS.times),
+          choose('time', 'Preferred time', options.times),
           <fieldset
             key="appointment-format"
             className="inquiry-field inquiry-format"
@@ -170,7 +170,7 @@ export function InquiryForm() {
           >
             <legend>Meeting</legend>
             <div>
-              {INQUIRY_OPTIONS.formats.map((format) => (
+              {options.formats.map((format) => (
                 <label key={format} data-selected={draft.format === format ? '' : undefined}>
                   <input
                     type="radio"

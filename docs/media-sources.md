@@ -53,6 +53,11 @@ The lotus mark redraw, favicon, share images, work naming, and UI art direction 
 created for this build and are provisional pending studio approval. No Loop
 assets, copy, source code, or branding were reused.
 
+The service-detail platform drawings/symbols, sample website layout, Morrow identity board, and
+brand-guide artwork are original interface illustrations, not client work. The
+sample website reuses the existing licensed `forma-*` interior photograph and its
+responsive AVIF/WebP variants above. No additional media was downloaded for these pages.
+
 ## Interface sounds
 
 Downloaded 2026-10-06 from Kenney, **CC0 1.0 (public domain)**; attribution is

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
-import contact from '@/constants/contact.json';
+import { useSiteContent } from '@/hooks/useSiteContent';
 import { inquiryRepository } from '@/repositories/inquiry.repository';
 import {
   composeInquiry,
@@ -24,6 +24,8 @@ const today = () => {
 };
 
 export function useInquiryForm() {
+  const contact = useSiteContent('contact');
+  const content = useSiteContent('inquiry');
   const [params] = useSearchParams();
   const requested = params.get('inquiry');
   const formRef = useRef<HTMLFormElement>(null);
@@ -131,7 +133,7 @@ export function useInquiryForm() {
   const openEmailApp = useCallback(() => {
     window.location.href = composeInquiry(draft, contact.email).href;
     setStatus('sent');
-  }, [draft]);
+  }, [draft, contact.email]);
 
   const submit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -176,6 +178,7 @@ export function useInquiryForm() {
 
   return {
     formRef,
+    content,
     draft,
     errors,
     status,

@@ -1,4 +1,4 @@
-import testimonials from '@/repositories/testimonials.json';
+import testimonials from '@/data/testimonials.json';
 import { TESTIMONIAL_MEDIA } from '@/repositories/testimonials.media';
 import type { TestimonialsRepository } from '@/types/testimonial';
 

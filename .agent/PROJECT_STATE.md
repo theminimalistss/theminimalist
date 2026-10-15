@@ -1,12 +1,15 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.27.1
-STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.27.1 release (separate Hostinger deployment of the site and mail service). Live email delivery is pending.
+VERSION: 0.28.0
+STATUS: Landing, Works, Founders, Contact, and service experiences implemented; Studio copy and product catalog provisional
+CURRENT TASK: Release 0.28.0: visual service pages, central JSON, adaptive Contact, and aligned animated branding drawers. Live email delivery remains pending.
 
 ## Completed
 
+- 0.28.0: Distinct concise service pages with five software platform drawings,
+  responsive website preview, and an illustrative brand board with aligned animated
+  drawers. Central application JSON, visible-only native motion, and adaptive Contact.
 - Strict React/TypeScript/Vite; repository → service → hooks → UI.
 - Twelve local licensed concepts (six featured on Home), responsive images, silent
   loops/posters, media scripts.
@@ -86,7 +89,48 @@ CURRENT TASK: 0.27.1 release (separate Hostinger deployment of the site and mail
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 0.27.1, 2026-10-16
+## Latest release and verification — 0.28.0, 2026-10-16
+
+- All application JSON is in `src/data/`, with an editing index in its README.
+  Works metadata, products, process captions, inquiry options, overview intros,
+  and Studio copy were extracted from TypeScript without changing wording.
+  `useSiteContent` preserves repository → service → hook → UI for editable copy.
+  Build/share scripts use the new paths. Media/route/motion code stays in TypeScript.
+- Three distinct service-detail compositions replace the shared placeholder layout.
+  Software has five interactive platform drawings (web/mobile/desktop/API/embedded),
+  capability symbols, and a forest system/process panel. Websites has a responsive
+  browser preview and symbolic chapters; Branding has a floating identity board,
+  three-part process, and six equal-height paired cards with shared animated
+  detail drawers. Native buttons, named regions, and cancellable height motion
+  retain keyboard access and handle rapid switches/resizing.
+- Service copy is roughly half as long, using short captions/example tags and
+  original vector drawings. Previews are explicitly illustrations; no invented
+  client projects or claims. Software metadata/directory copy covers all platforms.
+- Content flows repository → validation service → cancellable hook → UI. Preview
+  selection lives in a hook. `useServiceMotion` gates CSS loops by entry, visibility,
+  per-scene intersection, manual pause, and reduced motion. Text enters with finite
+  reveals. No new dependency/media; Websites reuses local responsive photography.
+- Floating Contact now adapts its forest/ivory face to the CSS surface beneath it,
+  including matching focus/pulse colours and a two-tone edge for image boundaries.
+  Probes are event-driven and stop while hidden; no polling or image readback.
+- Latest browser checks: 27 service/Contact cases verified across Chromium and
+  desktop/mobile WebKit (24 passed, three drawer failures corrected and passed on
+  rerun). Also nine navigation/overview/accessibility regressions passed. The
+  production-only drawer timing bug was fixed: CSS minification rewrites 600ms as
+  .6s; both units now parse correctly. A dedicated regression test covers this.
+- `npm run check` passed: 170 unit tests, strict types, lint, formatting, production
+  build, version alignment, and media audit. Deployment audit passed.
+- All three layouts and all five platform drawings reviewed. No overflow at
+  320/768/1440 px in Chromium and WebKit. Deployment audit passed (14 routes,
+  three aliases, 404, 126 asset references). Lazy service module: 10.13 KB gzip;
+  shared CSS: 25.99 KB gzip; media remains 10.96 MiB. No hosting publication.
+- Earlier data consolidation: 71 browser passes, seven platform skips; original
+  payload parity and byte-identical temporary artwork regeneration verified before
+  intentional service copy/metadata changes. All source JSON remains central;
+  UI imports are blocked by lint. No runtime content requests. Package/lockfile,
+  README, state, and changelog are aligned at 0.28.0.
+
+## Previous verification — 0.27.1, 2026-10-16
 
 - `npm run build:hostinger` with `.env.production.local` embedded the mail service
   endpoint and the website canonical URL; `deploy:check` passed. Contact and
@@ -242,7 +286,7 @@ CURRENT TASK: 0.27.1 release (separate Hostinger deployment of the site and mail
 - Set `VITE_SITE_URL` to the production origin before launch; without it share
   images are relative and canonical URLs and the sitemap are omitted.
 - Concepts and provisional copy need approved replacements before launch.
-- About and Products hold placeholder content. Contact posts to the PHP Brevo
+- Studio copy and the product catalog remain provisional. Contact posts to the PHP Brevo
   service in `server/` when `VITE_CONTACT_ENDPOINT` is set at build time; otherwise,
   or after a failed send, it opens the visitor's email app (with a copy fallback).
   `/inquiries/*` links redirect to `/contact?inquiry=…`.
@@ -267,12 +311,16 @@ CURRENT TASK: 0.27.1 release (separate Hostinger deployment of the site and mail
 
 ## Important files
 
-`src/repositories/works.content.ts`, `src/services/works.service.ts`,
+`src/ui/sections/ServiceDetail/ServiceArtwork.tsx`, `src/hooks/useBrandDisclosure.ts`,
+`src/hooks/useServiceMotion.ts`, `src/hooks/useContactContrast.ts`,
+`src/data/README.md`, `src/repositories/siteContent.repository.ts`,
+`src/services/siteContent.service.ts`, `src/hooks/useSiteContent.ts`,
+`src/data/works.json`, `src/services/works.service.ts`,
 `src/hooks/useSpiralLoop.ts`, `src/hooks/useLoaderScene.ts`,
 `src/hooks/useMenuMorph.ts`, `src/hooks/useCollectionMorph.ts`, `src/hooks/usePointerCue.ts`,
 `src/router/pageModules.ts`, `src/shaders/`,
-`src/constants/brand.ts`, `src/constants/founders.json`,
-`src/constants/contact.json`, `src/constants/social.json`, `src/constants/social.ts`,
+`src/constants/brand.ts`, `src/data/founders.json`,
+`src/data/contact.json`, `src/data/social.json`, `src/constants/social.ts`,
 `src/ui/sections/Contact/ContactChannels.tsx`, `src/repositories/inquiry.repository.ts`,
 `server/` (Brevo contact service), `scripts/socialMeta.ts`,
 `src/router/navigation.ts`, `src/ui/layouts/`, `src/ui/pages/`, `src/audio/`,

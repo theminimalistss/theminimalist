@@ -35,9 +35,10 @@ Emulated iPhone tests do not replace checks on real iOS hardware or in-app brows
 - Contact copying checks the Clipboard API and handles denial with a selectable
   message. Clipboard writes require a secure context and may require permission
   or user activation; see [MDN Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API).
-- The form opens a mail app, which the visitor must use to send the email. A
-  manual-copy message supports visitors without a mail handler; no backend receipt
-  or successful delivery is asserted.
+- With a configured endpoint, Contact sends through the separate PHP service;
+  acceptance does not establish inbox delivery. Without an endpoint, or after a
+  failed send, the email-app action composes a message that the visitor must send.
+  Manual copying supports visitors without a mail handler.
 
 Before hosting publication, verify direct route refreshes, touch controls,
 reduced motion, blocked clipboard/WebGL, and mail-app hand-off on representative

@@ -6,8 +6,10 @@ changes, minor for compatible additions, and patch for fixes.
 
 Prepare a local version with `npm version 0.2.1 --no-git-tag-version`. Then add a
 dated entry to `.agent/CHANGELOG.md` (release notes plus an “AI session” block),
-update `VERSION:` in `.agent/PROJECT_STATE.md`, and run `npm run version:check`
-and the quality gates. Package and lockfile versions must match the documentation.
+update `VERSION:` in `.agent/PROJECT_STATE.md` and both README version references,
+and run `npm run version:check` and the quality gates. Package and lockfile versions
+must match the documentation. Promote any unreleased notes into the dated release
+entry and retain only verified results in the handoff records.
 
 Use Conventional Commits, e.g. `feat(hero): add work gallery`. When authorized,
 commit reviewed changes and create an annotated `vMAJOR.MINOR.PATCH` tag. Pushing,

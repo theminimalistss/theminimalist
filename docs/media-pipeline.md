@@ -8,7 +8,7 @@ VP9/H.264 support.
 2. Add the semantic name and URL to `scripts/media-manifest.mjs`.
 3. Run `npm run media:prepare`; source downloads are cached in ignored `.cache/media/`.
 4. Visually review crops and loop motion.
-5. Run `npm run media:audit`; update `works.content.ts`.
+5. Run `npm run media:audit`; update `src/data/works.json` with the matching semantic asset key.
 
 Images are autorotated, cropped to 4:5, stripped of unnecessary metadata, and
 encoded as 480×600 / 960×1200 AVIF and WebP. Attention-based crops need visual
@@ -35,7 +35,7 @@ matching fallback per sound.
 ## Share images
 
 `npm run media:social` renders `public/social/*.png`, app icons, and the web
-manifest from `src/router/pageMeta.json`.
+manifest from `src/data/page-meta.json`.
 
 ## Founder portraits
 

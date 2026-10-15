@@ -1,4 +1,4 @@
-import lotus from '@/constants/lotus.json';
+import lotus from '@/data/lotus.json';
 
 export const LOTUS_MARK = {
   ...lotus,

@@ -32,7 +32,10 @@ export default defineConfig([
   {
     files: ['src/ui/**/*.{ts,tsx}', 'src/App.tsx'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['@/repositories/*', '@/services/*'] }],
+      'no-restricted-imports': [
+        'error',
+        { patterns: ['@/repositories/*', '@/services/*', '@/data/*', '**/*.json'] },
+      ],
       'no-restricted-globals': [
         'error',
         { name: 'fetch', message: 'Use a repository through a service and hook.' },
