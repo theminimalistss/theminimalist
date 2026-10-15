@@ -4,7 +4,27 @@ Set `VITE_SITE_URL` (for example `https://www.example.com`), then run
 `npm ci && npm run build:hostinger` and publish `dist/` on a static host. The build assumes
 a domain-root deployment.
 
-## Hostinger Web Apps
+## Hostinger web hosting (current)
+
+The website and the contact mail service are two separate Hostinger websites on
+Business Web Hosting, each with its own `public_html`. Hostinger does not build
+the website; it is built locally and uploaded.
+
+1. Put the public build settings in `.env.production.local` (git-ignored; Vite
+   reads it for `npm run build`):
+   ```
+   VITE_SITE_URL=https://<website domain>
+   VITE_CONTACT_ENDPOINT=https://<mail service domain>/
+   ```
+2. Run `npm run build:hostinger`, replace the website's `public_html` contents
+   with the contents of `dist/`, and clear the Hostinger cache.
+3. Run `npm run build:api` and upload `dist-api/` to the mail service as described
+   in [Contact mail service](#contact-mail-service).
+
+Browser tests build with both variables emptied (`playwright.config.ts`), so
+local production settings never reach test builds or the live mail service.
+
+## Hostinger Web Apps (alternative)
 
 Use Hostinger's **Vite frontend** preset with **Node.js 24**, installation command
 `npm ci`, build command `npm run build:hostinger`, and output directory **`dist`**.
@@ -99,12 +119,12 @@ belongs only in the PHP host's `server/.env`.
 
 ## Contact mail service
 
-`server/` is a PHP 8.1+ service deployed separately from the static site, on a
-PHP subdomain such as `api.example.com` (Hostinger subdomain or GoDaddy cPanel).
-`npm run build:api` writes the upload folder `dist-api/`. Put its `.env` above the
-subdomain's `public_html`, authorise the host's IP in Brevo, then set
-`VITE_CONTACT_ENDPOINT=https://api.example.com/` in the Web App build environment
-and redeploy the site. The CSP's `connect-src` must allow that origin. Full steps
+`server/` is a PHP 8.1+ service deployed separately from the static site, on its
+own PHP website or subdomain (Hostinger or GoDaddy cPanel). `npm run build:api`
+writes the upload folder `dist-api/`. Put its `.env` above that site's
+`public_html`, authorise the host's IP in Brevo, then build the website with
+`VITE_CONTACT_ENDPOINT` set to the service URL (`.env.production.local`, or a Web
+App's build environment) and redeploy it. The CSP's `connect-src` must allow that origin. Full steps
 are in `server/README.md`.
 
 Before launch, replace concepts/provisional copy/logo with approved content,

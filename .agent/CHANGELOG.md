@@ -5,6 +5,29 @@ Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
 ## [Unreleased]
 
+## [0.27.1] — 2026-10-16
+
+### Changed
+
+- Deployment docs describe the current setup: two Hostinger websites, a website
+  built locally with `.env.production.local` (`VITE_SITE_URL`,
+  `VITE_CONTACT_ENDPOINT`), and the PHP mail service uploaded from `dist-api/` with
+  its `.env` above `public_html`.
+- Browser tests build with `VITE_SITE_URL` and `VITE_CONTACT_ENDPOINT` emptied, so
+  local production settings never send test messages to the live mail service.
+
+### AI session
+
+Changed: `playwright.config.ts` build environment, `docs/deployment.md`,
+`server/README.md`, `.env.example`, and release records.
+
+Reason: The user's website runs on Business Web Hosting (no host-side build), so
+public build values must come from a local, git-ignored production env file.
+
+Verification: the local production build embedded the endpoint and the canonical
+URL, and `deploy:check` passed. Contact and link-preview browser tests (17) passed
+with an endpoint-free test build. `npm run check` and `npm run test:php` passed.
+
 ## [0.27.0] — 2026-10-16
 
 ### Added

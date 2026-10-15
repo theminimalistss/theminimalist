@@ -84,8 +84,9 @@ The website and this service deploy separately. The website stays a static build
    website's exact origins, e.g. `https://example.com,https://www.example.com`.
 4. Choose PHP 8.1+ with `curl` for the subdomain.
 5. Rebuild and redeploy the website with
-   `VITE_CONTACT_ENDPOINT=https://api.example.com/` (Vite bakes it into the build;
-   on Hostinger, set it in the Web App's environment variables).
+   `VITE_CONTACT_ENDPOINT=https://api.example.com/`. Vite bakes it into the build:
+   put it in the repository's `.env.production.local` when building locally, or in
+   a Web App's build environment variables when the host builds the site.
 
 **Hostinger.** Create the subdomain under **Domains → Subdomains** and open its
 File Manager (not the main Web App's, whose `public_html` is replaced on each

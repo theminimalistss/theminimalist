@@ -1,9 +1,9 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.27.0
+VERSION: 0.27.1
 STATUS: Landing experience complete; Founders and Contact populated; remaining pages provisional
-CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployment remains pending.
+CURRENT TASK: 0.27.1 release (separate Hostinger deployment of the site and mail service). Live email delivery is pending.
 
 ## Completed
 
@@ -76,6 +76,8 @@ CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployme
   email-app hand-off, manual copy fallback, interrupted resize handling, and
   visible-only envelope motion. Legacy inquiry HTML/redirects remain available;
   selected options and collapsed channels have explicit accessibility fallbacks.
+- 0.27.1: Separate Hostinger deployment documented (locally built site plus PHP mail
+  service site); browser tests build without production `VITE_` values.
 - 0.27.0: Brevo contact mail service (`server/`, PHP MVC, branded HTML emails,
   `.env` config) and direct sending from Contact with an email-app fallback.
 - 0.26.0: Stable page entry without shell transforms or route snapshots; modules
@@ -84,7 +86,16 @@ CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployme
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest verification — 0.27.0, 2026-10-16
+## Latest verification — 0.27.1, 2026-10-16
+
+- `npm run build:hostinger` with `.env.production.local` embedded the mail service
+  endpoint and the website canonical URL; `deploy:check` passed. Contact and
+  link-preview browser tests (17, desktop Chromium, `--workers=1`) passed, and their
+  build contained no endpoint. `npm run check` and `npm run test:php` passed.
+- The mail service host answered with PHP 8.3 and blocked `/.env` (403) before
+  upload. No upload, deployment, or live email was performed by the agent.
+
+## Previous verification — 0.27.0, 2026-10-16
 
 - `npm run check` passed with 150 unit tests, lint, strict types,
   formatting, production build, version alignment, and unchanged media budgets;
@@ -235,10 +246,12 @@ CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployme
   service in `server/` when `VITE_CONTACT_ENDPOINT` is set at build time; otherwise,
   or after a failed send, it opens the visitor's email app (with a copy fallback).
   `/inquiries/*` links redirect to `/contact?inquiry=…`.
-- The contact service is not deployed. It goes on a separate PHP 8.1+ subdomain
-  (`npm run build:api` → `dist-api/`), with `.env` above that `public_html`, a
-  verified Brevo sender/domain, the host's IP in Brevo's authorised IPs, and the
-  site rebuilt with `VITE_CONTACT_ENDPOINT` (see `server/README.md`). The local key
+- Deployment targets (temporary Hostinger domains, Business Web Hosting): website
+  `https://gold-armadillo-874716.hostingersite.com`, mail service
+  `https://rosybrown-cod-365702.hostingersite.com` (PHP 8.3). The site is built
+  locally with `.env.production.local` and uploaded; the service gets `dist-api/`
+  plus `.env` above its `public_html`. Pending: upload, Brevo authorised IP,
+  a verified sender on a studio domain, and a real test message. The local key
   was rejected for an unrecognised IP, so no real email has been sent yet.
 - WebGL frames were reviewed in headless Chromium/WebKit only; check real devices.
 - Sound was designed by measurement and synthesis, not by ear in this session;
@@ -266,8 +279,8 @@ CURRENT TASK: 0.27.0 release (Brevo contact mail service in `server/`). Deployme
 `src/constants/sounds.ts`,
 `src/ui/sections/Hero/Hero.tsx`, `src/ui/styles/`, `docs/media-sources.md`.
 
-NEXT RECOMMENDED TASK: Create the `api` subdomain, upload `dist-api/`, add `.env`
-above its `public_html`, confirm it returns 405 JSON, authorise the server IP in
-Brevo, verify a sender on the studio domain, rebuild the site with
-`VITE_CONTACT_ENDPOINT`, and send a real test message. Then supply approved
+NEXT RECOMMENDED TASK: Upload `dist-api/` and `.env` to the mail service site,
+confirm it returns 405 JSON, upload the rebuilt `dist/` to the website, authorise
+the server IP in Brevo, and send a real test message. Later, move both to a
+studio domain and authenticate it in Brevo. Then supply approved
 catalog/portfolio content and a production origin.

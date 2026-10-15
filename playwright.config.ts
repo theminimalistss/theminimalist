@@ -43,6 +43,7 @@ export default defineConfig({
     command: `npm run build -- --outDir ${buildDirectory} && npm run preview -- --outDir ${buildDirectory} --port ${port} --strictPort`,
     url: baseURL,
     reuseExistingServer: false,
+    env: { VITE_SITE_URL: '', VITE_CONTACT_ENDPOINT: '' },
     timeout: 120_000,
   },
 });
