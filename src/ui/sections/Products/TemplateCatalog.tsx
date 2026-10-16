@@ -1,38 +1,32 @@
 import { Icon } from '@/ui/components/Icon';
-import { useMemo, useState } from 'react';
-import { useTemplates } from '@/hooks/useTemplates';
+import { useTemplateCatalog } from '@/hooks/useTemplateCatalog';
 import { CONTACT_LINKS } from '@/router/paths';
 import { PageLink } from '@/ui/components/PageLink';
 import { TemplatePreview } from './TemplatePreview';
 
-const ALL = 'All';
-
 export function TemplateCatalog() {
-  const state = useTemplates();
-  const [category, setCategory] = useState(ALL);
-  const templates = useMemo(() => (state.status === 'ready' ? state.templates : []), [state]);
-  const categories = useMemo(
-    () => [ALL, ...(state.status === 'ready' ? state.categories : [])],
-    [state],
-  );
-  const shown =
-    category === ALL ? templates : templates.filter((item) => item.category === category);
+  const { state, category, chooseCategory, templates, categories, shown } = useTemplateCatalog();
 
   if (state.status === 'error') return <p className="template-catalog-error">{state.message}</p>;
   return (
     <div className="template-catalog">
       <div className="template-filters" role="group" aria-label="Filter templates">
-        {categories.map((item) => (
+        {[null, ...categories].map((item) => (
           <button
-            key={item}
+            key={item ?? 'all'}
             type="button"
             aria-pressed={item === category}
-            onClick={() => setCategory(item)}
+            onClick={() => chooseCategory(item)}
           >
-            {item}
+            {item ?? 'All'}
           </button>
         ))}
       </div>
+      <p className="sr-only" role="status">
+        {state.status === 'loading'
+          ? 'Loading templates…'
+          : `${shown.length} template ${shown.length === 1 ? 'direction' : 'directions'}`}
+      </p>
       <ul
         className="template-grid"
         aria-label="Website templates"

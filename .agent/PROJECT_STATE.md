@@ -1,12 +1,15 @@
 # Current project state
 
 PROJECT: The Minimalist — Design Studio website
-VERSION: 0.28.0
-STATUS: Landing, Works, Founders, Contact, and service experiences implemented; Studio copy and product catalog provisional
-CURRENT TASK: Release 0.28.0: visual service pages, central JSON, adaptive Contact, and aligned animated branding drawers. Live email delivery remains pending.
+VERSION: 0.29.0
+STATUS: Landing, Works, Founders, Contact, Services, and Products implemented; Studio copy and product catalog provisional
+CURRENT TASK: Release 0.29.0: distinct visual product pages, interactive studies, and shared native illustration playback. Live email delivery remains pending.
 
 ## Completed
 
+- 0.29.0: Distinct Software, Templates, and Hardware product pages with interactive
+  workspace/layout/component studies, animated assembly, and an editorial catalog.
+  Validated central product JSON and shared Services/Products motion lifecycle.
 - 0.28.0: Distinct concise service pages with five software platform drawings,
   responsive website preview, and an illustrative brand board with aligned animated
   drawers. Central application JSON, visible-only native motion, and adaptive Contact.
@@ -89,7 +92,35 @@ CURRENT TASK: Release 0.28.0: visual service pages, central JSON, adaptive Conta
   One warm ambient continues across every page; Contact's envelope responds to
   inquiry interaction independently of Safari pointer-focus behavior.
 
-## Latest release and verification — 0.28.0, 2026-10-16
+## Latest release and verification — 0.29.0, 2026-10-16
+
+- Three distinct product compositions replace the shared placeholder: a software
+  workspace (Organise / Connect / Understand), a paper-based template layout study
+  and editorial catalog, and a layered hardware study with assembly/components.
+- Product detail copy is central JSON through repository → validation service →
+  cancellable hook → UI. All supported choices, captions, and supporting notes
+  validate at the service boundary. Template filtering is now hook/service owned.
+- Existing Services motion is extracted into `useIllustrationMotion`, shared by
+  Products, with entry/visibility/intersection/pause/reduced-motion safeguards.
+  No new dependency, media, WebGL scene, or continuous JS frame loop. Existing
+  product status and provisional catalog notices are preserved and clarified.
+- `npm run check` passed: 179 tests, formatting, lint, strict types, production
+  build, version alignment, and media audit. Deployment audit passed (14 routes,
+  three aliases, 404, 126 asset references). Lazy ProductPage: 8.43 KB gzip;
+  shared CSS: 29.45 KB gzip. Media remains 10.96 MiB.
+- Browser verification: 48 cases passed across focused production runs in Chromium
+  and desktop/mobile WebKit, three expected hover/touch skips. The initial run had
+  three accessibility failures from text contrast on beige; corrected and passed
+  in the 18-case regression run, including Services playback and navigation.
+- All three product layouts reviewed at 320/768/1440 px in both engines: 18 visual
+  cases, no overflow or axe violations. Native controls, selection, interrupted
+  assembly, filters, routes, actual motion, pause, hidden/offscreen suspension,
+  and reduced motion verified. Metadata length remains within the existing limit.
+  The final connection-diagram refinement passed nine additional focused browser
+  checks. Package/lockfile, README, state, and changelog align at 0.29.0.
+  No hosting publication was performed.
+
+## Previous release and verification — 0.28.0, 2026-10-16
 
 - All application JSON is in `src/data/`, with an editing index in its README.
   Works metadata, products, process captions, inquiry options, overview intros,

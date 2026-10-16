@@ -6,6 +6,15 @@ Run `npm run test:e2e` after interaction or layout changes.
 
 ## Coverage boundaries
 
+Product detail tests validate distinct content, route identity, isolated snapshots,
+required captions/materials, complete unique study identifiers, three example
+labels/supporting notes, cancellation, and repository failure. Template tests
+also cover exact-category filtering without mutation. Browser tests cover all
+workspace/layout/component choices, assembly interruption, category/inquiry routes,
+template filters, accessibility/reduced motion, and actual artwork movement,
+pause/resume, hidden-tab suspension, and offscreen suspension in Chromium and
+desktop/mobile WebKit. Service motion tests cover the shared lifecycle extraction.
+
 Editable site content is checked by `siteContent.service.test.ts`: product status,
 four-stage drawing alignment, inquiry kind completeness/uniqueness, blank copy,
 empty options, and isolated snapshots. Existing repository tests validate local

@@ -6,6 +6,7 @@ rebuilding the site. No runtime JSON fetches or extra Hostinger setup are needed
 | File                   | Content                                                                         | Consumer                                                                |
 | ---------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | `service-details.json` | Software, Website, and Branding detail narratives and illustrative preview copy | Service details repository → validation service → `useServiceDetail`    |
+| `product-details.json` | Distinct Software, Templates, and Hardware narratives and study captions        | Product details repository → validation service → `useProductDetail`    |
 | `works.json`           | Concept studies, ordering, visibility, descriptions, and semantic media keys    | Works repository/media resolver → validation service → collection hooks |
 | `templates.json`       | Provisional website template catalog                                            | Templates repository → validation service → `useTemplates`              |
 | `testimonials.json`    | Approved testimonial text and identities                                        | Testimonials repository/media adapter → service → `useTestimonials`     |
@@ -32,6 +33,12 @@ rebuilding the site. No runtime JSON fetches or extra Hostinger setup are needed
 - Software detail platform IDs remain `web`, `mobile`, `desktop`, `api`, and
   `embedded`; the service requires exactly one of each. Their titles, captions,
   and examples are editable. Device drawing geometry stays in TypeScript.
+- Product studies require all three unique choices: software `organise`, `connect`,
+  `understand`; templates `portfolio`, `journal`, `shop`; hardware `shell`, `core`,
+  `base`. Each software study has three example labels; each composition has three
+  supporting notes. Keep concept/provisional notices accurate. `products.json`
+  controls directory availability; `available` currently means a collection preview,
+  not purchasable files. Actual product releases require approved catalog details.
 - A work's `asset` is a semantic filename prefix such as `forma` or `still`.
   `works.media.ts` resolves responsive AVIF/WebP images, or WebM/MP4 videos and
   their posters. Use local optimised assets; no remote URLs or generated filenames.

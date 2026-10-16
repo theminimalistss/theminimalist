@@ -21,6 +21,11 @@ export const SERVICE_ROUTES = {
   websites: ROUTES.websiteDevelopment,
   branding: ROUTES.branding,
 } as const;
+export const PRODUCT_ROUTES = {
+  software: ROUTES.software,
+  templates: ROUTES.templates,
+  hardware: ROUTES.hardware,
+} as const;
 export type LinkTarget = RoutePath | `${RoutePath}?${string}`;
 
 export const CONTACT_LINKS = {

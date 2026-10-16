@@ -31,6 +31,14 @@ to an intentional surface; denied/failed video retains its poster.
 
 ## Motion
 
+Service and product detail illustrations share `useIllustrationMotion`. It owns
+entry, document visibility, per-scene IntersectionObservers, reduced motion, and
+manual pause. `useServiceMotion` supplies the existing service scene selector;
+Product pages supply their own. CSS owns native SVG/HTML playback and transitions.
+Only entered, visible, intersecting, unpaused scenes run their decorative loops.
+Input-driven state remains in each feature's preview hook; there is no timer that
+automatically changes the selected product study.
+
 `getSpiralPosition` maps wrapped normalized progress to horizontal orbit, vertical
 travel, perspective-derived scale, and mild rotation. Unique works have evenly
 spaced visual offsets. The path wraps beyond the clipping region; content is not
@@ -353,6 +361,31 @@ and absence of public source maps/environment files. See `deployment.md` for
 frontend build settings and checks that require the deployed domain. Playwright
 uses a per-port build/report directory (`E2E_PORT`) so its production snapshot
 is not affected by a separate build or browser run.
+
+## Product detail compositions
+
+`product-details.json` → `productDetails.repository` → `productDetails.service` →
+`useProductDetail` → `SoftwareProductDetail`, `TemplateProductDetail`, or
+`HardwareProductDetail`. The repository returns isolated unknown snapshots; the
+service validates the requested key, required copy, three supporting notes, and
+all unique illustration choices. Aborted results never become ready UI. The page
+keeps loading/error/retry states and the existing breadcrumb/category navigation.
+
+Software presents a functional-looking illustrative workspace: task board,
+connection map, and activity bars, selected manually. Templates has a paper study
+with three layout previews, a filterable two-column collection, and a compact
+customisation sequence. Hardware has a technical object drawing with smoothly
+separating layers, manual assembly, and selected component captions. All artwork
+is native SVG/HTML; no product specifications, metrics, live demos, or stock
+photographs are invented. Notices preserve software/hardware coming-soon status
+and provisional template availability. Directory availability still comes from
+`products.json` through `useSiteContent`.
+
+`useProductPreview` owns preview/assembly selection. `useTemplateCatalog` owns
+filter selection and consumes `useTemplates`; `filterTemplates` in the service
+performs exact-category selection. UI receives the resulting collection and
+renders native controls, live summaries, and existing inquiry links. No runtime
+content fetch or additional hosting setup is introduced.
 
 ## Founders
 

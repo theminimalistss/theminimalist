@@ -3,6 +3,45 @@
 The single changelog for releases and AI implementation sessions. Versions follow
 Semantic Versioning (`docs/versioning.md`). Dates use Asia/Manila.
 
+## [0.29.0] — 2026-10-16
+
+### Changed
+
+- Software Solutions has an interactive illustrative workspace with organisation,
+  connection, and insight views, plus a forest product-philosophy section.
+- Website Templates has a switchable paper layout study, an editorial two-column
+  collection, and a concise customisation sequence. Existing filtering/inquiries remain.
+- Hardware Products has an original layered object study with animated assembly,
+  component selection/captions, and compact purpose/material/experience notes.
+- Product narratives live in central JSON through repository → service → hooks → UI.
+  Validation requires complete unique illustration choices and complete copy.
+  Template filter state/rules move to a hook and pure service.
+- Services and Products share native illustration playback lifecycle: entry,
+  visibility, intersection, manual pause, and reduced motion. Coming-soon and
+  provisional catalog notices remain explicit; no purchase or shipping is implied.
+
+### AI session
+
+Changed: product content/contracts/repository/validation/loading and preview hooks,
+three compositions, scoped styles, shared native motion hook, template filtering,
+catalog status wording, metadata, domain/browser checks, and documentation.
+
+Reason: Extend the distinct visual approach from Services to the three product
+portals while retaining the studio design language, concise copy, and architecture.
+
+Verification: `npm run check` passed with 179 tests, formatting, lint, strict types,
+production build, version alignment, and media audit. Deployment audit verified
+14 routes, three aliases, 404, and 126 asset references. Focused production browser
+runs verified 48 passing cases across Chromium and desktop/mobile WebKit, plus
+three expected hover/touch skips. Initial contrast failures were corrected and
+passed in the 18-case regression run, which also covered Services playback and
+navigation. Eighteen visual/accessibility cases at 320/768/1440 px in both engines
+found no overflow or axe violations. Product module: 8.43 KB gzip; shared CSS:
+29.45 KB gzip; media unchanged at 10.96 MiB. No new media, dependency, runtime
+content request, or hosting publication. Nine additional focused browser checks
+passed after aligning the connection-diagram labels within the SVG. Package/lockfile,
+README, state, and release records are aligned at 0.29.0.
+
 ## [0.28.0] — 2026-10-16
 
 ### Changed

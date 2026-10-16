@@ -1,0 +1,135 @@
+{
+  "software": {
+    "key": "software",
+    "title": "Software solutions",
+    "accent": "Less friction. More flow.",
+    "lead": "Thoughtful tools for everyday work. A quieter place to organise, connect, and see what matters.",
+    "notice": "Product exploration · Illustrative interface. Our software collection is in development; availability and plans are not yet announced.",
+    "views": [
+      {
+        "id": "organise",
+        "label": "Organise",
+        "title": "Everything in its place.",
+        "text": "Give tasks, people, and next steps a shared home.",
+        "items": ["Gather ideas", "Shape the brief", "Share the next step"]
+      },
+      {
+        "id": "connect",
+        "label": "Connect",
+        "title": "Fewer loose ends.",
+        "text": "Bring the pieces of your workflow into one clear conversation.",
+        "items": ["Your team", "Your tools", "One workflow"]
+      },
+      {
+        "id": "understand",
+        "label": "Understand",
+        "title": "See the bigger picture.",
+        "text": "Turn everyday activity into a useful view of your work.",
+        "items": ["See progress", "Spot patterns", "Choose what’s next"]
+      }
+    ],
+    "section": {
+      "title": "A tool should make room.",
+      "text": "For your attention. For your team. For the work you set out to do."
+    },
+    "steps": [
+      { "title": "Clear by default", "text": "A small learning curve. A purposeful interface." },
+      { "title": "Connected by design", "text": "Workflows that belong together, brought closer." },
+      {
+        "title": "Ready for real work",
+        "text": "Onboarding, licensing, and support outlined at release."
+      }
+    ],
+    "closing": {
+      "title": "Something specific in mind?",
+      "text": "Tell us about your workflow, or explore a custom build."
+    }
+  },
+  "templates": {
+    "key": "templates",
+    "title": "Website templates",
+    "accent": "A head start. A point of view.",
+    "lead": "An editorial foundation for your next chapter. Find a direction, then make it unmistakably yours.",
+    "notice": "Provisional collection · Schematic previews. Downloadable files, live demos, pricing, and licensing are not yet published.",
+    "views": [
+      {
+        "id": "portfolio",
+        "label": "Portfolio",
+        "title": "Room for your work.",
+        "text": "Image-led layouts with a considered rhythm."
+      },
+      {
+        "id": "journal",
+        "label": "Journal",
+        "title": "Words, given space.",
+        "text": "A clear hierarchy for stories worth staying with."
+      },
+      {
+        "id": "shop",
+        "label": "Shop",
+        "title": "Objects with a story.",
+        "text": "A calm framework for a small product collection."
+      }
+    ],
+    "section": {
+      "title": "Your story. A considered start.",
+      "text": "A foundation gives you direction. Your words, images, and character make it a website."
+    },
+    "steps": [
+      { "title": "Find your direction", "text": "Choose a structure that suits your story." },
+      { "title": "Make it yours", "text": "Bring your identity, photography, and copy." },
+      { "title": "Plan your launch", "text": "Ask us about setup, customisation, and the release." }
+    ],
+    "collection": {
+      "title": "The starting points.",
+      "text": "Six directions to explore. Ask us about a design you like."
+    },
+    "closing": {
+      "title": "A little more you?",
+      "text": "Talk to us about a template, or a website made from the ground up."
+    }
+  },
+  "hardware": {
+    "key": "hardware",
+    "title": "Hardware products",
+    "accent": "Useful, down to the detail.",
+    "lead": "Physical ideas with a digital sensibility. Considered objects, clear interactions, and a place in everyday life.",
+    "notice": "Object study · Illustrative concept, not a product specification. Our hardware collection is coming soon; materials and features are not final.",
+    "parts": [
+      {
+        "id": "shell",
+        "label": "Enclosure",
+        "title": "The first impression.",
+        "material": "Surface / form",
+        "text": "An honest shape. A finish that feels at home."
+      },
+      {
+        "id": "core",
+        "label": "Electronics",
+        "title": "Purpose at the centre.",
+        "material": "Board / connection",
+        "text": "The quiet relationship between the physical and digital."
+      },
+      {
+        "id": "base",
+        "label": "Foundation",
+        "title": "Considered underneath.",
+        "material": "Base / assembly",
+        "text": "How it sits, fits, and comes together matters too."
+      }
+    ],
+    "section": {
+      "title": "More than the object.",
+      "text": "We think about the whole experience, from first touch to everyday use."
+    },
+    "steps": [
+      { "title": "Purpose", "text": "Start with a real need, then give it form." },
+      { "title": "Material", "text": "Explore finishes, feel, and how parts meet." },
+      { "title": "Experience", "text": "Make setup, interaction, and care clear." }
+    ],
+    "closing": {
+      "title": "An idea taking shape?",
+      "text": "Ask about the collection, or discuss a connected-device project."
+    }
+  }
+}

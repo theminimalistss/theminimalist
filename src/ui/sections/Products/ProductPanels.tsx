@@ -34,7 +34,7 @@ export function ProductPanels() {
                 <span className="product-panel-number">{String(index + 1).padStart(2, '0')}</span>
               </span>
               <span className="product-panel-status" data-status={leads[index]?.status}>
-                {leads[index]?.status === 'available' ? 'Available' : 'Coming soon'}
+                {leads[index]?.status === 'available' ? 'Collection preview' : 'Coming soon'}
               </span>
               {art && <ProductArtwork art={art} id={`product-art-${index}`} />}
               <span className="product-panel-copy">

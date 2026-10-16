@@ -4,6 +4,11 @@ Accessed **2026-10-06 (Asia/Manila)**. These are temporary concept illustrations
 not commissioned work. Concept names and editorial treatments are original
 placeholder art direction and do not imply brand affiliation.
 
+Product detail workspace, paper-study treatment, and layered hardware object are
+original HTML/SVG/CSS illustrations. Template studies reuse the original native
+`TemplatePreview` geometry. They are explicitly provisional/conceptual and add no
+third-party media, product photography, specifications, or downloadable assets.
+
 The [Pexels license](https://www.pexels.com/license/) permits website use and
 modification; attribution is appreciated but not required. Images are editorial
 illustrations, not trademarks or implied endorsements. Do not redistribute

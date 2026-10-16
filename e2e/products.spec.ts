@@ -56,7 +56,7 @@ test('templates list as a filterable grid while software and hardware are coming
   page,
 }) => {
   await openPage(page, '/products/templates');
-  await expect(page.locator('.page-intro .eyebrow')).toHaveText('Products · Available');
+  await expect(page.locator('.pd-intro .eyebrow')).toHaveText('Products · Collection preview');
   const grid = page.getByRole('list', { name: 'Website templates' });
   const cards = grid.locator(':scope > li');
   const total = await cards.count();
@@ -67,7 +67,7 @@ test('templates list as a filterable grid while software and hardware are coming
   await expect(cards).toHaveCount(total);
   for (const path of ['/products/software', '/products/hardware']) {
     await openPage(page, path);
-    await expect(page.locator('.page-intro .eyebrow')).toHaveText('Products · Coming soon');
+    await expect(page.locator('.pd-intro .eyebrow')).toHaveText('Products · Coming soon');
     await expect(page.getByRole('list', { name: 'Website templates' })).toHaveCount(0);
   }
 });

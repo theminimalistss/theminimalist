@@ -56,3 +56,7 @@ export async function getTemplates(
 export function templateCategories(templates: readonly WebsiteTemplate[]) {
   return [...new Set(templates.map((item) => item.category))];
 }
+
+export function filterTemplates(templates: readonly WebsiteTemplate[], category: string | null) {
+  return category === null ? templates : templates.filter((item) => item.category === category);
+}

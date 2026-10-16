@@ -1,5 +1,24 @@
 # Architecture decisions
 
+## 2026-10-16 — Distinct product studies and shared illustration lifecycle
+
+Decision: Give each product category a distinct visual narrative: Software has an
+interactive workspace, Templates an editorial collection with layout studies, and
+Hardware an exploded-object drawing with assembly/component controls. Keep new
+copy in `src/data/product-details.json`, behind an isolated repository, validation
+service, and cancellable loading hook. Reuse the existing provisional template catalog.
+
+Reason: The user wants the product portals developed to the same design standard
+as Services while keeping each page unique, concise, and architecturally consistent.
+
+Impact: `useProductPreview` owns input-only selection. `useIllustrationMotion`
+extracts the existing Services lifecycle for both features; native CSS/SVG loops
+run only when entered, visible, in view, and unpaused. Reduced motion is static.
+Template filters move from UI state/rules into a hook and pure service. No new
+dependency, media, GPU scene, automatic selection timer, or runtime content API.
+Software/hardware remain coming soon; templates and all visual studies retain
+explicit provisional/illustrative notices. No invented availability or product specs.
+
 ## 2026-10-16 — Aligned animated brand drawers and adaptive Contact
 
 Decision: Six branding cards stay in equal-height pairs. A shared detail region

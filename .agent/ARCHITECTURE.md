@@ -31,7 +31,18 @@ UI → hooks → services → repositories. Static presentation is the exception
   It reuses `useDialog`, with focus trapping and dismissal for older engines.
 - Products: `ProductPanels` + `useProductPanels` with `productArt` drawings that
   assemble into solid objects when opened; templates flow `templates.json` →
-  `templates.service` → `useTemplates` → `TemplateCatalog`.
+  `templates.service` → `useTemplates`/`useTemplateCatalog` → `TemplateCatalog`.
+  Filter selection lives in the hook; exact-category filtering stays in the service.
+  Detail pages flow `product-details.json` → `productDetails.repository` →
+  `productDetails.service` → `useProductDetail` → separate Software, Template, and
+  Hardware compositions. Validation requires complete/unique illustration choices,
+  concise captions, and complete supporting notes. Snapshots are isolated and
+  requests cancel. `useProductPreview` owns input-only selection/assembly state.
+  Native workspace, paper layout, and exploded object studies use shared
+  `useIllustrationMotion` for entry/visibility/intersection/pause/reduced motion.
+  `useServiceMotion` delegates to that hook without changing service behavior.
+  No new media, dependency, WebGL scene, or continuous JavaScript frame loop.
+  Software/hardware stay coming soon; the six templates remain provisional.
 - Studio: `StudioPortals` uses unique visual artwork; presentational `StudioApproach` follows. Works posters use
   `useHeroWorks` → service → repository;
   portraits reuse shared founder constants. Source CSS is imported by the composed

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getTemplates, templateCategories } from '@/services/templates.service';
+import { filterTemplates, getTemplates, templateCategories } from '@/services/templates.service';
 
 const valid = {
   id: 'one',
@@ -12,6 +12,14 @@ const valid = {
 };
 
 describe('templates', () => {
+  it('filters by exact category without mutating the catalog', async () => {
+    const templates = await getTemplates();
+    const ids = templates.map((item) => item.id);
+    expect(filterTemplates(templates, 'Online shop').map((item) => item.name)).toEqual(['Mercer']);
+    expect(filterTemplates(templates, 'Unknown')).toEqual([]);
+    expect(filterTemplates(templates, null).map((item) => item.id)).toEqual(ids);
+    expect(templates.map((item) => item.id)).toEqual(ids);
+  });
   it('lists the website templates with unique ids and known layouts', async () => {
     const templates = await getTemplates();
     expect(templates.length).toBeGreaterThan(0);

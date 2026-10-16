@@ -1,11 +1,11 @@
 # The Minimalist
 
-**Design studio · v0.28.0 · Immersive studio portfolio**
+**Design studio · v0.29.0 · Immersive studio portfolio**
 
 A warm editorial portfolio with a continuous spatial work loop, mixed image and
 video studies, an accessible gallery, and studio navigation. The landing
-experience, Works explorer, Founders, Contact, and service pages are implemented.
-Studio copy and the product catalog remain provisional.
+experience, Works explorer, Founders, Contact, and service and product pages are
+implemented. Studio copy and the product catalog remain provisional.
 
 The twelve projects (six featured on Home, all twelve on Works) are **independent
 concept studies with licensed stock media**,
@@ -35,6 +35,13 @@ assembles into textured objects. Hover or keyboard focus opens a panel; on touch
 tap once to open and again to navigate. Website templates has a filterable grid
 of six provisional entries with schematic previews. Software and hardware are
 coming soon; approved template files, previews, and pricing remain pending.
+
+Each product category has its own composition: an interactive software workspace,
+an editorial template collection with switchable layout studies, and an exploded
+hardware object with assembly/layer controls. These are illustrative previews;
+they retain coming-soon/provisional notices and link to the studio for inquiries.
+Artwork uses native vectors and shares the service pages' visibility, pause, and
+reduced-motion safeguards.
 
 Services has three distinct visual pages. Software covers web, mobile, desktop,
 APIs, and embedded systems through selectable vector drawings. Websites has a
@@ -153,7 +160,7 @@ No reference-site assets, copy, code, or branding are included.
 
 ## Versioning and AI handoff
 
-Semantic Versioning (currently `0.28.0`). Keep `package.json`, `package-lock.json`,
+Semantic Versioning (currently `0.29.0`). Keep `package.json`, `package-lock.json`,
 `.agent/CHANGELOG.md`, and `.agent/PROJECT_STATE.md` synchronized. Use Conventional
 Commits. Preparing a version is local; pushing/publishing requires authorization.
 

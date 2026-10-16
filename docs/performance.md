@@ -45,6 +45,11 @@ Budgets enforced by `npm run media:audit`:
   while it is catching up to the pointer.
 - Production CSS is HTML-linked in one bundle; route JavaScript stays lazy.
   This removes the late route stylesheet dependency observed on Hostinger.
+- Product and service detail artwork uses native SVG/HTML/CSS. A shared hook gates
+  decorative loops by entry, visibility, per-scene intersection, reduced motion,
+  and manual pause. Product previews switch only on input. No new media download,
+  GPU context, selection timer, or continuous JavaScript frame loop is added.
+  Hardware assembly uses finite transforms; template filters use the bundled catalog.
 - Contact artwork uses native SVG/CSS; its idle motion stops before entry,
   offscreen, in hidden tabs, and under reduced motion. Form resizing only runs
   on structural changes, cancels interrupted animation, and uses no RAF loop.

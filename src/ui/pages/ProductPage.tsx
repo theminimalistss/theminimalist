@@ -1,51 +1,63 @@
-import { Icon } from '@/ui/components/Icon';
-import { useSiteContent } from '@/hooks/useSiteContent';
+import { useProductDetail } from '@/hooks/useProductDetail';
+import { useIllustrationMotion } from '@/hooks/useIllustrationMotion';
 import type { ProductKey } from '@/types/content';
 import { PRODUCT_PAGES } from '@/router/navigation';
-import { CONTACT_LINKS, ROUTES } from '@/router/paths';
+import { PRODUCT_ROUTES, ROUTES } from '@/router/paths';
+import { Icon } from '@/ui/components/Icon';
 import { Breadcrumbs } from '@/ui/sections/Page/Breadcrumbs';
-import { Checklist } from '@/ui/sections/Page/Checklist';
-import { PageIntro } from '@/ui/sections/Page/PageIntro';
-import { PageSection } from '@/ui/sections/Page/PageSection';
-import { Placeholder } from '@/ui/sections/Page/Placeholder';
 import { SectionTabs } from '@/ui/sections/Page/SectionTabs';
-import { PageLink } from '@/ui/components/PageLink';
-import { TemplateCatalog } from '@/ui/sections/Products/TemplateCatalog';
+import { SoftwareProductDetail } from '@/ui/sections/Products/SoftwareProductDetail';
+import { TemplateProductDetail } from '@/ui/sections/Products/TemplateProductDetail';
+import { HardwareProductDetail } from '@/ui/sections/Products/HardwareProductDetail';
+import { ProductClosing } from '@/ui/sections/Products/ProductDetailPrimitives';
 import '@/ui/styles/products.css';
+import '@/ui/styles/product-detail.css';
 
 export default function ProductPage({ product }: { product: ProductKey }) {
-  const copy = useSiteContent('products')[product];
+  const { state, retry } = useProductDetail(product);
+  const { ref, paused, reduced, running, toggle } = useIllustrationMotion(
+    state.status === 'ready',
+    '[data-product-scene]',
+  );
+  const title = PRODUCT_PAGES.find((item) => item.to === PRODUCT_ROUTES[product])!.label;
   return (
-    <>
-      <Breadcrumbs trail={[{ label: 'Products', to: ROUTES.products }, { label: copy.title }]} />
+    <div
+      ref={ref}
+      className={`product-detail product-detail--${product}`}
+      data-motion={running ? 'running' : 'paused'}
+    >
+      <Breadcrumbs trail={[{ label: 'Products', to: ROUTES.products }, { label: title }]} />
       <SectionTabs items={PRODUCT_PAGES} label="Product categories" />
-      <PageIntro
-        eyebrow={copy.status === 'available' ? 'Products · Available' : 'Products · Coming soon'}
-        title={copy.title}
-        accent={copy.accent}
-        lead={copy.lead}
-      >
-        <PageLink className="text-button" to={CONTACT_LINKS.quote}>
-          {copy.status === 'available' ? 'Request a quote' : 'Ask to be notified'}{' '}
-          <Icon name="arrow" className="inline-icon" />
-        </PageLink>
-        <PageLink className="text-button" to={CONTACT_LINKS.appointment}>
-          Book an appointment <Icon name="arrow" className="inline-icon" />
-        </PageLink>
-      </PageIntro>
-      {copy.status === 'available' ? (
-        <PageSection eyebrow="Templates" title="Choose a starting point.">
-          <TemplateCatalog />
-        </PageSection>
-      ) : (
-        <PageSection eyebrow="Coming soon" title="In the studio now.">
-          <Checklist items={copy.checklist} label={`${copy.title} catalog contents`} />
-          <Placeholder title="Coming soon">
-            {copy.title} are in development and will be listed here. In the meantime, ask us
-            directly about what you need.
-          </Placeholder>
-        </PageSection>
+      {state.status === 'ready' && !reduced && (
+        <div className="pd-motion-tools pd-pad">
+          <button type="button" aria-pressed={paused} onClick={toggle}>
+            <Icon name={paused ? 'play' : 'pause'} />
+            {paused ? 'Play' : 'Pause'} illustrations
+          </button>
+        </div>
       )}
-    </>
+      {state.status === 'loading' && (
+        <p className="pd-status" role="status">
+          Gathering the collection…
+        </p>
+      )}
+      {state.status === 'error' && (
+        <div className="pd-status" role="alert">
+          <h1>{title}</h1>
+          <p>The product details couldn’t be loaded.</p>
+          <button type="button" className="text-button" onClick={retry}>
+            Try again
+          </button>
+        </div>
+      )}
+      {state.status === 'ready' && (
+        <>
+          {state.detail.key === 'software' && <SoftwareProductDetail detail={state.detail} />}
+          {state.detail.key === 'templates' && <TemplateProductDetail detail={state.detail} />}
+          {state.detail.key === 'hardware' && <HardwareProductDetail detail={state.detail} />}
+          <ProductClosing detail={state.detail} />
+        </>
+      )}
+    </div>
   );
 }
